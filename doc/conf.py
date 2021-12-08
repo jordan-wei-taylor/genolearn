@@ -1,0 +1,111 @@
+import sys
+import os
+import shlex
+import datetime
+from os import path
+
+root = path.realpath(path.join(path.dirname(__file__), '../'))
+sys.path.insert(0, root)
+sys.path.insert(0, '_static/python')
+
+print(sys.path)
+
+import sphinx_rtd_theme
+import sphinxcontrib.video
+
+octest_path = [root]
+doctest_global_setup = "import pluginmanager"
+autodoc_default_flags = ['members']
+autosummary_generate = True
+
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+#sys.path.insert(0, os.path.abspath('.'))
+
+# -- General configuration ------------------------------------------------
+
+# If your documentation needs a minimal Sphinx version, state it here.
+#needs_sphinx = '1.0'
+
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+# ones.
+extensions = [
+    'sphinxcontrib.video',
+    'sphinx.ext.doctest',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx_rtd_theme',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.autosectionlabel'
+]
+
+
+autosectionlabel_prefix_document = True
+
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
+# The suffix(es) of source filenames.
+# You can specify multiple suffix as a list of string:
+# source_suffix = ['.rst', '.md']
+source_suffix = ['.rst', '.md']
+
+# The encoding of source files.
+#source_encoding = 'utf-8-sig'
+
+
+project = "BioLearn"
+author = "BioLearn"
+copyright = f"{datetime.datetime.now().year}, {author}"
+version = release = ""
+
+todo_include_todos = False
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+html_theme = 'sphinx_rtd_theme'
+
+html_logo = '_static/logo.png'
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+html_theme_options = {
+    "collapse_navigation" : False,
+    'logo_only' : True,
+    'body_max_width': '100%',
+    'style_nav_header_background' : "#fcfcfc"
+}
+
+# 
+
+# 
+html_show_sourcelink = False
+html_use_index = True
+mathjax_config = {
+    'TeX': {'equationNumbers': {'autoNumber': 'AMS', 'useLabelIds': True}},
+}
+
+html_static_path = ['_static']
+
+html_css_files = [
+    'css/custom.css',
+]
+
+html_js_files = [
+    'js/custom.js'
+]
+
+html_style = 'css/custom.css'
+
+numfig = True
+numfig_secnum_depth = 2
+
+html_favicon = 'favicon.png'
+
+pngmath_latex_preamble=r'\usepackage[active]{preview}' # + other custom stuff for inline math, such as non-default math fonts etc.
+pngmath_use_preview=True
+
