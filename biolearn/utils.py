@@ -7,6 +7,7 @@ import psutil
 import json
 import os
 
+PARAMS = {}
 
 def get_process_memory():
     """ returns current RAM usage by current Python process """

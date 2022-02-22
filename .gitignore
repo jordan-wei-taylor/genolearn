@@ -7,3 +7,5 @@ env
 .tox
 
 __pycache__
+
+testing*
