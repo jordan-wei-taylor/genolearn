@@ -18,7 +18,6 @@ os.makedirs('testing', exist_ok = True)
 for file in os.listdir('testing'):
     os.remove(f'testing/{file}')
 
-
 features = []
 
 def clean_open(file):

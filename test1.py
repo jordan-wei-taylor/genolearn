@@ -8,7 +8,7 @@ def main(output_dir, genome_sequence, batch_size, verbose, n_processes):
     gather_feature = lambda line : line[:line.index(' ')]
     gather_samples = lambda line : re.findall(r'[\w]+(?=:)', line)
     gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
-    gather         = lambda line : dict(zip(gather_samples(line), gather_counts(line)))
+    gather         = lambda line : zip(gather_samples(line), gather_counts(line))
 
     
 
@@ -47,20 +47,19 @@ def main(output_dir, genome_sequence, batch_size, verbose, n_processes):
 
                 srr_count = gather(line)
 
-                for SRR, count in srr_count.items():
+                for SRR, count in srr_count:
                     if SRR not in exceptions:
-                        if skip:
-                            continue
-                        elif SRR not in files:
+                        if SRR not in files:
+                            if skip: continue
                             files[SRR] = clean_open(SRR)
                             c         += 1
                             C         += 1
                             skip = c == batch_size
-                        files[SRR].write(f'{i} {srr_count[SRR]}\n')
+                        files[SRR].write(f'{i} {count}\n')
 
                 if i % verbose == 0:
                     msg(f'{C:10,d} {i:10,d}')
-            
+
             msg(f'{C:10,d} {i + 1:10,d}')
 
             for f in files.values():
@@ -82,7 +81,6 @@ def main(output_dir, genome_sequence, batch_size, verbose, n_processes):
                 break
 
             files.clear()
-
 
         create_log(output_dir)
 
@@ -135,15 +133,21 @@ if __name__ == '__main__':
     parser.add_argument('-batch_size', type = int, default = 512)
     parser.add_argument('-verbose', type = int, default = 250000)
     parser.add_argument('-n_processes', default = 'auto')
+    parser.add_argument('-dtype', default = 'uint16')
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
     print_dict('executing "process.py" with parameters:', params)
 
+    dtypes = dict(uint8 = np.uint8, uint16 = np.uint16, uint32 = np.uint32, uint64 = np.uint64,
+                  int8 = np.int8, int16 = np.int16, int32 = np.int32, int64 = np.int64)
+
+    dtype  = dtypes[args.dtype]
+
     def txt2npy(file):
         txt = f'{args.output_dir}/{file}.txt'
         npy = f'{args.output_dir}/{file}.npy'
-        np.save(npy, np.loadtxt(txt, dtype = np.uint8))
+        np.save(npy, np.loadtxt(txt, dtype = dtype))
         os.remove(txt)
 
     main(args.output_dir, args.genome_sequence_path, args.batch_size, args.verbose, args.n_processes)
