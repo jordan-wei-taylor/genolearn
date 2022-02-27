@@ -142,7 +142,7 @@ if __name__ == '__main__':
                     txt  = f'{args.output_dir}/{file}.txt'
                     npz  = f'{args.output_dir}/{file}.npz'
                     c, d = np.loadtxt(txt, dtype = c_dtype)
-                    np.savez(npz, col = c, data = d.astype(d_dtype))
+                    np.savez_compressed(npz, col = c, data = d.astype(d_dtype))
                     os.remove(txt)
 
             with Pool(args.n_processes) as pool:
