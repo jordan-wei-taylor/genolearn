@@ -47,7 +47,6 @@ if __name__ == '__main__':
     parser.add_argument('-batch_size', type = int, default = 512)
     parser.add_argument('-verbose', type = int, default = 250000)
     parser.add_argument('-n_processes', default = 'auto')
-    parser.add_argument('-dtype', default = 'uint16')
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
@@ -87,7 +86,7 @@ if __name__ == '__main__':
     C          = 0
     hi         = 0
 
-    with gzip.GzipFile(args.genome_sequence) as gz:
+    with gzip.GzipFile(args.genome_sequence_path) as gz:
         
         while True:
             
@@ -107,7 +106,7 @@ if __name__ == '__main__':
 
                 if first_run:
                     features.append(gather_feature(line))
-                    hi = max(hi, *counts)
+                    hi = max(hi, *map(int, counts))
 
                 for SRR, count in zip(srrs, counts):
                     if SRR not in exceptions:
@@ -121,7 +120,7 @@ if __name__ == '__main__':
                             skip = c == args.batch_size
                         files[SRR].write(f'{i} {count}\n')
 
-                if i % verbose == 0:
+                if i % args.verbose == 0:
                     msg(f'{C:10,d} {i:10,d}')
 
             msg(f'{C:10,d} {i + 1:10,d}')
@@ -141,7 +140,7 @@ if __name__ == '__main__':
                 def txt2npz(file):
                     txt  = f'{args.output_dir}/{file}.txt'
                     npz  = f'{args.output_dir}/{file}.npz'
-                    c, d = np.loadtxt(txt, dtype = c_dtype)
+                    c, d = np.loadtxt(txt, dtype = c_dtype).T
                     np.savez_compressed(npz, col = c, data = d.astype(d_dtype))
                     os.remove(txt)
 
