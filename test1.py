@@ -75,8 +75,8 @@ if __name__ == '__main__':
                 return dtype
         raise Exception()
 
-    os.makedirs(args.output_dir, exist_ok = True)
-
+    os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)
+    
     for file in os.listdir(args.output_dir):
         os.remove(f'{args.output_dir}/{file}')
 
