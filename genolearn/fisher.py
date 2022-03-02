@@ -1,4 +1,6 @@
-from   biolearn.logger import Computing, msg
+from   genolearn.logger import Computing, msg
+import os
+
 import numpy as np
 
 def fisher(X, Y, name = None, indent = 0):
@@ -68,3 +70,61 @@ def weighted_fisher(X, Y, name = None, indent = 0):
     ret      = num / den
     if name is not None: msg(f'computed weighted fisher score for "{name}"', delete = 1, indent = indent)
     return ret
+
+
+def _fisher_score(dataloader, meta, target_column, index_column, group_column):
+    if group_column is not None:
+        ix_group_target = meta.loc[:,[index_column, group_column, target_column]].copy()
+        scores = {group : {target : [0, 0, 0] for target in set(ix_group_target.loc[:,target_column])} for group in set(ix_group_target.loc[:,group_column])}
+        for i in ix_group_target.index:
+            ix, group, target = ix_group_target.loc[i]
+            x = dataloader.load_X(ix)
+            scores[group][target][0] += x
+            scores[group][target][1] += x.power(2)
+            scores[group][target][2] += 1
+        return scores
+    else:
+        ix_target = meta.loc[:,[index_column, target_column]].copy()
+        scores = {target : [0, 0, 0] for target in set(ix_target.loc[:,target_column])}
+        for i in ix_target.index:
+            ix, target = ix_target.loc[i]
+            x = dataloader.load_X(ix)
+            scores[target][0] += x
+            scores[target][1] += x.power(2)
+            scores[target][2] += 1
+        return scores
+
+def fisher_score_by_year(dataloader, meta, target_column, index_column, group_column):
+    scores = _fisher_score(dataloader, meta, target_column, index_column, group_column)
+    S      = {}
+
+    for start in range(min(scores), max(scores)):
+        years = range(start, max(scores))
+        sub   = [0, 0]
+        N     = {}
+        for year in years:
+            for label in scores[year]:
+                if scores[year][label][2] == 0: continue
+                sub[0] += scores[year][label][0].A
+                sub[1] += scores[year][label][2]
+                if label not in N:
+                    N[label] = 0
+                N[label] += scores[year][label][2]
+        
+        mean = sub[0] / sub[1]
+
+        top  = 0
+        bot  = 0
+
+        for year in years:
+            for label in scores[year]:
+                if scores[year][label][2] == 0: continue
+                mean_ij = scores[year][label][0].A / scores[year][label][2]
+                mom2_ij = scores[year][label][1].A / scores[year][label][2]
+                var_ij  = mom2_ij - mean_ij
+                top += N[label] * np.square(mean_ij - mean)
+                bot += N[label] * var_ij
+        
+        S[str(start)] = np.divide(top, bot, where = bot > 0)
+
+        np.savez_compressed(os.path.join(dataloader.path, 'feature-selection', 'fisher-by-year.npz'), **S)

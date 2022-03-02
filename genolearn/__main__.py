@@ -1,6 +1,6 @@
 if __name__ == '__main__':
 
-    from   biolearn.logger  import print_dict
+    from   genolearn.logger  import print_dict
 
     from   argparse import ArgumentParser, RawTextHelpFormatter
 
@@ -11,8 +11,8 @@ if __name__ == '__main__':
 
     from   multiprocessing import cpu_count, Pool
 
-    from   biolearn.logger import msg
-    from   biolearn.utils  import create_log
+    from   genolearn.logger import msg
+    from   genolearn.utils  import create_log
 
     from   shutil import rmtree
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
-    print_dict('executing "process.py" with parameters:', params)
+    print_dict('executing "GenoLearn" with parameters:', params)
 
     if args.batch_size == -1:
         args.batch_size = np.inf
@@ -160,3 +160,5 @@ if __name__ == '__main__':
             files.clear()
 
         create_log(args.output_dir)
+    
+    msg('executed "GenoLearn"')

@@ -1,4 +1,4 @@
-from   biolearn.logger import msg
+from   genolearn.logger import msg
 
 from   time           import time
 from   datetime       import datetime

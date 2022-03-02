@@ -1,0 +1,12 @@
+from   genolearn.dataloader import DataLoader
+
+import numpy as np
+import os
+
+def feature_selection(function, data_path, meta_path, target_column, index_column, group_column = None):
+    dataloader = DataLoader(data_path, meta_path, index_column)
+    npzs       = [npz.replace('.npz', '') for npz in os.listdir(data_path) if npz.endswith('.npz')]
+    valid_ix   = dataloader.meta.index.isin(npzs)
+    meta       = dataloader.meta.loc[valid_ix].reset_index()
+
+    function(dataloader, meta, target_column, index_column, group_column)
