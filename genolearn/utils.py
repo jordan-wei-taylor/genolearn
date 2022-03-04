@@ -1,3 +1,4 @@
+from re import M
 from   genolearn.logger import msg
 
 from   time           import time
@@ -6,6 +7,8 @@ from   datetime       import datetime
 import psutil
 import json
 import os
+
+import numpy as np
 
 PARAMS = {}
 
@@ -45,6 +48,35 @@ def to_json(obj, path):
     with open(path, 'w') as f:
         json.dump(obj, f)
     msg(f'written "{path}"')
+
+def set_c_dtype(dtype):
+    global c_dtype
+    c_dtype = dtype
+
+def set_r_dtype(dtype):
+    global r_dtype
+    r_dtype = dtype
+
+def set_d_dtype(dtype):
+    global d_dtype
+    d_dtype = dtype
+
+def set_m(val):
+    global m
+    m = val
+
+def process2sparse(npz, c, d):
+    # npz  = path.replace('process', 'sparse').replace('.txt', '.npz')
+    # c, d = np.loadtxt(path, dtype = c_dtype)
+    np.savez_compressed(npz, col = c, data = d.astype(d_dtype))
+
+def process2dense(npz, c, d):
+    # npz  = path.replace('process', 'sparse').replace('.txt', '.npz')
+    # c, d = np.loadtxt(path, dtype = c_dtype)
+    arr  = np.zeros(m, dtype = d.dtype)
+    arr[c] = d
+    np.savez_compressed(npz, arr = arr)
+
 
 START    = time()
 RAM      = get_process_memory()

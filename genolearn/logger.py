@@ -36,7 +36,7 @@ def print_dict(text, d):
     Args:
         d (dict) : Dictionary of parameters. 
     """
-    from  biolearn.utils   import set_params
+    from  genolearn.utils   import set_params
     set_params(d)
     m    = max(len(key) for key in d)
     sep  = f'\n{clear}{" " * 23}'

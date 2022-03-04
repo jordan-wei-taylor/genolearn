@@ -12,7 +12,7 @@ if __name__ == '__main__':
     from   multiprocessing import cpu_count, Pool
 
     from   genolearn.logger import msg
-    from   genolearn.utils  import create_log
+    from   genolearn.utils  import create_log, process2sparse, process2dense
 
     from   shutil import rmtree
 
@@ -49,6 +49,8 @@ if __name__ == '__main__':
     parser.add_argument('-batch_size', type = int, default = 512)
     parser.add_argument('-verbose', type = int, default = 250000)
     parser.add_argument('-n_processes', default = 'auto')
+    parser.add_argument('-sparse', default = True, type = bool)
+    parser.add_argument('-dense', default = True, type = bool)
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
@@ -63,8 +65,13 @@ if __name__ == '__main__':
     gather_samples = lambda line : re.findall(r'[\w]+(?=:)', line)
     gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
 
+    if os.path.exists(args.output_dir):
+        rmtree(args.output_dir)
+
+    os.makedirs(f'{args.output_dir}/process/', exist_ok = True)
+
     def clean_open(file):
-        path = f'{args.output_dir}/{file}.txt'
+        path = f'{args.output_dir}/process/{file}.txt'
         if os.path.exists(path):
             os.remove(path)
         return open(path, 'a')
@@ -76,9 +83,6 @@ if __name__ == '__main__':
             if info.min <= val <= info.max:
                 return dtype
         raise Exception()
-
-    if os.path.exists(args.output_dir):
-        rmtree(args.output_dir)
 
     os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)
 
@@ -139,15 +143,27 @@ if __name__ == '__main__':
                 d_dtype = get_dtype(hi)
                 c_dtype = get_dtype(i)
 
-                def txt2npz(file):
-                    txt  = f'{args.output_dir}/{file}.txt'
+                functions = []
+                if args.sparse:
+                    functions.append(process2sparse)
+                    os.makedirs(f'{args.output_dir}/sparse')
+
+                if args.dense:
+                    functions.append(process2dense)
+                    os.makedirs(f'{args.output_dir}/dense')
+
+                def convert(file):
+                    txt  = f'{args.output_dir}/process/{file}.txt'
                     npz  = f'{args.output_dir}/{file}.npz'
                     c, d = np.loadtxt(txt, dtype = c_dtype).T
-                    np.savez_compressed(npz, col = c, data = d.astype(d_dtype))
+
+                    for function in functions:
+                        function(npz, c, d)
+
                     os.remove(txt)
 
             with Pool(args.n_processes) as pool:
-                pool.map(txt2npz, list(files))
+                pool.map(convert, list(files))
 
             if not skipped:
                 break
