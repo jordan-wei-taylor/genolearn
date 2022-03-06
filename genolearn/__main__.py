@@ -1,20 +1,21 @@
+from re import M
+
+
 if __name__ == '__main__':
 
-    from   genolearn.logger  import print_dict
+    from   genolearn.logger  import print_dict, msg
+    from   genolearn         import utils
 
-    from   argparse import ArgumentParser, RawTextHelpFormatter
+    from   argparse          import ArgumentParser, RawTextHelpFormatter
+    from   multiprocessing   import cpu_count, Pool
+    from   shutil            import rmtree
 
-    import gzip
     import numpy  as np
+
+    import json
+    import gzip
     import re
     import os
-
-    from   multiprocessing import cpu_count, Pool
-
-    from   genolearn.logger import msg
-    from   genolearn.utils  import create_log, process2sparse, process2dense
-
-    from   shutil import rmtree
 
     description = \
     r"""
@@ -51,10 +52,11 @@ if __name__ == '__main__':
     parser.add_argument('-n_processes', default = 'auto')
     parser.add_argument('-sparse', default = True, type = bool)
     parser.add_argument('-dense', default = True, type = bool)
+    parser.add_argument('-low_memory', default = True, type = bool)
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
-    print_dict('executing "GenoLearn" with parameters:', params)
+    print_dict('executing "genolearn" with parameters:', params)
 
     if args.batch_size == -1:
         args.batch_size = np.inf
@@ -70,8 +72,8 @@ if __name__ == '__main__':
 
     os.makedirs(f'{args.output_dir}/process/', exist_ok = True)
 
-    def clean_open(file):
-        path = f'{args.output_dir}/process/{file}.txt'
+    def clean_open(file, subpath = 'process', ext = 'txt'):
+        path = os.path.join(args.output_dir, subpath, f'{file}.{ext}') if subpath else os.path.join(args.output_dir, f'{file}.{ext}')
         if os.path.exists(path):
             os.remove(path)
         return open(path, 'a')
@@ -91,6 +93,7 @@ if __name__ == '__main__':
     exceptions = set()
     C          = 0
     hi         = 0
+    unique     = set()
 
     with gzip.GzipFile(args.genome_sequence_path) as gz:
         
@@ -102,7 +105,7 @@ if __name__ == '__main__':
             skipped = False
             c       = 0
             files   = {}
-
+            
             for i, line in enumerate(gz):
 
                 line   = line.decode()
@@ -112,7 +115,8 @@ if __name__ == '__main__':
 
                 if first_run:
                     features.append(gather_feature(line))
-                    hi = max(hi, *map(int, counts))
+                    hi      = max(hi, *map(int, counts))
+                    unique |= set(srrs)
 
                 for SRR, count in zip(srrs, counts):
                     if SRR not in exceptions:
@@ -135,30 +139,44 @@ if __name__ == '__main__':
                 f.close()
 
             if first_run:
-                f = clean_open('features')
+                first_run = False
+
+                n         = len(unique)
+                m         = i + 1
+                d_dtype   = get_dtype(hi)
+                c_dtype   = get_dtype(m)
+                r_dtype   = get_dtype(n)
+
+                utils.set_m(m)
+                utils.set_d_dtype(d_dtype)
+                utils.set_c_dtype(c_dtype)
+                utils.set_r_dtype(r_dtype)
+                
+                f = clean_open('features', None)
                 f.write(' '.join(features))
                 f.close()
                 features.clear()
-                first_run = False
-                d_dtype = get_dtype(hi)
-                c_dtype = get_dtype(i)
+
+                f = clean_open('meta', None, 'json')
+                json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
+                f.close()
 
                 functions = []
                 if args.sparse:
-                    functions.append(process2sparse)
+                    functions.append(utils.process2sparse)
                     os.makedirs(f'{args.output_dir}/sparse')
 
                 if args.dense:
-                    functions.append(process2dense)
+                    functions.append(utils.process2dense)
                     os.makedirs(f'{args.output_dir}/dense')
 
                 def convert(file):
                     txt  = f'{args.output_dir}/process/{file}.txt'
-                    npz  = f'{args.output_dir}/{file}.npz'
+                    npz  = f'{file}.npz'
                     c, d = np.loadtxt(txt, dtype = c_dtype).T
 
                     for function in functions:
-                        function(npz, c, d)
+                        function(args.output_dir, npz, c, d)
 
                     os.remove(txt)
 
@@ -175,6 +193,8 @@ if __name__ == '__main__':
 
             files.clear()
 
-        create_log(args.output_dir)
+        os.rmdir(f'{args.output_dir}/process')
+
+        utils.create_log(args.output_dir)
     
-    msg('executed "GenoLearn"')
+    msg('executed "genolearn"')
