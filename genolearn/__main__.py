@@ -4,7 +4,7 @@ from re import M
 if __name__ == '__main__':
 
     from   genolearn.logger  import print_dict, msg
-    from   genolearn         import utils
+    from   genolearn         import utils, _data
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
     from   multiprocessing   import cpu_count, Pool
@@ -52,7 +52,8 @@ if __name__ == '__main__':
     parser.add_argument('-n_processes', default = 'auto')
     parser.add_argument('-sparse', default = True, type = bool)
     parser.add_argument('-dense', default = True, type = bool)
-    parser.add_argument('-low_memory', default = True, type = bool)
+    parser.add_argument('-debug', default = -1, type = int)
+    parser.add_argument('--not_low_memory', default = False, action = 'store_true')
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
@@ -67,25 +68,13 @@ if __name__ == '__main__':
     gather_samples = lambda line : re.findall(r'[\w]+(?=:)', line)
     gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
 
+    _data.set_memory(args.not_low_memory)
+    _data.set_output_dir(args.output_dir)
+    
     if os.path.exists(args.output_dir):
         rmtree(args.output_dir)
 
-    os.makedirs(f'{args.output_dir}/process/', exist_ok = True)
-
-    def clean_open(file, subpath = 'process', ext = 'txt'):
-        path = os.path.join(args.output_dir, subpath, f'{file}.{ext}') if subpath else os.path.join(args.output_dir, f'{file}.{ext}')
-        if os.path.exists(path):
-            os.remove(path)
-        return open(path, 'a')
-
-    def get_dtype(val):
-        dtypes = [np.uint8, np.uint16, np.uint32, np.uint64]
-        for dtype in dtypes:
-            info = np.iinfo(dtype)
-            if info.min <= val <= info.max:
-                return dtype
-        raise Exception()
-
+    os.makedirs(f'{args.output_dir}/temp', exist_ok = True)
     os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)
 
     first_run  = True
@@ -97,6 +86,9 @@ if __name__ == '__main__':
 
     with gzip.GzipFile(args.genome_sequence_path) as gz:
         
+        files = {}
+        _data.set_files(files)
+
         while True:
             
             gz.seek(0)
@@ -104,9 +96,8 @@ if __name__ == '__main__':
             skip    = False
             skipped = False
             c       = 0
-            files   = {}
             
-            for i, line in enumerate(gz):
+            for m, line in enumerate(gz, 1):
 
                 line   = line.decode()
 
@@ -124,62 +115,82 @@ if __name__ == '__main__':
                             if skip: 
                                 skipped = True
                                 continue
-                            files[SRR] = clean_open(SRR)
+                            files[SRR] = _data.init(SRR)
                             c         += 1
                             C         += 1
                             skip = c == args.batch_size
-                        files[SRR].write(f'{i} {count}\n')
+                        _data.add(files[SRR], m - 1, count)
 
-                if i % args.verbose == 0:
-                    msg(f'{C:10,d} {i:10,d}')
+                if m % args.verbose == 0:
+                    msg(f'{C:10,d} {m:10,d}')
+                
+                if m == args.debug:
+                    break
+            
+            if m % args.verbose:
+                msg(f'{C:10,d} {m:10,d}')
 
-            msg(f'{C:10,d} {i + 1:10,d}')
-
-            for f in files.values():
-                f.close()
+            if not args.not_low_memory:
+                for f in files.values():
+                    f.close()
 
             if first_run:
                 first_run = False
 
                 n         = len(unique)
-                m         = i + 1
-                d_dtype   = get_dtype(hi)
-                c_dtype   = get_dtype(m)
-                r_dtype   = get_dtype(n)
+                d_dtype   = utils.get_dtype(hi)
+                c_dtype   = utils.get_dtype(m)
+                r_dtype   = utils.get_dtype(n)
 
                 utils.set_m(m)
-                utils.set_d_dtype(d_dtype)
-                utils.set_c_dtype(c_dtype)
-                utils.set_r_dtype(r_dtype)
                 
-                f = clean_open('features', None)
+                f = _data.init_write('features', None, args.output_dir)
                 f.write(' '.join(features))
                 f.close()
                 features.clear()
 
-                f = clean_open('meta', None, 'json')
+                f = _data.init_write('meta', None, 'json', args.output_dir)
                 json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
                 f.close()
+                
+                def to_sparse(npz, c, d):
+                    np.savez_compressed(os.path.join(args.output_dir, 'sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
 
-                functions = []
-                if args.sparse:
-                    functions.append(utils.process2sparse)
-                    os.makedirs(f'{args.output_dir}/sparse')
-
-                if args.dense:
-                    functions.append(utils.process2dense)
-                    os.makedirs(f'{args.output_dir}/dense')
-
-                def convert(file):
-                    txt  = f'{args.output_dir}/process/{file}.txt'
+                def to_dense(npz, c, d):
+                    arr = np.zeros(m, dtype = d.dtype)
+                    arr[c] = d
+                    np.savez_compressed(os.path.join(args.output_dir, 'dense', npz), arr = arr)
+                
+                def convert_write(file):
+                    txt  = os.path.join(args.output_dir, 'temp', f'{file}.txt')
                     npz  = f'{file}.npz'
                     c, d = np.loadtxt(txt, dtype = c_dtype).T
 
                     for function in functions:
-                        function(args.output_dir, npz, c, d)
+                        function(npz, c, d)
 
                     os.remove(txt)
 
+                def convert_dict(file):
+                    npz  = f'{file}.npz'
+                    c, d = map(np.array, map(list, zip(*files[file].items())))
+
+                    for function in functions:
+                        function(npz, c, d)
+
+                convert = convert_dict if args.not_low_memory else convert_write
+
+                functions = []
+                if args.sparse:
+                    functions.append(to_sparse)
+                    os.makedirs(f'{args.output_dir}/sparse')
+
+                if args.dense:
+                    functions.append(to_dense)
+                    os.makedirs(f'{args.output_dir}/dense')
+
+                _data.set_functions(functions)
+            
             with Pool(args.n_processes) as pool:
                 pool.map(convert, list(files))
 
@@ -193,7 +204,7 @@ if __name__ == '__main__':
 
             files.clear()
 
-        os.rmdir(f'{args.output_dir}/process')
+        os.rmdir(os.path.join(args.output_dir, 'temp'))
 
         utils.create_log(args.output_dir)
     

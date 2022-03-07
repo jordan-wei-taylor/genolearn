@@ -1,14 +1,14 @@
+from re import M
 from   genolearn.logger import msg
 
-from   time             import time
-from   datetime         import datetime
+from   time           import time
+from   datetime       import datetime
 
 import psutil
 import json
 import os
 
 import numpy as np
-import scipy.sparse
 
 PARAMS = {}
 
@@ -49,6 +49,15 @@ def to_json(obj, path):
         json.dump(obj, f)
     msg(f'written "{path}"')
 
+
+def get_dtype(val):
+    dtypes = [np.uint8, np.uint16, np.uint32, np.uint64]
+    for dtype in dtypes:
+        info = np.iinfo(dtype)
+        if info.min <= val <= info.max:
+            return dtype
+    raise Exception()
+    
 def set_c_dtype(dtype):
     global c_dtype
     c_dtype = dtype
@@ -65,19 +74,13 @@ def set_m(val):
     global m
     m = val
 
-def process2sparse(path, npz, c, d):
-    # npz  = path.replace('process', 'sparse').replace('.txt', '.npz')
-    # c, d = np.loadtxt(path, dtype = c_dtype)
-    matrix = scipy.sparse.csr_matrix((d.astype(d_dtype), (np.zeros_like(c, dtype = r_dtype), c.astype(c_dtype))))
-    scipy.sparse.save_npz(os.path.join(path, 'sparse', npz), matrix)
-    # np.savez_compressed(os.path.join(path, 'sparse', npz), col = c, data = d.astype(d_dtype))
+def process2sparse(npz, c, d):
+    np.savez_compressed(npz, col = c, data = d.astype(d_dtype))
 
-def process2dense(path, npz, c, d):
-    # npz  = path.replace('process', 'sparse').replace('.txt', '.npz')
-    # c, d = np.loadtxt(path, dtype = c_dtype)
-    arr  = np.zeros(m, dtype = d.dtype)
+def process2dense(npz, c, d):
+    arr = np.zeros(m, dtype = d.dtype)
     arr[c] = d
-    np.savez_compressed(os.path.join(path, 'dense', npz), arr = arr)
+    np.savez_compressed(npz, arr = arr)
 
 
 START    = time()
