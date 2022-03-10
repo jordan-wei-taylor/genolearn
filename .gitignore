@@ -4,9 +4,9 @@ env
 
 testing*
 
-build
-
 __pycache__
 
-.ipynb_checkpoints
+*ipynb_checkpoints*
 .tox
+
+test*

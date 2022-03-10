@@ -1,0 +1,7 @@
+action: website, msg: getenv
+cwd: /home/jordan/git-workspace/BioLearn/build/tox
+cmd: /usr/bin/python3 -m virtualenv --no-download --python /usr/bin/python3 website
+created virtual environment CPython3.8.10.final.0-64 in 115ms
+  creator CPython3Posix(dest=/home/jordan/git-workspace/BioLearn/build/tox/website, clear=False, global=False)
+  seeder FromAppData(download=False, pip=latest, setuptools=latest, wheel=latest, pkg_resources=latest, via=copy, app_data_dir=/home/jordan/.local/share/virtualenv/seed-app-data/v1.0.1.debian.1)
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator

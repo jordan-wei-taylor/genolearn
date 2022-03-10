@@ -1,0 +1,10 @@
+@import "theme-original.css";
+
+.wy-nav-content {
+    max-width: none;
+}
+
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
