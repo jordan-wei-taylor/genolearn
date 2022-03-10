@@ -1,11 +1,12 @@
 env
 
-*data*/
+*data*
 
-/build
+testing*
 
-.tox
+build
 
 __pycache__
 
-testing*
+.ipynb_checkpoints
+.tox

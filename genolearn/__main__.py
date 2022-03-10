@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
                 utils.set_m(m)
                 
-                f = _data.init_write('features', None, args.output_dir)
+                f = _data.init_write('features', None, 'txt', args.output_dir)
                 f.write(' '.join(features))
                 f.close()
                 features.clear()
