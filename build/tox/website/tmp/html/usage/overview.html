@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; GenoLearn  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png" property="og:image" />
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/js/custom.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Preprocessing" href="preprocessing.html" />
+    <link rel="prev" title="Installation via conda" href="../installation/conda.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #fcfcfc" >
+          
+
+          
+            <a href="../index.html" >
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo" property="og:image"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/pip.html">Installation via pip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/github.html">Installation via Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/conda.html">Installation via conda</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataloader.html">Data Loader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature-selection.html">Feature Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="machine-learning.html">Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature-importance.html">Feature Importance</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../demos/paper-a.html">Paper A</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demos/paper-b.html">Paper B</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GenoLearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<p>To use GenoLearn once you have installed it, we require you to first preprocess your genome sequence files (such as an fsm-lite gun-zipped) into a more readable format. This requires executing the package on a .gz file specifying any options. The .gz file should be a text file with the following format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>feature_1 | observation_{1}:count_{1,1} observation_{1}:count_{2,1} ...
+feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
+...
+</pre></div>
+</div>
+</div>
+<div class="section" id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h2>
+<p>First you will need to preprocess your data into a format this package has been optimized for. Depending on the magnitude of your data and the specifications of your machine, this may take minutes or even hours.</p>
+<p>The preprocessing writes to a directory specified by the user. By default, the directory will be</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DATASET NAME
+├── dense
+|   ├── *.npz
+├── feature-selection
+├── sparse
+|   ├── *.npz
+├── features.txt
+├── log.txt
+└── meta.json
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>dense</cite> folder contains dense arrays</p></li>
+<li><p><cite>sparse</cite> folder contains sparse arrays</p></li>
+<li><p><cite>feature-selection</cite> folder is initially empty but can be populated using the later discussed <cite>feature_selection.py</cite> module</p></li>
+<li><p><cite>features.txt</cite> contains all the genome sequences seperated by a single empty space</p></li>
+<li><p><cite>log.txt</cite> contains the parameters used to generate the current folder, the timestamp of the execution, and the RAM usage</p></li>
+<li><p><cite>meta.json</cite> contains the number of samples $n$, the number of genome sequences $m$ and the maximum value observed <em>max</em></p></li>
+</ul>
+<p>The <cite>dense</cite> folder contains dense arrays and the <cite>sparse</cite> folder contains the same information but as sparse arrays. The <cite>feature-selection</cite> folder is initially empty and can be populated using the later discussed <cite>feature_selection</cite> module. <cite>features.txt</cite></p>
+<p>On our <strong>&lt;NAME OF DATASET WE USE&gt;</strong> dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.</p>
+<p>See <a class="reference internal" href="preprocessing.html#preprocessing"><span class="std std-ref">Preprocessing</span></a> for more details.</p>
+</div>
+<div class="section" id="dataloader">
+<h2>DataLoader<a class="headerlink" href="#dataloader" title="Permalink to this headline">¶</a></h2>
+<p>A DataLoader class can be found in <code class="docutils literal notranslate"><span class="pre">genolearn.dataloader</span></code>. This expects a path to the previous step’s preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.</p>
+<p>See <a class="reference internal" href="dataloader.html#dataloader"><span class="std std-ref">DataLoader</span></a> for more details.</p>
+</div>
+<div class="section" id="feature-selection">
+<h2>Feature Selection<a class="headerlink" href="#feature-selection" title="Permalink to this headline">¶</a></h2>
+<p>As the number of genome sequences tends to be large, we need to perform feature selection to then constrain our later Machine Learning models’ complexity. This optional step is to remove features with high measures of similarity.</p>
+<p>See <a class="reference internal" href="feature-selection.html#featureselection"><span class="std std-ref">Feature Selection</span></a> for more details.</p>
+</div>
+<div class="section" id="machine-learning">
+<h2>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this headline">¶</a></h2>
+<p>Within <code class="docutils literal notranslate"><span class="pre">biolearn.models</span></code>, there are machine learning models from the popular library <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> and a few useful functions to save / load models.</p>
+</div>
+<div class="section" id="feature-importance">
+<h2>Feature Importance<a class="headerlink" href="#feature-importance" title="Permalink to this headline">¶</a></h2>
+<p>After fitting a model, the user may wish to identify which were the most importance features in their dataset. With <code class="docutils literal notranslate"><span class="pre">biolearn.feature_importance</span></code>, the user can simply call this function on a fitted model and analyse the feature importance based on the particlar model. For example, Logistic Regression will return a set of coefficients for each feature corresponding to the contribution to each class label.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../installation/conda.html" class="btn btn-neutral float-left" title="Installation via conda" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2022, GenoLearn 
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

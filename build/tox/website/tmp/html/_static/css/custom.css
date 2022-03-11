@@ -1,0 +1,45 @@
+@import "sphinx_rtd_theme.css";
+
+.wy-nav-content {
+    max-width: none;
+}
+
+.rst-content .code .admonition-title {
+    background: #6A6A6A
+}
+
+.rst-content .code {
+    background: #C6C6C6
+}
+
+.rst-content .data .admonition-title {
+    background: #45573E
+}
+
+.rst-content .data {
+    background: #DDF9D2
+}
+
+summary {
+    cursor: pointer
+}
+
+.wy-menu > .caption > span.caption-text {
+  color: #2472a4;
+}
+
+
+.icon-home:before {
+    color: #2472a4;
+}
+
+/*Desired to have captions centered but main text justified but css code not working # TODO 
+.wy-nav-content .rst-content .section .figure .caption .caption-text p {
+    text-align: center;
+}   
+
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+*/

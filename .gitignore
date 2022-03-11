@@ -16,5 +16,11 @@ test*
 .tox
 
 # only retain the html output so collaboraters can see
-build
-!build/website/tmp/html
+build/tox/.tmp
+build/tox/log
+
+build/tox/website/bin
+build/tox/website/lib
+build/tox/website/log
+
+build/tox/website/tmp/doctrees
