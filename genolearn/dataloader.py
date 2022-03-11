@@ -43,7 +43,7 @@ class DataLoader():
         npz = os.path.join(self.path, identifier + '.npz')
         if os.path.exists(npz):
             return npz
-        raise Exception(f'"{npz}" not a valid path!')
+        # raise Exception(f'"{npz}" not a valid path!')
 
     def _check_meta(self, *identifiers, column = None):
         if self.meta is None:

@@ -44,12 +44,12 @@ On our **\<NAME OF DATASET WE USE>** dataset, this meant reducing data reading t
 
 See :ref:`Preprocessing <Preprocessing>` for more details.
 
-DataLoader
+Data Loader
 ==========
 
-A DataLoader class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
+A ``DataLoader`` class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
 
-See :ref:`DataLoader <DataLoader>` for more details.
+See :ref:`Data Loader <DataLoader>` for more details.
 
 Feature Selection
 =================
