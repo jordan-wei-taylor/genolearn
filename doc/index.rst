@@ -1,8 +1,8 @@
 ##############
-BioLearn
+GenoLearn
 ##############
 
-BioLearn is a machine learning pipeline designed for biologists working with fsm-lite files looking to build a predictive model or identify important patterns.
+GenoLearn is a machine learning pipeline designed for biologists working with fsm-lite files looking to build a predictive model or identify important patterns.
 
 .. toctree::
     :hidden:
@@ -12,6 +12,7 @@ BioLearn is a machine learning pipeline designed for biologists working with fsm
 
     installation/pip
     installation/github
+    installation/conda
 
 .. toctree::
     :hidden:
@@ -22,7 +23,7 @@ BioLearn is a machine learning pipeline designed for biologists working with fsm
     usage/overview
     usage/preprocessing
     usage/dataloader
-    usage/fisher-score
+    usage/feature-selection
     usage/machine-learning
     usage/feature-importance
 

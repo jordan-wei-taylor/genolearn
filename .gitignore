@@ -1,12 +1,20 @@
-env
-
-*data*
-
-testing*
+# additional files from running (I)Python
 
 __pycache__
-
 *ipynb_checkpoints*
+
+# virtual python env
+env
+
+# preprocessed data
+*data*
+
+# testing files / directories
+test*
+
+# additional file from running tox
 .tox
 
-test*
+# only retain the html output so collaboraters can see
+build
+!build/website/tmp/html

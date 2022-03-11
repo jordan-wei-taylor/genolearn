@@ -15,8 +15,8 @@ Installation via pip
     # if windows
     >>> ./env/Scripts/activate
 
-    # install BioLearn
-    >>> pip install -U biolearn
+    # install GenoLearn
+    >>> pip install -U genolearn
 
 
 Write about dependencies

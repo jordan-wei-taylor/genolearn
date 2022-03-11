@@ -57,8 +57,8 @@ source_suffix = ['.rst', '.md']
 #source_encoding = 'utf-8-sig'
 
 
-project = "BioLearn"
-author = "BioLearn"
+project = "GenoLearn"
+author = "GenoLearn "
 copyright = f"{datetime.datetime.now().year}, {author}"
 version = release = ""
 

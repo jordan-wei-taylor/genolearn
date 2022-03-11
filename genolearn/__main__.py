@@ -37,10 +37,17 @@ if __name__ == '__main__':
         batch_size  = 512    : number of temporary txt files to generate over a single parse of the genome data
         verbose     = 250000 : number of iterations before giving verbose update
         n_processes = 'auto' : number of processes to run in parallel when compressing txt to npy files
+        sparse      = True   : output sparse npz files
+        dense       = True   : output dense npz files
+        debug       = -1     : integer denoting first number of features to consider (-1 results in all features)
+
+    Optional Flags
+    =======================
+        --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
 
     Example Usage
     =======================
-        python -m biolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
+        python -m genolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
     """
 
     parser = ArgumentParser(description = description, formatter_class = RawTextHelpFormatter)

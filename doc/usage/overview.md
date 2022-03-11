@@ -4,7 +4,7 @@ Overview
 Data
 ====
 
-To use BioLearn once you have installed it, we require you to first preprocess your fsm-lite file (gun-zipped) into a more readable format. This requires executing the package on a .gz file specifying any options. The .gz file should be a text file with the following format:
+To use GenoLearn once you have installed it, we require you to first preprocess your genome sequence files (such as an fsm-lite gun-zipped) into a more readable format. This requires executing the package on a .gz file specifying any options. The .gz file should be a text file with the following format:
 
 .. code-block:: text
 
@@ -12,41 +12,51 @@ To use BioLearn once you have installed it, we require you to first preprocess y
     feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
     ...
 
-For example suppose we have in our text file the following two lines:
-
-.. code-block:: text
-
-    CAAAGT | SRR1:5 SRR2:1 SRR3:2
-    AAAGTA | SRR2:8
-
-then in this example, we would have the resulting dense matrix:
-
-.. code-block:: text
-
-    [[5, 0],
-     [1, 8],
-     [2, 0]]
-
-where the three rows correspond to the observations with the ids SRR1, SRR2, and SRR3 and the two columns representing the features "CAAAGT" and "AAAGTA", and the integer counts to be the number of times a particular feature appeared for that observation.
-
 Preprocessing
 =============
 
 First you will need to preprocess your data into a format this package has been optimized for. Depending on the magnitude of your data and the specifications of your machine, this may take minutes or even hours.
 
-The preprocessing writes to a directory, specified by the user, a gz file containing the dense matrix as shown above. If the groupby option has been specified, the directory will have sub-directories containing the unique values contained in the meta data with the groupby column.
+The preprocessing writes to a directory specified by the user. By default, the directory will be
 
-This is necessary to read the data with multiple processes to leverage parallelized compute making data reading far quicker. On the DATASET NAME dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.
+.. code-block:: text
+    
+    DATASET NAME
+    ├── dense
+    |   ├── *.npz
+    ├── feature-selection
+    ├── sparse
+    |   ├── *.npz
+    ├── features.txt
+    ├── log.txt
+    └── meta.json
+
++ `dense` folder contains dense arrays
++ `sparse` folder contains sparse arrays
++ `feature-selection` folder is initially empty but can be populated using the later discussed `feature_selection.py` module
++ `features.txt` contains all the genome sequences seperated by a single empty space
++ `log.txt` contains the parameters used to generate the current folder, the timestamp of the execution, and the RAM usage
++ `meta.json` contains the number of samples $n$, the number of genome sequences $m$ and the maximum value observed *max*
+
+The `dense` folder contains dense arrays and the `sparse` folder contains the same information but as sparse arrays. The `feature-selection` folder is initially empty and can be populated using the later discussed `feature_selection` module. `features.txt`  
+
+On our **\<NAME OF DATASET WE USE>** dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.
+
+See :ref:`Preprocessing <Preprocessing>` for more details.
 
 DataLoader
 ==========
 
-A DataLoader class can be found in ``biolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later models support sparse matrices and should be used to save RAM requirements at the potential cost of additional compute power.
+A DataLoader class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
 
-Fisher Score
-============
+See :ref:`DataLoader <DataLoader>` for more details.
 
-The fisher score is how this package reduces the feature space through feature selection. The fisher score metric was chosen as it is cheap and fast to compute. Each feature in the dataset will have an associated fisher score where the higher the score, the more *important* the feature.
+Feature Selection
+=================
+
+As the number of genome sequences tends to be large, we need to perform feature selection to then constrain our later Machine Learning models' complexity. This optional step is to remove features with high measures of similarity. 
+
+See :ref:`Feature Selection <FeatureSelection>` for more details.
 
 
 Machine Learning

@@ -1,3 +1,5 @@
+.. _DataLoader:
+
 Data Loader
 ##########################
 
