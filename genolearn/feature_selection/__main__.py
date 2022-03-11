@@ -1,14 +1,9 @@
-from re import M
-
-
 if __name__ == '__main__':
 
     from   genolearn.logger  import print_dict, msg
-    from   genolearn         import utils, _data
+    from   genolearn         import DataLoader, utils
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
-    from   multiprocessing   import cpu_count, Pool
-    from   shutil            import rmtree
 
     import numpy  as np
 
@@ -19,35 +14,7 @@ if __name__ == '__main__':
 
     description = \
     r"""
-    Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
-
-    feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...\n
-    feature_id_2 | ...
-
-    into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the 
-    i-th feature and j-th sample i.e. value_i_j at feature_id_i, sample_id_j.
-
-    Required Arguments
-    =======================
-        output_dir           : output directory
-        genome_sequence_path : path to compressed text file with sparse format
-
-    Optional Arguments
-    =======================
-        batch_size  = 512    : number of temporary txt files to generate over a single parse of the genome data
-        verbose     = 250000 : number of iterations before giving verbose update
-        n_processes = 'auto' : number of processes to run in parallel when compressing txt to npy files
-        sparse      = True   : output sparse npz files
-        dense       = True   : output dense npz files
-        debug       = -1     : integer denoting first number of features to consider (-1 results in all features)
-
-    Optional Flags
-    =======================
-        --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
-
-    Example Usage
-    =======================
-        python -m genolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
+    Generates an ordered list of features and meta information.
     """
 
     parser = ArgumentParser(description = description, formatter_class = RawTextHelpFormatter)

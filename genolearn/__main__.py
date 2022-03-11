@@ -1,6 +1,3 @@
-from re import M
-
-
 if __name__ == '__main__':
 
     from   genolearn.logger  import print_dict, msg
