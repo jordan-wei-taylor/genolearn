@@ -36,7 +36,7 @@ if __name__ == '__main__':
     if args.batch_size == -1:
         args.batch_size = np.inf
 
-    args.n_processes = cpu_count() if args.n_processes == 'auto' else int(args.n_processes)
+    args.n_processes = os.cpu_count() if args.n_processes == 'auto' else int(args.n_processes)
 
     gather_feature = lambda line : line[:line.index(' ')]
     gather_samples = lambda line : re.findall(r'[\w]+(?=:)', line)
