@@ -15,13 +15,16 @@ The ``genolearn`` package is a pipeline designed to enable researchers to use of
         <figure>
             <img src="../_static/overview-horizontal.png" width=45% />
             <br><br>
-            <figurecaption>Pipeline of genolearn</figurecaption>
+            <figurecaption>Figure 1. <i>End to end pipeline of genolearn.</i></figurecaption>
         </figure>
+        <br>
     </div>
 
 Our pipeline starts with the raw genome sequence data which assumes a certain data format (see :ref:`Preprocessing <Preprocessing>` for more details). Running the ``genolearn`` package directly on the raw genome sequence data generates a compressed converted data representation using ``numpy`` which results in ``.npz`` files.
 
 With the compressed converted files, there is an optional script to run which performs genome sequence selection which reduces the number of genome sequences to consider when performing later machine learning tasks. By reducing the space of genome sequences to consider, the model complexity, along with computational and memory demands are reduced.
+
+Next, we can use the ``DataLoader`` class to read in the meta data as well as the ``.npz`` files efficiently, optionally only filtering on genome sequences from the previous section, to then give to a off-the-shelf Machine Learning framework. For example, we can train a classifier which maps from some genome sequences input to meta data classification such as using :math:`k`-mer counts to predict strain location discussed in :ref:`Paper A <PaperA>`.
         
 
 Data
@@ -59,7 +62,7 @@ The preprocessing writes to a directory specified by the user. By default, the d
 + `feature-selection` folder is initially empty but can be populated using the later discussed `feature_selection.py` module
 + `features.txt` contains all the genome sequences seperated by a single empty space
 + `log.txt` contains the parameters used to generate the current folder, the timestamp of the execution, and the RAM usage
-+ `meta.json` contains the number of samples $n$, the number of genome sequences $m$ and the maximum value observed *max*
++ `meta.json` contains the number of samples :math:`n`, the number of genome sequences :math:`m` and the maximum value observed *max*
 
 The `dense` folder contains dense arrays and the `sparse` folder contains the same information but as sparse arrays. The `feature-selection` folder is initially empty and can be populated using the later discussed `feature_selection` module. `features.txt`  
 
