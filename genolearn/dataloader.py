@@ -37,15 +37,20 @@ class DataLoader():
 
         with open(os.path.join(path, 'meta.json')) as f:
             d = json.load(f)
+            self.n = d['n']
             self.m = d['m']
+            
+        self.c = len(set(df[target]))
 
-    def _check_path(self, identifier):
-        npz = os.path.join(self.path, identifier + '.npz')
+    def _check_path(self, identifier, sparse):
+        npz = os.path.join(self._sparse if sparse else self._dense, f'{identifier}.npz')
         if os.path.exists(npz):
             return npz
         # raise Exception(f'"{npz}" not a valid path!')
 
     def _check_meta(self, *identifiers, column = None):
+        if column is None:
+            column = self.target
         if self.meta is None:
             raise Exception('Meta data not loaded! Run the load_meta method first!')
         if column not in self.meta.columns:
@@ -59,12 +64,12 @@ class DataLoader():
     def _load_X(self, npz, features, sparse = None):
         if sparse is None:
             sparse = self.sparse
-        
+                
         try:
             if sparse:
-                arr = scipy.sparse.load_npz(os.path.join(self._sparse, f'{npz}.npz'))
+                arr  = scipy.sparse.load_npz(npz)
             else:
-                arr = np.load(os.path.join(self._dense, f'{npz}.npz')).reshape(-1, 1)
+                arr, = np.load(npz).values()
         except:
             raise Exception(f'"{os.path.join(self._sparse if sparse else self._dense)}" does not exist!')
 
@@ -78,17 +83,25 @@ class DataLoader():
         identifiers = self.meta.index[self.meta[column].isin(values)].values
         return identifiers
 
-    def load_X(self, *identifiers, features = None, column = None, sparse = None):
-        if column is None:
-            npzs = [self._check_path(identifier) for identifier in identifiers]
+    def load_X(self, *identifiers, features = None, sparse = None):
+        if f'{identifiers[0]}.npz' in os.listdir(self._sparse if sparse else self._dense):
+            npzs = [self._check_path(identifier, sparse) for identifier in identifiers]
             X    = [self._load_X(npz, features, sparse) for npz in npzs]
-            return scipy.sparse.vstack(X) if sparse else np.vstack(X)
+            return scipy.sparse.vstack(X) if sparse else np.array(X)
         else:
-            identifiers = self.get_identifiers(*identifiers, column = column)
+            identifiers = self.get_identifiers(*identifiers, column = self.group)
             return self.load_X(*identifiers)
 
-    def load_Y(self, *identifiers, column):
-        return self._check_meta(*identifiers, column)
+    def load_Y(self, *identifiers):
+        return self._check_meta(*identifiers)
 
-    def load(self, *identifiers, column):
-        return self.load_X(*identifiers, column), self.load_Y(*identifiers, column)
+    def load(self, *identifiers):
+        return self.load_X(*identifiers), self.load_Y(*identifiers)
+
+    def generator(self, *identifiers, features = None, sparse = None):
+        for identifier in identifiers:
+            if f'{identifier}.npz' in os.listdir(self._sparse if sparse else self._dense):
+                npz = self._check_path(identifier, sparse)
+                yield self._load_X(npz, features, sparse), self.load_Y(identifier)
+            elif identifier in self.meta[self.group].values:
+                yield from self.generator(*self.get_identifiers(identifier, column = self.group))
