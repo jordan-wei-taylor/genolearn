@@ -3,16 +3,33 @@
 Preprocessing
 ##########################
 
+.. raw:: html
+
+    <style>
+      .img-container {
+        text-align: center;
+      }
+    </style>
+    <div class="img-container">
+        <figure>
+            <img src="../_static/preprocessing-horizontal.png" width=45% />
+            <br><br>
+            <figurecaption>Figure 1. <i>Preprocessing pipeline.</i></figurecaption>
+        </figure>
+        <br>
+    </div>
 
 .. code-block:: text
 
-    >>> python -m biolearn --help
+    >>> python -m genolearn --help
 
-    usage: __main__.py [-h] [--groupby GROUPBY] input_file meta_path identifier output_directory target [target ...]
+    usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG]
+                   [--not_low_memory]
+                   output_dir genome_sequence_path
 
-        Processes a gunzip (gz) compressed text file of the following sparse format
+        Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
 
-        feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...
+        feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...\n
         feature_id_2 | ...
 
         into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the 
@@ -20,25 +37,37 @@ Preprocessing
 
         Required Arguments
         =======================
-            input_path         : path to compressed text file with sparse format
-            meta_path          : path to csv containing identifiers and meta information e.g. "Region" or "Year"
-            identifier         : name of column in meta csv containing all sample ids
-            output_directory   : directory to output all generated files
-            targets            : name of column(s) in meta csv containing desired target output(s)
-            groupby [optional] : name of column in meta csv to group outputs by (see example)
+            output_dir           : output directory
+            genome_sequence_path : path to compressed text file with sparse format
+
+        Optional Arguments
+        =======================
+            batch_size  = 512    : number of temporary txt files to generate over a single parse of the genome data
+            verbose     = 250000 : number of iterations before giving verbose update
+            n_processes = 'auto' : number of processes to run in parallel when compressing txt to npy files
+            sparse      = True   : output sparse npz files
+            dense       = True   : output dense npz files
+            debug       = -1     : integer denoting first number of features to consider (-1 results in all features)
+
+        Optional Flags
+        =======================
+            --not_low_memory     : if flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
 
         Example Usage
         =======================
-            >>> python -m biolearn raw-data/STEC_14-19_fsm_kmers.txt.gz raw-data/meta_data.csv Accession data Region --groupby Year 
+            python -m genolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
         
 
     positional arguments:
-    input_file
-    meta_path
-    identifier
-    output_directory
-    target
+    output_dir
+    genome_sequence_path
 
     optional arguments:
-    -h, --help         show this help message and exit
-    --groupby GROUPBY
+    -h, --help            show this help message and exit
+    -batch_size BATCH_SIZE
+    -verbose VERBOSE
+    -n_processes N_PROCESSES
+    -sparse SPARSE
+    -dense DENSE
+    -debug DEBUG
+    --not_low_memory

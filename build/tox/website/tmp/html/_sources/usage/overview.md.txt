@@ -30,7 +30,7 @@ Next, we can use the ``DataLoader`` class to read in the meta data as well as th
 Data
 ====
 
-To use GenoLearn once you have installed it, we require you to first preprocess your genome sequence files (such as an fsm-lite gun-zipped) into a more readable format. This requires executing the package on a .gz file specifying any options. The .gz file should be a text file with the following format:
+To use GenoLearn once you have installed it, we require you to first preprocess your genome sequence files (such as an fsm-lite gun-zipped) into a more readable format. This requires executing the package on a ``.gz`` file specifying any options. The ``.gz`` file should be a text file with the following format:
 
 .. code-block:: text
 
