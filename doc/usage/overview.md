@@ -57,14 +57,14 @@ The preprocessing writes to a directory specified by the user. By default, the d
     ├── log.txt
     └── meta.json
 
-+ `dense` folder contains dense arrays
-+ `sparse` folder contains sparse arrays
++ `dense` folder (optional) contains dense arrays
++ `sparse` folder  (optional) contains sparse arrays
 + `feature-selection` folder is initially empty but can be populated using the later discussed `feature_selection.py` module
 + `features.txt` contains all the genome sequences seperated by a single empty space
 + `log.txt` contains the parameters used to generate the current folder, the timestamp of the execution, and the RAM usage
 + `meta.json` contains the number of samples :math:`n`, the number of genome sequences :math:`m` and the maximum value observed *max*
 
-The `dense` folder contains dense arrays and the `sparse` folder contains the same information but as sparse arrays. The `feature-selection` folder is initially empty and can be populated using the later discussed `feature_selection` module. `features.txt`  
+The `dense` folder contains dense arrays and the `sparse` folder contains the same information but as sparse arrays. The `feature-selection` folder is initially empty and can be populated using the later discussed `feature_selection` module. The user has the option to produce either the `dense`, `sparse`, or both outputs. The later discussed ``DataLoader`` requires only one data format.
 
 On our **\<NAME OF DATASET WE USE>** dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.
 
@@ -73,7 +73,7 @@ See :ref:`Preprocessing <Preprocessing>` for more details.
 Data Loader
 ===========
 
-A ``DataLoader`` class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
+A ``DataLoader`` class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense data which the earlier Preprocessing step can output.
 
 See :ref:`Data Loader <DataLoader>` for more details.
 

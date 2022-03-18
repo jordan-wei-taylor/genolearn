@@ -32,6 +32,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -172,28 +174,23 @@
             
   <div class="section" id="feature-selection">
 <span id="featureselection"></span><h1>Feature Selection<a class="headerlink" href="#feature-selection" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m fisher --help
-
-usage: fisher.py [-h] input_path
-
-    Computes the fisher score as defined in the thread &lt;website&gt;.
-
-    Required Arguments
-    =======================
-        input_path         : path to preprocessed directory
-
-    Example Usage
-    =======================
-        &gt;&gt;&gt; python -m biolearn.fisher data
-
-
-positional arguments:
-input_path
-
-optional arguments:
--h, --help         show this help message and exit
-</pre></div>
-</div>
+<p>As the number of genome sequences is typically very large, it is a common challenge to load the data in its entirety, a bigger problem to perform analysis on. As a means of reducing the space of genome sequences to consider we offer the user a means of genome sequence selection prior to any further analysis.</p>
+<p>We offer the user, by default, a means of performing feature selection by using the Fisher Score for each genome sequence. It is defined by</p>
+<div class="math notranslate nohighlight" id="equation-fisher">
+\begin{equation}
+    S_j = \frac{\sum_{c = 1}^C n_c (\mu_{jc} - \mu_j)^2}{\sum_{c = 1}^C n_c \sigma_{jc}^2}
+\end{equation}</div><p>where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(S_j\)</span> is the score for the <span class="math notranslate nohighlight">\(j\)</span>-th genome sequence</p></li>
+<li><p><span class="math notranslate nohighlight">\(C\)</span> is the number of classes (labels)</p></li>
+<li><p><span class="math notranslate nohighlight">\(n_c\)</span> is the number of instances in the <span class="math notranslate nohighlight">\(c\)</span>-th class</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_{jc}\)</span> is the mean of the <span class="math notranslate nohighlight">\(j\)</span>-th sequence values within the <span class="math notranslate nohighlight">\(c\)</span>-th class</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_{j}\)</span> is the mean of the <span class="math notranslate nohighlight">\(j\)</span>-th sequence values</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_{jc}^2\)</span> is the variance of the <span class="math notranslate nohighlight">\(j\)</span>-th sequence values within the <span class="math notranslate nohighlight">\(c\)</span>-th class</p></li>
+</ul>
+</div></blockquote>
+<p>The intuition behind the use of Eq. <a class="reference internal" href="#equation-fisher">(1)</a> is to quantify the the ratio between the weighted differences in intra class mean values to the global mean <span class="math notranslate nohighlight">\(n_c(\mu_{jc} - \mu_j)^2\)</span> and the weighted variances <span class="math notranslate nohighlight">\(n_c \sigma_{jc}^2\)</span>. That is, if a feature has very different locations for each class, it would have a high Fisher Score. In contrast, if the feature had similar values irrespective of class label, it would have a lower Fisher Score.</p>
 </div>
 
 

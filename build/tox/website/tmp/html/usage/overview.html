@@ -215,14 +215,14 @@ feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>dense</cite> folder contains dense arrays</p></li>
-<li><p><cite>sparse</cite> folder contains sparse arrays</p></li>
+<li><p><cite>dense</cite> folder (optional) contains dense arrays</p></li>
+<li><p><cite>sparse</cite> folder  (optional) contains sparse arrays</p></li>
 <li><p><cite>feature-selection</cite> folder is initially empty but can be populated using the later discussed <cite>feature_selection.py</cite> module</p></li>
 <li><p><cite>features.txt</cite> contains all the genome sequences seperated by a single empty space</p></li>
 <li><p><cite>log.txt</cite> contains the parameters used to generate the current folder, the timestamp of the execution, and the RAM usage</p></li>
 <li><p><cite>meta.json</cite> contains the number of samples <span class="math notranslate nohighlight">\(n\)</span>, the number of genome sequences <span class="math notranslate nohighlight">\(m\)</span> and the maximum value observed <em>max</em></p></li>
 </ul>
-<p>The <cite>dense</cite> folder contains dense arrays and the <cite>sparse</cite> folder contains the same information but as sparse arrays. The <cite>feature-selection</cite> folder is initially empty and can be populated using the later discussed <cite>feature_selection</cite> module. <cite>features.txt</cite></p>
+<p>The <cite>dense</cite> folder contains dense arrays and the <cite>sparse</cite> folder contains the same information but as sparse arrays. The <cite>feature-selection</cite> folder is initially empty and can be populated using the later discussed <cite>feature_selection</cite> module. The user has the option to produce either the <cite>dense</cite>, <cite>sparse</cite>, or both outputs. The later discussed <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> requires only one data format.</p>
 <p>On our <strong>&lt;NAME OF DATASET WE USE&gt;</strong> dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.</p>
 <p>See <a class="reference internal" href="preprocessing.html#preprocessing"><span class="std std-ref">Preprocessing</span></a> for more details.</p>
 </div>
