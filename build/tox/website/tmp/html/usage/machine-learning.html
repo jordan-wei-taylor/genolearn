@@ -171,19 +171,20 @@
            <div itemprop="articleBody">
             
   <div class="section" id="machine-learning">
-<h1>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import function to get various models</span>
-<span class="kn">from</span> <span class="nn">biolearn.models</span>  <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">save_model</span>
-<span class="kn">from</span> <span class="nn">biolearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span id="machinelearning"></span><h1>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">genolearn.models.classification</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">genolearn.metrics</span>               <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">genolearn.models</span>                <span class="kn">import</span> <span class="n">save_model</span><span class="p">,</span> <span class="n">feature_importance</span>
+<span class="kn">from</span> <span class="nn">genolearn</span>                       <span class="kn">import</span> <span class="n">DataLoader</span>
 
-<span class="c1"># execute function to see list of models accepted</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">get_model</span><span class="p">())</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">meta_path</span> <span class="o">=</span> <span class="s1">&#39;meta.csv&#39;</span><span class="p">,</span> <span class="n">identifier</span> <span class="o">=</span> <span class="s1">&#39;identifier&#39;</span><span class="p">,</span> <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;target&#39;</span><span class="p">)</span>
 
-<span class="c1"># get a particular model class</span>
-<span class="n">Model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="s1">&#39;random-forest&#39;</span><span class="p">)</span>
+<span class="c1"># train on 2014-2020 and test on 2021</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">2021</span><span class="p">))</span>
+<span class="n">X_test</span> <span class="p">,</span> <span class="n">Y_test</span>  <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="mi">2021</span><span class="p">)</span>
 
 <span class="c1"># create an instance of a model with particular parameters from the above class</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
 
 <span class="c1"># assuming we have already defined the training data (X_train, Y_train) and testing data (X_test, Y_test)</span>
 <span class="c1"># fit the model to the training data</span>
@@ -193,10 +194,13 @@
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
 <span class="c1"># save model</span>
-<span class="n">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;random-forest&#39;</span><span class="p">)</span>
+<span class="n">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;random-forest-v1&#39;</span><span class="p">)</span>
 
 <span class="c1"># show a confusion matrix</span>
 <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+
+<span class="c1"># get the feature importances the model has learnt</span>
+<span class="n">feature_importance</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

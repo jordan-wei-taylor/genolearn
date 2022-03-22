@@ -1,12 +1,13 @@
 if __name__ == '__main__':
 
     from   genolearn.logger  import print_dict, msg
-    from   genolearn         import DataLoader, utils
+    from   genolearn         import DataLoader, utils, _data
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
 
     import numpy  as np
 
+    import shutil
     import json
     import gzip
     import re
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     _data.set_output_dir(args.output_dir)
     
     if os.path.exists(args.output_dir):
-        rmtree(args.output_dir)
+        shutil.rmtree(args.output_dir)
 
     os.makedirs(f'{args.output_dir}/temp', exist_ok = True)
     os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)

@@ -1,3 +1,5 @@
+.. _FeatureImportance:
+
 Feature Importance
 ##########################
 
