@@ -131,6 +131,11 @@ class Computing(Waiting):
     def __init__(self, file = None, inline = False, delete = 0):
        super().__init__('computing', 'computed', file = file, inline = inline, delete = delete)
 
+class Writing(Waiting):
+
+    def __init__(self, file = None, inline = False, delete = 0):
+       super().__init__('writing', 'written', file = file, inline = inline, delete = delete)
+
 class Counter():
 
     def __init__(self, message, verbose = 0, display = True):

@@ -1,3 +1,4 @@
+from tkinter import Y
 import scipy.sparse
 
 import numpy  as np
@@ -64,17 +65,18 @@ class DataLoader():
         # raise Exception(f'"{npz}" not a valid path!')
 
     def _check_meta(self, *identifiers, column = None):
+        identifiers = [str(identifier) for identifier in identifiers]
         if column is None:
-            column = self.target
+            column = self.group
         if self.meta is None:
             raise Exception('Meta data not loaded! Run the load_meta method first!')
-        if column not in self.meta.columns:
+        if column and column not in self.meta.columns:
             raise Exception(f'"{column}" not a valid column in self.meta!')
         if identifiers and self.meta.index.isin(identifiers).any():
-            return self.meta.loc[identifiers, column]
-        if identifiers and self.meta[column].isin(identifiers).any():
-            return self.meta.loc[self.meta[column].isin(identifiers),column]
-        return Exception()
+            return self.meta.loc[identifiers, self.target]
+        if identifiers and column and self.meta[column].isin(identifiers).any():
+            return self.meta.loc[self.meta[column].isin(identifiers),self.target]
+        raise Exception()
         
     def _load_X(self, npz, features, sparse = None):
         if sparse is None:
@@ -89,11 +91,15 @@ class DataLoader():
             raise Exception(f'"{os.path.join(self._sparse if sparse else self._dense)}" does not exist!')
 
         if features is not None:
-            arr = arr[:,features]
+            if sparse:
+                arr = arr[:,features]
+            else:
+                arr = arr[features]
 
         return arr
 
     def get_identifiers(self, *values, column):
+        values = [str(value) for value in values]
         self._check_meta(*values, column = column)            
         identifiers = self.meta.index[self.meta[column].isin(values)].values
         return identifiers
@@ -107,7 +113,7 @@ class DataLoader():
             return scipy.sparse.vstack(X) if sparse else np.array(X)
         else:
             identifiers = self.get_identifiers(*identifiers, column = self.group)
-            return self.load_X(*identifiers)
+            return self.load_X(*identifiers, features = features, sparse = sparse)
 
     def load_Y(self, *identifiers):
         return self._check_meta(*identifiers)
@@ -115,6 +121,36 @@ class DataLoader():
     def load(self, *identifiers, features = None, sparse = None):
         return self.load_X(*identifiers, features = features, sparse = sparse), self.load_Y(*identifiers)
 
+    def load_train_test(self, train_identifiers, test_identifiers, features = None, sparse = None, min_count = 0):
+        
+        identifiers       = []
+
+        X_train, y_train  = self.load(*train_identifiers, features = features, sparse = sparse)
+
+        train_counts      = pd.get_dummies(y_train).sum()
+
+        train_labels      = train_counts.index[train_counts.values >= min_count]
+
+        encoding          = {label : i for i, label in enumerate(train_labels)}
+
+        train_mask        = y_train.isin(train_labels)
+
+        Y_train           = np.array([encoding[y] for y in y_train[train_mask].values])
+
+        identifiers.append(np.array(self._identifiers)[train_mask])
+
+        X_test , y_test   = self.load(*test_identifiers , features = features, sparse = sparse)
+
+        test_mask         = y_test.isin(train_labels)
+
+        Y_test            = np.array([encoding[y] for y in y_test[test_mask].values])
+
+        identifiers.append(np.array(self._identifiers)[test_mask])
+
+        self._identifiers = identifiers
+
+        return X_train[train_mask], Y_train, X_test[test_mask], Y_test
+    
     def generator(self, *identifiers, features = None, sparse = None, force_dense = False, force_sparse = False):
         for identifier in identifiers:
             if f'{identifier}.npz' in os.listdir(self._sparse if sparse else self._dense):

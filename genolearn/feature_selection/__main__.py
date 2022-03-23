@@ -1,16 +1,11 @@
 if __name__ == '__main__':
 
-    from   genolearn.logger  import print_dict, msg
-    from   genolearn         import DataLoader, utils, _data
+    from   genolearn.logger  import print_dict, msg, Writing
+    from   genolearn         import DataLoader, utils
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
 
     import numpy  as np
-
-    import shutil
-    import json
-    import gzip
-    import re
     import os
 
     description = \
@@ -58,6 +53,11 @@ if __name__ == '__main__':
 
             scores       = _feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse)
 
-    np.savez_compressed(f'{args.path}/feature-selection/{args.output}', **scores)
+
+    save_path = f'{args.path}/feature-selection/{args.output}'
+    with Writing(save_path, inline = True):
+        np.savez_compressed(save_path, **scores)
+
+    utils.create_log(f'{args.path}/feature-selection', f'log-{args.method}.txt')
 
     msg('executed "genolearn.feature_selection"')
