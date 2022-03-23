@@ -20,167 +20,44 @@ if __name__ == '__main__':
 
     parser = ArgumentParser(description = description, formatter_class = RawTextHelpFormatter)
 
-    parser.add_argument('output_dir')
-    parser.add_argument('genome_sequence_path')
-    parser.add_argument('-batch_size', type = int, default = 512)
-    parser.add_argument('-verbose', type = int, default = 250000)
-    parser.add_argument('-n_processes', default = 'auto')
-    parser.add_argument('-sparse', default = True, type = bool)
-    parser.add_argument('-dense', default = True, type = bool)
-    parser.add_argument('-debug', default = -1, type = int)
-    parser.add_argument('--not_low_memory', default = False, action = 'store_true')
+    parser.add_argument('output')
+    parser.add_argument('path')
+    parser.add_argument('meta_path')
+    parser.add_argument('identifier')
+    parser.add_argument('target')
+    parser.add_argument('values', nargs = '+')
+    parser.add_argument('-group', default = None)
+    parser.add_argument('-method', default = 'fisher')
+    parser.add_argument('--sparse', default = False, action = 'store_true')
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
-    print_dict('executing "genolearn" with parameters:', params)
+    print_dict('executing "genolearn.feature_selection" with parameters:', params)
 
-    if args.batch_size == -1:
-        args.batch_size = np.inf
+    dataloader = DataLoader(args.path, args.meta_path, args.identifier, args.target, args.group, args.sparse)
 
-    args.n_processes = os.cpu_count() if args.n_processes == 'auto' else int(args.n_processes)
+    if args.method == 'fisher':
+        from genolearn.feature_selection.fisher import fisher_score
 
-    gather_feature = lambda line : line[:line.index(' ')]
-    gather_samples = lambda line : re.findall(r'[\w]+(?=:)', line)
-    gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
-
-    _data.set_memory(args.not_low_memory)
-    _data.set_output_dir(args.output_dir)
+        scores = fisher_score(dataloader, args.values)
     
-    if os.path.exists(args.output_dir):
-        shutil.rmtree(args.output_dir)
+    else:
+        if f'{args.method}.py' in os.listdir():
+            from   genolearn.feature_selection.base import _feature_selection
+            import importlib
 
-    os.makedirs(f'{args.output_dir}/temp', exist_ok = True)
-    os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)
+            module       = importlib.import_module(args.method)
 
-    first_run  = True
-    features   = []
-    exceptions = set()
-    C          = 0
-    hi         = 0
-    unique     = set()
+            variables    = dir(module)
 
-    with gzip.GzipFile(args.genome_sequence_path) as gz:
-        
-        files = {}
-        _data.set_files(files)
-
-        while True:
-            
-            gz.seek(0)
-
-            skip    = False
-            skipped = False
-            c       = 0
-            
-            for m, line in enumerate(gz, 1):
-
-                line   = line.decode()
-
-                srrs   = gather_samples(line)
-                counts = gather_counts(line)
-
-                if first_run:
-                    features.append(gather_feature(line))
-                    hi      = max(hi, *map(int, counts))
-                    unique |= set(srrs)
-
-                for SRR, count in zip(srrs, counts):
-                    if SRR not in exceptions:
-                        if SRR not in files:
-                            if skip: 
-                                skipped = True
-                                continue
-                            files[SRR] = _data.init(SRR)
-                            c         += 1
-                            C         += 1
-                            skip = c == args.batch_size
-                        _data.add(files[SRR], m - 1, count)
-
-                if m % args.verbose == 0:
-                    msg(f'{C:10,d} {m:10,d}')
+            for name in ['init', 'inner_loop', 'outer_loop']:
+                assert name in variables
                 
-                if m == args.debug:
-                    break
-            
-            if m % args.verbose:
-                msg(f'{C:10,d} {m:10,d}')
+            force_sparse = module.force_sparse if 'force_sparse' in variables else False
+            force_dense  = module.force_sparse if 'force_dense'  in variables else False
 
-            if not args.not_low_memory:
-                for f in files.values():
-                    f.close()
+            scores       = _feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse)
 
-            if first_run:
-                first_run = False
+    np.savez_compressed(f'{args.path}/feature-selection/{args.output}', **scores)
 
-                n         = len(unique)
-                d_dtype   = utils.get_dtype(hi)
-                c_dtype   = utils.get_dtype(m)
-                r_dtype   = utils.get_dtype(n)
-
-                utils.set_m(m)
-                
-                f = _data.init_write('features', None, 'txt', args.output_dir)
-                f.write(' '.join(features))
-                f.close()
-                features.clear()
-
-                f = _data.init_write('meta', None, 'json', args.output_dir)
-                json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
-                f.close()
-                
-                def to_sparse(npz, c, d):
-                    np.savez_compressed(os.path.join(args.output_dir, 'sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
-
-                def to_dense(npz, c, d):
-                    arr = np.zeros(m, dtype = d.dtype)
-                    arr[c] = d
-                    np.savez_compressed(os.path.join(args.output_dir, 'dense', npz), arr = arr)
-                
-                def convert_write(file):
-                    txt  = os.path.join(args.output_dir, 'temp', f'{file}.txt')
-                    npz  = f'{file}.npz'
-                    c, d = np.loadtxt(txt, dtype = c_dtype).T
-
-                    for function in functions:
-                        function(npz, c, d)
-
-                    os.remove(txt)
-
-                def convert_dict(file):
-                    npz  = f'{file}.npz'
-                    c, d = map(np.array, map(list, zip(*files[file].items())))
-
-                    for function in functions:
-                        function(npz, c, d)
-
-                convert = convert_dict if args.not_low_memory else convert_write
-
-                functions = []
-                if args.sparse:
-                    functions.append(to_sparse)
-                    os.makedirs(f'{args.output_dir}/sparse')
-
-                if args.dense:
-                    functions.append(to_dense)
-                    os.makedirs(f'{args.output_dir}/dense')
-
-                _data.set_functions(functions)
-            
-            with Pool(args.n_processes) as pool:
-                pool.map(convert, list(files))
-
-            if not skipped:
-                break
-
-            exceptions |= set(files)
-
-            if len(files) < args.batch_size:
-                break
-
-            files.clear()
-
-        os.rmdir(os.path.join(args.output_dir, 'temp'))
-
-        utils.create_log(args.output_dir)
-    
-    msg('executed "genolearn"')
+    msg('executed "genolearn.feature_selection"')
