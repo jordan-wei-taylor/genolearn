@@ -1,4 +1,3 @@
-from tkinter import Y
 import scipy.sparse
 
 import numpy  as np
@@ -116,7 +115,8 @@ class DataLoader():
             return self.load_X(*identifiers, features = features, sparse = sparse)
 
     def load_Y(self, *identifiers):
-        return self._check_meta(*identifiers)
+        Y = self._check_meta(*identifiers)
+        return np.array(Y).flatten()[0] if len(Y) == 1 else Y
 
     def load(self, *identifiers, features = None, sparse = None):
         return self.load_X(*identifiers, features = features, sparse = sparse), self.load_Y(*identifiers)
