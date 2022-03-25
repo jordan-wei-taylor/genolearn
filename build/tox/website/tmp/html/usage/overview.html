@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Preprocessing" href="preprocessing.html" />
+    <link rel="next" title="Preprocessing" href="preprocessing/index.html" />
     <link rel="prev" title="Installation via conda" href="../installation/conda.html" /> 
 </head>
 
@@ -97,11 +97,12 @@
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataloader.html">Data Loader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="feature-selection.html">Feature Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="machine-learning.html">Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="feature-importance.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-loader/index.html">Data Loader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature-selection/index.html">Feature Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature-importance/index.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models/index.html">Machine Learning</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Demos</span></p>
 <ul>
@@ -206,17 +207,17 @@ feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
 </ul>
 <p>The <cite>dense</cite> folder contains dense arrays and the <cite>sparse</cite> folder contains the same information but as sparse arrays. The <cite>feature-selection</cite> folder is initially empty and can be populated using the later discussed <cite>feature_selection</cite> module. <cite>features.txt</cite></p>
 <p>On our <strong>&lt;NAME OF DATASET WE USE&gt;</strong> dataset, this meant reducing data reading time from hours, in the case of the raw fsm-lite file, to minutes,  in the case of our preprocessed directory.</p>
-<p>See <a class="reference internal" href="preprocessing.html#preprocessing"><span class="std std-ref">Preprocessing</span></a> for more details.</p>
+<p>See <a class="reference internal" href="preprocessing/index.html#preprocessing"><span class="std std-ref">Preprocessing</span></a> for more details.</p>
 </div>
-<div class="section" id="dataloader">
-<h2>DataLoader<a class="headerlink" href="#dataloader" title="Permalink to this headline">¶</a></h2>
-<p>A DataLoader class can be found in <code class="docutils literal notranslate"><span class="pre">genolearn.dataloader</span></code>. This expects a path to the previous step’s preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.</p>
-<p>See <a class="reference internal" href="dataloader.html#dataloader"><span class="std std-ref">Data Loader</span></a> for more details.</p>
+<div class="section" id="data-loader">
+<h2>Data Loader<a class="headerlink" href="#data-loader" title="Permalink to this headline">¶</a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> class can be found in <code class="docutils literal notranslate"><span class="pre">genolearn.dataloader</span></code>. This expects a path to the previous step’s preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.</p>
+<p>See <a class="reference internal" href="data-loader/index.html#dataloader"><span class="std std-ref">Data Loader</span></a> for more details.</p>
 </div>
 <div class="section" id="feature-selection">
 <h2>Feature Selection<a class="headerlink" href="#feature-selection" title="Permalink to this headline">¶</a></h2>
 <p>As the number of genome sequences tends to be large, we need to perform feature selection to then constrain our later Machine Learning models’ complexity. This optional step is to remove features with high measures of similarity.</p>
-<p>See <a class="reference internal" href="feature-selection.html#featureselection"><span class="std std-ref">Feature Selection</span></a> for more details.</p>
+<p>See <a class="reference internal" href="feature-selection/index.html#featureselection"><span class="std std-ref">Feature Selection</span></a> for more details.</p>
 </div>
 <div class="section" id="machine-learning">
 <h2>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this headline">¶</a></h2>
@@ -236,7 +237,7 @@ feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="preprocessing.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="preprocessing/index.html" class="btn btn-neutral float-right" title="Preprocessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../installation/conda.html" class="btn btn-neutral float-left" title="Installation via conda" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -1,6 +1,31 @@
 Overview
 ########
 
+The ``genolearn`` package is a pipeline designed to enable researchers to use off-the-shelf machine learning toolkits on genome sequence data in Python3. Additionally, ``genolearn`` is a loose wrapper around the popular machine learning toolkit ``sklearn`` where the machine learning models are accessible via ``genolearn.models`` (see :ref:`Machine Learning <MachineLearning>` for more details.).
+
+
+.. raw:: html
+
+    <style>
+      .img-container {
+        text-align: center;
+      }
+    </style>
+    <div class="img-container">
+        <figure>
+            <img src="../_static/overview-horizontal.png" width=45% />
+            <br><br>
+            <figurecaption>Figure 1. <i>End to end pipeline of genolearn.</i></figurecaption>
+        </figure>
+        <br>
+    </div>
+
+Our pipeline starts with the raw genome sequence data which assumes a certain data format (see :ref:`Preprocessing <Preprocessing>` for more details). Running the ``genolearn`` package directly on the raw genome sequence data generates a compressed converted data representation using ``numpy`` which results in ``.npz`` files.
+
+With the compressed converted files, there is an optional script to run which performs genome sequence selection which reduces the number of genome sequences to consider when performing later machine learning tasks. By reducing the space of genome sequences to consider, the model complexity, along with computational and memory demands are reduced.
+
+Next, we can use the ``DataLoader`` class to read in the meta data as well as the ``.npz`` files efficiently, optionally only filtering on genome sequences from the previous section, to then give to a off-the-shelf Machine Learning framework. For example, we can train a classifier which maps from some genome sequences input to meta data classification such as using :math:`k`-mer counts to predict strain location discussed in :ref:`Paper A <PaperA>`.
+
 Data
 ====
 
@@ -45,7 +70,7 @@ On our **\<NAME OF DATASET WE USE>** dataset, this meant reducing data reading t
 See :ref:`Preprocessing <Preprocessing>` for more details.
 
 Data Loader
-==========
+===========
 
 A ``DataLoader`` class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
 
@@ -62,10 +87,9 @@ See :ref:`Feature Selection <FeatureSelection>` for more details.
 Machine Learning
 ================
 
-Within ``biolearn.models``, there are machine learning models from the popular library ``sklearn`` and a few useful functions to save / load models.
+Within ``genolearn.models``, there are machine learning models from the popular library ``sklearn`` and a few useful functions to save / load models.
 
 Feature Importance
 ==================
 
-After fitting a model, the user may wish to identify which were the most importance features in their dataset. With ``biolearn.feature_importance``, the user can simply call this function on a fitted model and analyse the feature importance based on the particlar model. For example, Logistic Regression will return a set of coefficients for each feature corresponding to the contribution to each class label.
-
+After fitting a model, the user may wish to identify which were the most importance features in their dataset. With ``genolearn.feature_importance``, the user can simply call this function on a fitted model and analyse the feature importance based on the particlar model. For example, Logistic Regression will return a set of coefficients for each feature corresponding to the contribution to each class label.

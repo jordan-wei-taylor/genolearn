@@ -121,36 +121,40 @@ class DataLoader():
     def load(self, *identifiers, features = None, sparse = None):
         return self.load_X(*identifiers, features = features, sparse = sparse), self.load_Y(*identifiers)
 
+    def load_train_test_identifiers(self, train_identifiers, test_identifiers, min_count = 0):
+
+        y_train           = self.load_Y(*train_identifiers)
+        y_test            = self.load_Y(*test_identifiers)
+
+
+        dummy             = pd.get_dummies(y_train)
+        label_counts      = dummy.sum()
+        labels            = label_counts.index[label_counts >= min_count]
+
+        self._encoder     = {label : i for i, label in enumerate(labels)}
+
+        train_mask        = y_train.isin(self._encoder)
+        test_mask         = y_test.isin(self._encoder)
+
+        train_identifiers = train_mask.index[train_mask]
+        test_identifiers  = test_mask.index[test_mask]
+
+        return train_identifiers, test_identifiers
+    
     def load_train_test(self, train_identifiers, test_identifiers, features = None, sparse = None, min_count = 0):
         
-        identifiers       = []
+        identifiers       = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count)
 
-        X_train, y_train  = self.load(*train_identifiers, features = features, sparse = sparse)
+        Y_train           = self.load_Y(*identifiers[0]).apply(lambda target : self._encoder[target]).values
+        Y_test            = self.load_Y(*identifiers[1]).apply(lambda target : self._encoder[target]).values
 
-        train_counts      = pd.get_dummies(y_train).sum()
+        X_train           = self.load_X(*train_identifiers, features = features, sparse = sparse)
+        X_test            = self.load_X(*test_identifiers , features = features, sparse = sparse)
 
-        train_labels      = train_counts.index[train_counts.values >= min_count]
+        self._identifiers = train_identifiers, test_identifiers
 
-        encoding          = {label : i for i, label in enumerate(train_labels)}
+        return X_train, Y_train, X_test, Y_test
 
-        train_mask        = y_train.isin(train_labels)
-
-        Y_train           = np.array([encoding[y] for y in y_train[train_mask].values])
-
-        identifiers.append(np.array(self._identifiers)[train_mask])
-
-        X_test , y_test   = self.load(*test_identifiers , features = features, sparse = sparse)
-
-        test_mask         = y_test.isin(train_labels)
-
-        Y_test            = np.array([encoding[y] for y in y_test[test_mask].values])
-
-        identifiers.append(np.array(self._identifiers)[test_mask])
-
-        self._identifiers = identifiers
-
-        return X_train[train_mask], Y_train, X_test[test_mask], Y_test
-    
     def generator(self, *identifiers, features = None, sparse = None, force_dense = False, force_sparse = False):
         for identifier in identifiers:
             if f'{identifier}.npz' in os.listdir(self._sparse if sparse else self._dense):
@@ -173,6 +177,14 @@ class DataLoader():
     @property
     def features(self):
         return self._features
+
+    @property
+    def encoder(self):
+        return self._encoder
+
+    @property
+    def decoder(self):
+        return {value : key for key, value in self.encoder.items()}
 
     def load_feature_selection(self, file):
         npz = np.load(os.path.join(self.path, 'feature-selection', file), allow_pickle = True)

@@ -44,10 +44,10 @@ On our **\<NAME OF DATASET WE USE>** dataset, this meant reducing data reading t
 
 See :ref:`Preprocessing <Preprocessing>` for more details.
 
-DataLoader
-==========
+Data Loader
+===========
 
-A DataLoader class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
+A ``DataLoader`` class can be found in ``genolearn.dataloader``. This expects a path to the previous step's preprocessed directory. The DataLoader class supports returning a dense or sparse matrix for the observations. Later Machine Learning models supports both sparse and dense matrices.
 
 See :ref:`Data Loader <DataLoader>` for more details.
 
@@ -68,4 +68,3 @@ Feature Importance
 ==================
 
 After fitting a model, the user may wish to identify which were the most importance features in their dataset. With ``biolearn.feature_importance``, the user can simply call this function on a fitted model and analyse the feature importance based on the particlar model. For example, Logistic Regression will return a set of coefficients for each feature corresponding to the contribution to each class label.
-

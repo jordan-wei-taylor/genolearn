@@ -8,8 +8,6 @@ root = path.realpath(path.join(path.dirname(__file__), '../'))
 sys.path.insert(0, root)
 sys.path.insert(0, '_static/python')
 
-print(sys.path)
-
 import sphinx_rtd_theme
 import sphinxcontrib.video
 
