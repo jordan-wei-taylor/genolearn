@@ -2,16 +2,12 @@ import sys
 import os
 import shlex
 import datetime
-from os import path
+from os.path import abspath
 
-root = path.realpath(path.join(path.dirname(__file__), '../'))
-sys.path.insert(0, root)
-sys.path.insert(0, '_static/python')
+sys.path.insert(0, abspath("sphinxext"))
+sys.path.insert(0, abspath(".."))
 
-import sphinx_rtd_theme
-import sphinxcontrib.video
-
-octest_path = [root]
+numpydoc_show_class_members = False 
 doctest_global_setup = "import pluginmanager"
 autodoc_default_flags = ['members']
 autosummary_generate = True
@@ -30,21 +26,21 @@ autosummary_generate = True
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinxcontrib.video',
     'sphinx.ext.doctest',
     'sphinx.ext.viewcode',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx_rtd_theme',
     'sphinx.ext.mathjax',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'numpydoc'
 ]
 
 
 autosectionlabel_prefix_document = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:

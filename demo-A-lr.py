@@ -1,9 +1,12 @@
-from   genolearn import DataLoader, utils
+from   genolearn.utils import create_log
+from   genolearn.dataloader import DataLoader
 from   genolearn.models.classification import LogisticRegression
 from   genolearn.logger import msg
 
 import numpy as np
 import os
+
+os.environ['PYTHONWARNINGS'] = 'ignore'
 
 msg('executing demo-A-lr.py')
 
@@ -36,13 +39,13 @@ for year in reversed(range(2014, 2019)):
 
         for c in C:
             
-            msg(f'{year} {k:7d} {c:2d}')
+            msg(f'{year} {k:7d} {c:.1e}')
             predictions_seed = []
 
             for seed in range(10):
                 model = LogisticRegression(C = c, random_state = seed, **kwargs)
                 model.fit(X_train[:,:k], Y_train)
-                predictions_seed.append(model.predict(X_test))
+                predictions_seed.append(dataloader.decode(model.predict(X_test[:,:k])))
 
             predictions_depth.append(predictions_seed)
 
@@ -59,6 +62,6 @@ os.makedirs(outdir, exist_ok = True)
 
 np.savez_compressed(f'{outdir}/logistic-regression.npz', predictions = predictions, K = K, C = C)
 
-utils.create_log(outdir, 'demo-A-lr.txt')
+create_log(outdir, 'demo-A-lr.txt')
 
 msg('executed demo-A-lr.py')

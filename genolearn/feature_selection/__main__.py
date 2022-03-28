@@ -32,13 +32,13 @@ if __name__ == '__main__':
     dataloader = DataLoader(args.path, args.meta_path, args.identifier, args.target, args.group, args.sparse)
 
     if args.method == 'fisher':
-        from genolearn.feature_selection.fisher import fisher_score
+        from genolearn.feature_selection import fisher_score
 
         scores = fisher_score(dataloader, args.values)
     
     else:
         if f'{args.method}.py' in os.listdir():
-            from   genolearn.feature_selection.base import _feature_selection
+            from   genolearn.feature_selection import base_feature_selection
             import importlib
 
             module       = importlib.import_module(args.method)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
             force_sparse = module.force_sparse if 'force_sparse' in variables else False
             force_dense  = module.force_sparse if 'force_dense'  in variables else False
 
-            scores       = _feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse)
+            scores       = base_feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse)
 
 
     save_path = f'{args.path}/feature-selection/{args.output}'

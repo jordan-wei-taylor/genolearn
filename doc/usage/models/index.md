@@ -1,4 +1,6 @@
-Machine Learning
+.. _Models:
+
+Models
 ##########################
 
 .. code-block:: python

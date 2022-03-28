@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Machine Learning &mdash; GenoLearn  documentation</title>
+  <title>Models &mdash; GenoLearn  documentation</title>
   
 
   
@@ -39,8 +39,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Paper A" href="../../demos/paper-a.html" />
-    <link rel="prev" title="Metrics" href="../metrics.html" /> 
+    <link rel="next" title="Feature Importance" href="../feature-importance/index.html" />
+    <link rel="prev" title="Feature Selection" href="../feature-selection/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,12 +97,26 @@
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocessing/index.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data-loader/index.html">Data Loader</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../feature-selection/index.html">Feature Selection</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../feature-importance/index.html">Feature Importance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../metrics.html">Metrics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Machine Learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/metrics.html">metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/models.html">models</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Demos</span></p>
 <ul>
@@ -154,7 +168,7 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Machine Learning</li>
+      <li>Models</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -171,8 +185,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="machine-learning">
-<h1>Machine Learning<a class="headerlink" href="#machine-learning" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="models">
+<span id="id1"></span><h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import function to get various models</span>
 <span class="kn">from</span> <span class="nn">biolearn.models</span>  <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">save_model</span>
 <span class="kn">from</span> <span class="nn">biolearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
@@ -210,10 +224,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../demos/paper-a.html" class="btn btn-neutral float-right" title="Paper A" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../feature-importance/index.html" class="btn btn-neutral float-right" title="Feature Importance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../metrics.html" class="btn btn-neutral float-left" title="Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../feature-selection/index.html" class="btn btn-neutral float-left" title="Feature Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

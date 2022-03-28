@@ -1,3 +1,5 @@
+from   genolearn._base import Dict
+
 import scipy.sparse
 
 import numpy  as np
@@ -6,58 +8,69 @@ import pandas as pd
 import json
 import os
 
-class Dict(dict):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def rank(self, ascending = False):
-        ret = {}
-        for key in self:
-            rank     = self[key].argsort(axis = -1)
-            ret[key] = rank if ascending else rank[::-1]
-        return ret
-
 class DataLoader():
+    """
+    DataLoader Class
 
-    def __init__(self, path, meta_path, identifier = None, target = None, group = None, sparse = False):
+    Parameters
+    ----------
+        path : str
+            Path to directory of preprocessed data.
+
+        meta_path : str
+            Path to meta data.
+
+        identifier : str
+            Column name within the meta data denoting the unique identifiers.
+        
+        target : str
+            Column name within the meta data denoting the target.
+        
+        group : str, *default=None*
+            Column name within the meta data denoting how the data may be grouped.
+
+        sparse : bool, *default=False*
+            Identify if preprocessed data is in sparse format.
+        
+    """
+    
+    def __init__(self, path, meta_path, identifier, target, group = None, sparse = False):
         self.path       = path
-        self.meta_path  = path
+        self.meta_path  = meta_path
         self.identifier = identifier
         self.target     = target
         self.group      = group
         self.sparse     = sparse
 
-        self._sparse   = os.path.join(path, 'sparse')
-        self._dense    = os.path.join(path, 'dense')
-
-        self.valid     = set()
-
-        if os.path.exists(self._sparse):
-            self.valid |= set(npz.replace('.npz', '') for npz in os.listdir(self._sparse) if npz.endswith('.npz'))
-
-        if os.path.exists(self._dense):
-            self.valid |= set(npz.replace('.npz', '') for npz in os.listdir(self._dense ) if npz.endswith('.npz'))
+        self._sparse    = os.path.join(path, 'sparse')
+        self._dense     = os.path.join(path, 'dense')
 
         df = pd.read_csv(meta_path)
         if identifier is not None:
             df = df.set_index(identifier)
-            self.valid = set(self.valid) & set(df.index)
 
         if group:
             df[group] = df[group].apply(str)
 
-        self.valid = list(self.valid)
         self.meta  = df
 
         with open(os.path.join(path, 'meta.json')) as f:
-            d = json.load(f)
+            d      = json.load(f)
             self.n = d['n']
             self.m = d['m']
             
         self.c = len(set(df[target]))
 
     def _check_path(self, identifier, sparse):
+        """
+        Checks if the identifier is valid
+
+        Returns
+        -------
+            npz : str or None
+                If a valid identifier, path to ``.npz`` file associated with ``identifier``,
+                otherwise, ``None``.
+        """
         npz = os.path.join(self._sparse if sparse else self._dense, f'{identifier}.npz')
         if os.path.exists(npz):
             return npz
@@ -97,13 +110,28 @@ class DataLoader():
 
         return arr
 
-    def get_identifiers(self, *values, column):
+    def _get_identifiers(self, *values, column):
         values = [str(value) for value in values]
         self._check_meta(*values, column = column)            
         identifiers = self.meta.index[self.meta[column].isin(values)].values
         return identifiers
 
     def load_X(self, *identifiers, features = None, sparse = None):
+        r"""
+        Loads all observations with associated ``identifiers``. If ``features`` is provided, loads only
+        those feature values. If ``sparse`` is provided, override the original ``sparse`` setting when
+        the class object was instantiated.
+
+        Returns
+        -------
+            X : numpy.ndarray or scipy.sparse.csr_matrix
+                Defining :math:`n = |\text{identifiers}|`  and :math:`m` as the number of genome
+                sequences identified during the preprocessing stage or :math:`|\text{features}|` if ``features``
+                was provided, then, :math:`X\in\mathbb{Z}^{n,m}`. If ``sparse`` is ``False``, return an ndarray,
+                if ``sparse`` is ``True``, return a csr_matrix, otherwise, assume the ``sparse`` setting from
+                the __init__.
+
+        """
         self._identifiers = identifiers
         self._features    = features
         if f'{identifiers[0]}.npz' in os.listdir(self._sparse if sparse else self._dense):
@@ -111,21 +139,40 @@ class DataLoader():
             X    = [self._load_X(npz, features, sparse) for npz in npzs]
             return scipy.sparse.vstack(X) if sparse else np.array(X)
         else:
-            identifiers = self.get_identifiers(*identifiers, column = self.group)
+            identifiers = self._get_identifiers(*identifiers, column = self.group)
             return self.load_X(*identifiers, features = features, sparse = sparse)
 
     def load_Y(self, *identifiers):
-        Y = self._check_meta(*identifiers)
+        """
+        Returns
+        -------
+            Y : str or pandas.Series
+        """
+        Y             = self._check_meta(*identifiers)
         return np.array(Y).flatten()[0] if len(Y) == 1 else Y
 
     def load(self, *identifiers, features = None, sparse = None):
+        """
+        Returns
+        -------
+            X : load_X(\*identifiers, features = features, sparse = sparse)
+            Y : load_Y(\*identifiers)
+        """
         return self.load_X(*identifiers, features = features, sparse = sparse), self.load_Y(*identifiers)
 
     def load_train_test_identifiers(self, train_identifiers, test_identifiers, min_count = 0):
+        """
+        Identifiers which of the ``test_identifiers``' targets are also in the ``train_identifiers``' targets
+        only counting training targets that have a count of at least ``min_count``.
 
+        Returns
+        -------
+            train_identifiers : pandas.Index
+            test_identifiers : pandas.Index
+
+        """
         y_train           = self.load_Y(*train_identifiers)
         y_test            = self.load_Y(*test_identifiers)
-
 
         dummy             = pd.get_dummies(y_train)
         label_counts      = dummy.sum()
@@ -142,11 +189,20 @@ class DataLoader():
         return train_identifiers, test_identifiers
     
     def load_train_test(self, train_identifiers, test_identifiers, features = None, sparse = None, min_count = 0):
-        
+        """
+        Using the method ``load_train_test_identifiers`` returns train and test data for supervised learning.
+
+        Returns
+        -------
+            X_train : load_X(train_identifiers, features = features, sparse = sparse)
+            Y_train : load_Y(train_identifiers)
+            X_test  : load_X(test_identifiers, features = features, sparse = sparse)
+            Y_test  : load_Y(test_identifiers)
+        """
         identifiers       = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count)
 
-        Y_train           = self.load_Y(*identifiers[0]).apply(lambda target : self._encoder[target]).values
-        Y_test            = self.load_Y(*identifiers[1]).apply(lambda target : self._encoder[target]).values
+        Y_train           = self.encode(self.load_Y(*identifiers[0]))
+        Y_test            = self.encode(self.load_Y(*identifiers[1]))
 
         X_train           = self.load_X(*train_identifiers, features = features, sparse = sparse)
         X_test            = self.load_X(*test_identifiers , features = features, sparse = sparse)
@@ -156,6 +212,14 @@ class DataLoader():
         return X_train, Y_train, X_test, Y_test
 
     def generator(self, *identifiers, features = None, sparse = None, force_dense = False, force_sparse = False):
+        """
+        Iteratively yields an x, y pair from the method ``load``.
+
+        Yields
+        ------
+            x : load_X(identifier, features = features, sparse = sparse)
+            y : load_Y(identifier)
+        """
         for identifier in identifiers:
             if f'{identifier}.npz' in os.listdir(self._sparse if sparse else self._dense):
                 npz  = self._check_path(identifier, sparse)
@@ -168,24 +232,55 @@ class DataLoader():
                         X = X.A.flatten()
                 yield X, Y
             elif identifier in self.meta[self.group].values:
-                yield from self.generator(*self.get_identifiers(identifier, column = self.group))
+                yield from self.generator(*self._get_identifiers(identifier, column = self.group))
 
     @property
     def identifiers(self):
+        """ The ``identifiers`` from the most recent call of ``load_X`` or ``load_train_test``.  """
         return self._identifiers
 
     @property
     def features(self):
+        """ The ``features`` from the most recent call of ``load_X`` or ``load_train_test``.  """
         return self._features
 
     @property
     def encoder(self):
-        return self._encoder
+        """ Encoding from integer to targets present in the meta-data (one-hot encoding). """
+        if self._encoder:
+            return self._encoder
+        raise Exception('encoder is only available after running the `load_train_test` method!')
+
+    def encode(self, Y):
+        """ Returns an ``encoder`` look-up for every element in ``Y`` """
+        if self._encoder:
+            return np.vectorize(lambda value : self._encoder[value])(Y)
+        raise Exception('encode is only available after running the `load_train_test` method!')
 
     @property
     def decoder(self):
-        return {value : key for key, value in self.encoder.items()}
+        """ Decoder from targets present in the meta-data to integers. """
+        if self._encoder:
+            return {value : key for key, value in self.encoder.items()}
+        raise Exception('decoder is only available after running the `load_train_test` method!')
+
+    def decode(self, Y):
+        """ Returns an ``decoder`` look-up for every element in ``Y`` """
+        if self._encoder:
+            decoder = self.decoder
+            return np.vectorize(lambda value : decoder[value])(Y)
+        raise Exception('decode is only available after running the `load_train_test` method!')
 
     def load_feature_selection(self, file):
-        npz = np.load(os.path.join(self.path, 'feature-selection', file), allow_pickle = True)
-        return Dict(npz)
+        """
+        Retrieves feature selection ``file`` from subdirectory "feature-selection".
+        
+        Returns
+        -------
+            features : Dict
+                A dictionary of the form {key : numpy.ndarray } where the values of the dictionary
+                are of shape :math:`(m,)` .
+        """
+        npz      = np.load(os.path.join(self.path, 'feature-selection', file), allow_pickle = True)
+        features = Dict(npz)
+        return features

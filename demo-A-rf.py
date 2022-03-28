@@ -1,4 +1,5 @@
-from   genolearn import DataLoader, utils
+from   genolearn.utils import create_log
+from   genolearn.dataloader import DataLoader
 from   genolearn.models.classification import RandomForestClassifier
 from   genolearn.logger import msg
 
@@ -15,7 +16,7 @@ orders = fisher.rank()
 kwargs = dict(class_weight = 'balanced', n_jobs = -1)
 
 K           = [100, 1000, 10000, 100000, 1000000]
-max_depths  = range(5, 51, 5)
+max_depths  = range(5, 101, 5)
 
 predictions = []
 
@@ -42,7 +43,7 @@ for year in reversed(range(2014, 2019)):
             for seed in range(10):
                 model = RandomForestClassifier(max_depth = max_depth, random_state = seed, **kwargs)
                 model.fit(X_train[:,:k], Y_train)
-                predictions_seed.append(model.predict(X_test))
+                predictions_seed.append(dataloader.decode(model.predict(X_test[:,:k])))
 
             predictions_depth.append(predictions_seed)
 
@@ -59,6 +60,6 @@ os.makedirs(outdir, exist_ok = True)
 
 np.savez_compressed(f'{outdir}/random-forest.npz', predictions = predictions, K = K, max_depths = max_depths)
 
-utils.create_log(outdir, 'demo-A-rf.txt')
+create_log(outdir, 'demo-A-rf.txt')
 
 msg('executed demo-A-rf.py')

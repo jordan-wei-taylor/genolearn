@@ -1,10 +1,12 @@
-from   . import *
+from . import classification
+
 import joblib
 import os
 
 root = 'models'
 
 def set_dir(path):
+    """test"""
     global root
     root = path
 

@@ -21,12 +21,18 @@ GenoLearn is a machine learning pipeline designed for biologists working with fs
     :caption: Usage
 
     usage/overview
-    usage/preprocessing/index
+    usage/preprocessing
     usage/data-loader/index
     usage/feature-selection/index
+    usage/models/index
     usage/feature-importance/index
     usage/metrics
-    usage/models/index
+
+.. toctree::
+    :hidden:
+    :caption: Python Documentation
+
+    genolearn/index
 
 .. toctree::
     :hidden:

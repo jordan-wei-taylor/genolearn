@@ -1,4 +1,5 @@
 from   genolearn import feature_selection, dataloader, metrics
+from   genolearn import models
 
 import numpy     as np
 import os
