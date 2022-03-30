@@ -14,7 +14,7 @@ os.environ['PYTHONWARNINGS'] = 'ignore'
 
 msg('executing demo-A-lr.py')
 
-dataloader = DataLoader('data', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
+dataloader = DataLoader('data-low-memory', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
 
 orders = dataloader.load_feature_selection('fisher-score.npz').rank()
 

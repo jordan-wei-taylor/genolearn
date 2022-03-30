@@ -10,7 +10,7 @@ import os
 
 msg('executing demo-A-rf.py')
 
-dataloader = DataLoader('data', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
+dataloader = DataLoader('data-low-memory', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
 
 fisher = dataloader.load_feature_selection('fisher-score.npz')
 orders = fisher.rank()

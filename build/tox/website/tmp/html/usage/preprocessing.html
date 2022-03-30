@@ -32,6 +32,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -187,6 +189,21 @@
             
   <div class="section" id="preprocessing">
 <span id="id1"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
+<p>Preprocessing of the raw genome sequence data is required as the raw format has the form</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
+...
+</pre></div>
+</div>
+<p>This means to read a given identifier, all rows need to be read. For example, suppose we wanted to read all sequence information for the <span class="math notranslate nohighlight">\(i\)</span>-th identifier. This would be a vector of size <span class="math notranslate nohighlight">\(m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the number of sequences and the <span class="math notranslate nohighlight">\(j\)</span>-th element of the vector is the count of how many times the <span class="math notranslate nohighlight">\(j\)</span>-th sequence appeared for the <span class="math notranslate nohighlight">\(i\)</span>-th strain. To construct this vector, we loop over all rows in the above example, and if on the <span class="math notranslate nohighlight">\(j\)</span>-th row the identifier of interest is present, we assign the associated count value, otherwise, zero.</p>
+<p>The operation described thus far is computationally expensive when the number of sequences, <span class="math notranslate nohighlight">\(m\)</span>, is large. To reduce this cost, we transpose the data such that it has the following form</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>identifier_1 | sequence_{1,1}:count_{1,1} sequence_{1,1}:count_{2,1} ...
+identifier_2 | sequence_{2,1}:count_{2,1} sequence_{2,1}:count_{2,2} ...
+...
+</pre></div>
+</div>
+<p>where each row is a seperate file which has the name format <code class="docutils literal notranslate"><span class="pre">&lt;identifier&gt;.npz</span></code>. We have chosen the file extension <code class="docutils literal notranslate"><span class="pre">.npz</span></code> as it is a compressed data format which is <code class="docutils literal notranslate"><span class="pre">numpy</span></code> friendly.</p>
+<p>Below, we show a diagram of this process, and example code execution.</p>
 <style>
   .img-container {
     text-align: center;
@@ -199,42 +216,55 @@
         <figurecaption>Figure 1. <i>Preprocessing pipeline.</i></figurecaption>
     </figure>
     <br>
-</div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m biolearn --help
+</div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m genolearn --help
 
-usage: __main__.py [-h] [--groupby GROUPBY] input_file meta_path identifier output_directory target [target ...]
+    usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG] [--not_low_memory] output_dir genome_sequence_path
 
-    Processes a gunzip (gz) compressed text file of the following sparse format
+    Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
 
-    feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...
-    feature_id_2 | ...
+        sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+        sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
+        ...
 
-    into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the
-    i-th feature and j-th sample i.e. value_i_j at feature_id_i, sample_id_j.
+    into a directory of .npz files, a list of all the features, and some meta information containing number of
+    identifiers, sequences, and non-zero counts.
 
     Required Arguments
     =======================
-        input_path         : path to compressed text file with sparse format
-        meta_path          : path to csv containing identifiers and meta information e.g. &quot;Region&quot; or &quot;Year&quot;
-        identifier         : name of column in meta csv containing all sample ids
-        output_directory   : directory to output all generated files
-        targets            : name of column(s) in meta csv containing desired target output(s)
-        groupby [optional] : name of column in meta csv to group outputs by (see example)
+        output_dir           : output directory
+        genome_sequence_path : path to compressed text file with sparse format
+
+    Optional Arguments
+    =======================
+        batch_size  = 512    : number of temporary txt files to generate over a single parse of the genome data
+        verbose     = 250000 : number of iterations before giving verbose update
+        n_processes = &#39;auto&#39; : number of processes to run in parallel when compressing txt to npy files
+        sparse      = True   : output sparse npz files
+        dense       = True   : output dense npz files
+        debug       = -1     : integer denoting first number of features to consider (-1 results in all features)
+
+    Optional Flags
+    =======================
+        --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
 
     Example Usage
     =======================
-        &gt;&gt;&gt; python -m biolearn raw-data/STEC_14-19_fsm_kmers.txt.gz raw-data/meta_data.csv Accession data Region --groupby Year
+        python -m genolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
 
 
 positional arguments:
-input_file
-meta_path
-identifier
-output_directory
-target
+output_dir
+genome_sequence_path
 
 optional arguments:
--h, --help         show this help message and exit
---groupby GROUPBY
+-h, --help            show this help message and exit
+-batch_size BATCH_SIZE
+-verbose VERBOSE
+-n_processes N_PROCESSES
+-sparse SPARSE
+-dense DENSE
+-debug DEBUG
+--not_low_memory
 </pre></div>
 </div>
 </div>
