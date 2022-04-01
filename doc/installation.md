@@ -1,0 +1,53 @@
+Installation
+############
+
+Pip
+====================
+
+
+.. code-block:: text
+
+    # set a virtual environment if not already done so
+    # assuming Python3 as the default python (otherwise use python3 inplace of python)
+    >>> python -m venv env
+
+    # activate virtual environment
+    # if linux / mac
+    >>> source env/bin/activate
+
+    # if windows
+    >>> ./env/Scripts/activate
+
+    # install GenoLearn
+    >>> pip install -U genolearn
+    
+
+GitHub
+=======================
+
+For the most recent stable version of GenoLearn clone the directory and then pip install
+
+.. code-block:: text
+
+    # clones repository to current directory
+    >>> git clone https://github.com/jordan-wei-taylor/genolearn.git
+
+    # change directory to the cloned repository
+    >>> cd genolearn
+
+    # install GenoLearn from local files
+    >>> pip install -e .
+
+Conda
+======================
+
+.. code-block:: text
+
+    # create new conda environment
+    >>> conda create --name env
+
+    # activate environment
+    >>> conda activate env
+
+    # install GenoLearn
+    >>> conda install genolearn --channel jordan-wei-taylor

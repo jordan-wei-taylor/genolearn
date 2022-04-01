@@ -7,12 +7,8 @@ GenoLearn is a machine learning pipeline designed for biologists working with fs
 .. toctree::
     :hidden:
     :maxdepth: 4
-    :caption: Installation
-    :titlesonly:
 
-    installation/pip
-    installation/github
-    installation/conda
+    installation
 
 .. toctree::
     :hidden:

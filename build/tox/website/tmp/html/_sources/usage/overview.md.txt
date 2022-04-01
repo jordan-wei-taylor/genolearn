@@ -92,7 +92,7 @@ Models
 
 Within ``genolearn.models``, there are machine learning models from the popular library ``sklearn`` and a few useful functions to save / load models.
 
-See :ref:`Modes <Models>` for more details.
+See :ref:`Models <Models>` for more details.
 
 Feature Importance
 ==================

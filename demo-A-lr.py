@@ -61,19 +61,22 @@ for year in reversed(range(2014, 2019)):
                 times_seed.append((train, test))
 
             predictions_c.append(predictions_seed)
+            times_c.append(times_seed)
 
         msg('', inline = True, delete = len(C))
 
         predictions_k.append(predictions_c)
+        times_k.append(times_c)
 
     msg('', inline = True, delete = len(K))
 
     predictions.append(predictions_k)
-    
+    times.append(times_k)
+
 outdir = 'script-output'
 os.makedirs(outdir, exist_ok = True)
 
-np.savez_compressed(f'{outdir}/logistic-regression.npz', predictions = predictions, K = K, C = C)
+np.savez_compressed(f'{outdir}/logistic-regression.npz', predictions = predictions, times = times, K = K, C = C)
 
 create_log(outdir, 'demo-A-lr.txt')
 

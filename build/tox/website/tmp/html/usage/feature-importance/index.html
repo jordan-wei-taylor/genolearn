@@ -88,11 +88,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Installation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation/pip.html">Installation via pip</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation/github.html">Installation via Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation/conda.html">Installation via conda</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#pip">Pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#github">GitHub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda">Conda</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
@@ -187,17 +189,6 @@
             
   <div class="section" id="feature-importance">
 <span id="featureimportance"></span><h1>Feature Importance<a class="headerlink" href="#feature-importance" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import function to load model from path and function that returns the feature importance</span>
-<span class="kn">from</span> <span class="nn">biolearn.models</span> <span class="kn">import</span> <span class="n">load_model</span>
-<span class="kn">from</span> <span class="nn">biolearn</span> <span class="kn">import</span> <span class="n">feature_importance</span>
-
-<span class="c1"># load model from previous example</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;random-forest&#39;</span><span class="p">)</span>
-
-<span class="c1"># prints the feature importance for the trained random forest</span>
-<span class="n">feature_importance</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 
 
