@@ -1,5 +1,10 @@
-from . import classification
+from   genolearn.models import classification
+from   genolearn.logger import Waiting, msg
 
+from   itertools        import product
+from   time             import time
+
+import numpy as np
 import joblib
 import os
 
@@ -30,3 +35,51 @@ def load(path):
     if os.path.exists(full_path):
         return joblib.load(path)
     raise Exception(f'"{full_path}" does not exist!')
+
+def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, **kwargs):
+
+    values  = [K] + list(kwargs.values())
+    params  = list(product(*values))
+    names   = ['k'] + list(kwargs)
+    C       = [len(K)] + [len(values) for values in kwargs.values()]
+    M       = len(C)
+    V       = [None] * len(names)
+    
+    with Waiting('loading', 'loaded', 'train / test data', inline = True):
+        X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)])
+
+    hats    = []
+    times   = []
+    for param in params:
+        for i, theta in enumerate(param):
+            flag = V[i] != theta
+            if (i + 1) < M and V[i] is not None and V[i] != theta:
+                flag   = True
+                delete = sum(C[i + 1:])
+                for j in range(i + 1, M):
+                    V[j] = None
+            else:
+                delete = 0
+        
+            V[i]    = theta
+            message = ' '.join([f'{p} {v}' for p, v in zip(names[:i + 1], V[:i + 1])])
+
+            if flag:
+                msg(message, delete = delete)
+        
+        model = Model(**common_kwargs, **dict(zip(names[1:], V[1:])))
+
+        start = time()
+        model.fit(X_train[:,:param[0]], Y_train)
+        fit   = time()
+        hat   = model.predict(X_test[:,:param[0]])
+        pred  = time()
+        hats.append(hat)
+        times.append((fit - start, pred - fit))
+
+    msg('computed predictions and computation times', delete = sum(C))
+
+    hats  = np.array(hats).reshape(*C, -1)
+    times = np.array(times).reshape(*C, 2)
+
+    return hats, times

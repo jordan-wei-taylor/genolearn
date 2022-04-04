@@ -1,7 +1,8 @@
 if __name__ == '__main__':
 
     from   genolearn.logger  import print_dict, msg, Writing
-    from   genolearn         import DataLoader, utils
+    from   genolearn.dataloader import DataLoader
+    from   genolearn         import utils
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
 

@@ -1,80 +1,51 @@
-from   genolearn.utils import create_log
+from   genolearn.logger import msg, Waiting
+from   genolearn.models import grid_predictions
 from   genolearn.dataloader import DataLoader
-from   genolearn.models.classification import RandomForestClassifier
-from   genolearn.logger import msg
+from   genolearn.utils import create_log
 
-from   time import time
+from   sklearn.ensemble import RandomForestClassifier
 
 import numpy as np
 import os
 
-msg('executing demo-A-rf.py')
+script = 'demo-A-rf'
 
-dataloader = DataLoader('data-low-memory', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
+msg(f'executing {script}.py')
 
-fisher = dataloader.load_feature_selection('fisher-score.npz')
-orders = fisher.rank()
+dataloader = DataLoader('data', 'raw-data/meta-data.csv', 'Accession', 'Region', 'Year')
 
-kwargs = dict(class_weight = 'balanced', n_jobs = -1)
+with Waiting('loading', 'loaded', 'fisher scores', inline = True):
+    orders = dataloader.load_feature_selection('fisher-score.npz').rank()
 
-K           = [100, 1000, 10000, 100000, 1000000]
-max_depths  = range(5, 101, 5)
+test       = [2019]
 
-predictions = []
-times       = []
+K          = [100, 1000, 10000, 100000, 1000000]
+
+common     = dict(n_jobs = -1, class_weight = 'balanced')
+params     = dict(max_depth = range(5, 101, 5), random_state = range(10))
+
+Hats       = []
+Times      = []
 
 for year in reversed(range(2014, 2019)):
+    train = range(year, 2019)
+    order = orders[str(year)]
+    msg(f'train = {train}\ttest = {test}')
+    hats, times = grid_predictions(dataloader, train, test, RandomForestClassifier, K, order, common, **params)
 
-    msg(year)
+    Hats.append(hats)
+    Times.append(times)
 
-    features         = orders[str(year)][:max(K)]
-    X_train, Y_train, X_test, Y_test = dataloader.load_train_test(range(year, 2019), [2019], features = features)
-    
-    predictions_k = []
-    times_k       = []
+path = 'script-output'
+file = f'{script}.npz'
+full = os.path.join(path, file)
 
-    for k in K:
+os.makedirs(path, exist_ok = True)
 
-        msg(f'{year} {k:7d}')
+with Waiting('generating', 'generated', full, inline = True):
+    np.savez(full, hats = Hats, times = Times, K = K, **params)
 
-        predictions_depth = []
-        times_depth       = []
+create_log(path, f'{script}-log.txt')
 
-        for max_depth in max_depths:
-            
-            msg(f'{year} {k:7d} {max_depth:2d}')
-            predictions_seed = []
-            times_seed       = []
+msg(f'executed {script}.py')
 
-            for seed in range(10):
-                train = time()
-                model = RandomForestClassifier(max_depth = max_depth, random_state = seed, **kwargs)
-                model.fit(X_train[:,:k], Y_train)
-                train = time() - train
-                test  = time()
-                pred  = model.predict(X_test[:,:k])
-                test  = time() - test
-                predictions_seed.append(dataloader.decode(pred))
-                times_seed.append((train, test))
-
-            predictions_depth.append(predictions_seed)
-            times_depth.append(times_seed)
-
-        msg('', inline = True, delete = len(max_depths))
-
-        predictions_k.append(predictions_depth)
-        times_k.append(times_depth)
-
-    msg('', inline = True, delete = len(K))
-
-    predictions.append(predictions_k)
-    times.append(times_k)
-
-outdir = 'script-output'
-os.makedirs(outdir, exist_ok = True)
-
-np.savez_compressed(f'{outdir}/random-forest.npz', predictions = predictions, times = times, K = K, max_depths = max_depths)
-
-create_log(outdir, 'demo-A-rf.txt')
-
-msg('executed demo-A-rf.py')
