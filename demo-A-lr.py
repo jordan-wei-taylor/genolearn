@@ -5,8 +5,12 @@ from   genolearn.utils import create_log
 
 from   sklearn.linear_model import LogisticRegression
 
+import warnings
 import numpy as np
 import os
+
+warnings.simplefilter("ignore")
+os.environ["PYTHONWARNINGS"] = "ignore"
 
 script = 'demo-A-lr'
 
@@ -21,7 +25,7 @@ test       = [2019]
 
 K          = [100, 1000, 10000, 100000]
 
-common     = dict(n_jobs = -1, class_weight = 'balanced')
+common     = dict(n_jobs = -1, class_weight = 'balanced', solver = 'saga')
 params     = dict(C = [1e-2, 1, 1e2], random_state = range(10))
 
 Hats       = []
