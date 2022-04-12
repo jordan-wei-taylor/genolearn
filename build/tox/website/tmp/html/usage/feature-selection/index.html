@@ -32,6 +32,8 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -40,7 +42,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Models" href="../models/index.html" />
-    <link rel="prev" title="Data Loader" href="../data-loader/index.html" /> 
+    <link rel="prev" title="Preprocessing" href="../preprocessing.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,18 +91,12 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../installation.html#pip">Pip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../installation.html#github">GitHub</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../installation.html#conda">Conda</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data-loader/index.html">Data Loader</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../models/index.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../feature-importance/index.html">Feature Importance</a></li>
@@ -109,10 +105,6 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/metrics.html">metrics</a></li>
@@ -189,6 +181,10 @@
             
   <div class="section" id="feature-selection">
 <span id="featureselection"></span><h1>Feature Selection<a class="headerlink" href="#feature-selection" title="Permalink to this headline">¶</a></h1>
+<p>For genome count datasets, it is often the case that the number of sequences is large. This presents memory problems when trying to read the data. Assuming the dataset originally has <span class="math notranslate nohighlight">\(n\)</span> observations each having <span class="math notranslate nohighlight">\(M\)</span> genome sequence counts, the total memory cost would be of the order <span class="math notranslate nohighlight">\(n\times M\)</span>. Feature selection is a process that aim to pre-select <span class="math notranslate nohighlight">\(m\)</span> features from <span class="math notranslate nohighlight">\(M\)</span> before conducting any further analysis and experimentation where <span class="math notranslate nohighlight">\(m\)</span> is much smaller than <span class="math notranslate nohighlight">\(M\)</span>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">genolearn</span></code> offers the Fisher Score feature selection method which gives a higher score for features that behave differently across the different associated labels.</p>
+<div class="math notranslate nohighlight">
+\[S_i = \frac{\sum_j n_j(\mu_{ij} - \mu_i)^2}{\sum_j n_j\sigma_{ij}^2}\]</div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m fisher --help
 
 usage: fisher.py [-h] input_path
@@ -224,7 +220,7 @@ optional arguments:
         <a href="../models/index.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../data-loader/index.html" class="btn btn-neutral float-left" title="Data Loader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../preprocessing.html" class="btn btn-neutral float-left" title="Preprocessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

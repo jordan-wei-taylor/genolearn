@@ -36,7 +36,7 @@ For the most recent stable version of GenoLearn clone the directory and then pip
     >>> cd genolearn
 
     # install GenoLearn from local files
-    >>> pip install .
+    >>> pip install -e .
 
 Conda
 ======================
