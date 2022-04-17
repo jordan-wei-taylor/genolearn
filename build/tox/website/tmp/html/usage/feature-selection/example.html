@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Fisher Score Example &mdash; GenoLearn  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png" property="og:image" />
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
+        <script src="../../_static/js/custom.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Models" href="../models/index.html" />
+    <link rel="prev" title="Feature Selection" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #fcfcfc" >
+          
+
+          
+            <a href="../../index.html" >
+          
+
+          
+            
+            <img src="../../_static/logo.png" class="logo" alt="Logo" property="og:image"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Feature Selection</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Fisher Score Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../models/index.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../feature-importance/index.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../metrics.html">Metrics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../genolearn/feature_selection.html#fisher">fisher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/metrics.html">metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/models.html">models</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../demos/paper-a.html">Paper A</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demos/paper-b.html">Paper B</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GenoLearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Feature Selection</a> &raquo;</li>
+        
+      <li>Fisher Score Example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fisher-score-example">
+<span id="featureexample"></span><h1>Fisher Score Example<a class="headerlink" href="#fisher-score-example" title="Permalink to this headline">¶</a></h1>
+<p>In this example we compute the Fisher Scores as the number of training points increase. This example scenario involves imagining we have an increasing amount of data as we include data from previous years. Since our dataset consists of the strains between the years 2014 - 2019, we imagine ourselves at the end of 2018 and want to compute predictions for 2019 data. We further imagine we had only starting collecting data from 2018, perform the Fisher Score computations, then imagine ourselves having collected the previous year’s data and repeat. That is, we compute the Fisher Scores on the following years worth of data:</p>
+<ul class="simple">
+<li><p>2018 - 2018</p></li>
+<li><p>2017 - 2018</p></li>
+<li><p>2016 - 2018</p></li>
+<li><p>2015 - 2018</p></li>
+<li><p>2014 - 2018</p></li>
+</ul>
+<p>i.e. we will have 6 different sets of Fisher Scores where the first is only based on 2018 data, and the last based on 2014 - 2018 data.</p>
+<p>Recall the Fisher Score for the <span class="math notranslate nohighlight">\(i\)</span>-th feature can be computed with the following formula</p>
+<div class="math notranslate nohighlight">
+\[S_i = \frac{\sum_j n_j(\mu_{ij} - \mu_i)^2}{\sum_j n_j\sigma_{ij}^2}\]</div>
+<p>Instead of computing each of the RHS terms directly, we can instead incrementally compute the count, the sum, and the sum of squares. To compute the mean, we would have to divide the sum by the associated count, and to compute the variance we can use <span class="math notranslate nohighlight">\(\sigma_{ij}^2 = \frac{1}{n}\sum_k x_k^2 - \big[\frac{1}{n}\sum_k x_k\big]^2 = \mathbb{E}[X^2] - \mathbb{E}[X]^2\)</span> where <span class="math notranslate nohighlight">\(x_k\)</span> denotes the <span class="math notranslate nohighlight">\(k\)</span>-th observation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> function below performs the incremental updates as previously described. The <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> function uses the statistics the <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> computes to compute the Fisher Score thus far.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">genolearn.feature_selection.fisher</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span>   <span class="nn">genolearn.logger</span> <span class="kn">import</span> <span class="n">msg</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialises statistics for the Fisher Score computation for inner and outer loop functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># encoding from class label to integer</span>
+    <span class="n">encode</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span> <span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="n">dataloader</span><span class="o">.</span><span class="n">target</span><span class="p">]))}</span>
+
+    <span class="c1"># class label count</span>
+    <span class="n">n</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># global sum</span>
+    <span class="n">sg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="c1"># class label sum</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dataloader</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">m</span><span class="p">))</span>
+
+    <span class="c1"># class label sum of squares</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dataloader</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">m</span><span class="p">))</span>
+
+    <span class="n">args</span>   <span class="o">=</span> <span class="p">(</span><span class="n">encode</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sg</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>  <span class="c1"># encoder, counts, sum, by class sum, by class sum of squares</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>                       <span class="c1"># no kwargs</span>
+
+    <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span>
+
+<span class="k">def</span> <span class="nf">inner_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Incrementally updates count, global, and by class label statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">inline</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">encode</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sg</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">args</span>
+    
+    <span class="n">y</span>      <span class="o">=</span> <span class="n">encode</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+
+    <span class="c1"># increase count of label</span>
+    <span class="n">n</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>  <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># increase global sum</span>
+    <span class="n">sg</span>    <span class="o">+=</span> <span class="n">x</span>
+
+    <span class="c1"># increase class label sum</span>
+    <span class="n">s1</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span>
+
+    <span class="c1"># increase class label sum of squares</span>
+    <span class="n">s2</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">outer_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the Fisher Score using statistics stored in ``*args``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> (computing fisher)&#39;</span><span class="p">,</span> <span class="n">inline</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">encode</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sg</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="c1"># reshape for broadcasting</span>
+    <span class="n">n</span>   <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># convert global sum to global mean</span>
+    <span class="n">mu</span>  <span class="o">=</span> <span class="n">sg</span> <span class="o">/</span> <span class="n">n</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1"># convert to first and second moments</span>
+    <span class="n">m1</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">m2</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># compute D and S as per www.genolearn.readthedocs.io/usage/feature-selection/index.html</span>
+    <span class="n">D</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">m1</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="n">S</span>   <span class="o">=</span> <span class="n">m2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
+
+    <span class="c1"># reshape from 2D back to 1D</span>
+    <span class="n">n</span>   <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># numerator and denominator expressions for Fisher Score</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">n</span> <span class="o">@</span> <span class="n">D</span>
+    <span class="n">den</span> <span class="o">=</span> <span class="n">n</span> <span class="o">@</span> <span class="n">S</span>
+
+    <span class="n">S</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">den</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="n">den</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">msg</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> (completed)&#39;</span><span class="p">)</span>
+
+    <span class="n">ret</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span>
+
+<span class="c1"># computations above require each &quot;x&quot; to be a 1D numpy array and not a scipy sparse array</span>
+<span class="n">force_dense</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>The above code is run by</p>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span>   <span class="nn">genolearn.logger</span> <span class="kn">import</span> <span class="n">msg</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">base_feature_selection</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">inner_loop</span><span class="p">,</span> <span class="n">outer_loop</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">force_dense</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">force_sparse</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    base feature selection function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        dataloader : str</span>
+<span class="sd">            genolearn.dataloader.DataLoader object.</span>
+
+<span class="sd">        init : str</span>
+<span class="sd">            Initialise function to generate and the associated ``args`` and ``kwargs`` for ``inner_loop`` and ``outer_loop`` functions.</span>
+
+<span class="sd">        inner_loop : str</span>
+<span class="sd">            Inner loop function to be executed on a given (x, y) pair.</span>
+<span class="sd">        </span>
+<span class="sd">        outer_loop : str</span>
+<span class="sd">            Outer loop function to be executed for each value in ``values``.</span>
+<span class="sd">        </span>
+<span class="sd">        values : list, *default=[]*</span>
+<span class="sd">            Set of values to use when looping over the generator method of the ``DataLoader`` object.</span>
+
+<span class="sd">        force_dense : bool, *default=False*</span>
+<span class="sd">            Identify if computations should be forced to dense computations.</span>
+
+<span class="sd">        force_dense : bool, *default=False*</span>
+<span class="sd">            Identify if computations should be forced to sparse computations.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    If it is intended to execute the ``inner_loop`` function on all examplars and the ``outer_loop`` function once at the end, ``values`` should be set such that it evaluates to ``False``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret</span>          <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">init</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">force_dense</span> <span class="o">=</span> <span class="n">force_dense</span><span class="p">,</span> <span class="n">force_sparse</span> <span class="o">=</span> <span class="n">force_sparse</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">inner_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">outer_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">dataloader</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">index</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">force_dense</span> <span class="o">=</span> <span class="n">force_dense</span><span class="p">,</span> <span class="n">force_sparse</span> <span class="o">=</span> <span class="n">force_sparse</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">inner_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">outer_loop</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../models/index.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Feature Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2022, GenoLearn 
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -112,8 +112,14 @@ class Waiting():
         self.file    = f'"{os.path.basename(file)}"' if file else ''
         self.inline  = inline
         self.delete  = delete
-        self._during = f'{during} {file}' if file else during
-        self._after  = f'{after} {file}' if file else during
+
+    @property
+    def _during(self):
+        return f'{self.during} {self.file}' if self.file else self.during
+    
+    @property
+    def _after(self):
+        return f'{self.after} {self.file}' if self.file else self.after
 
     def __enter__(self):
         msg(f'{self._during}', inline = self.inline)
@@ -124,17 +130,17 @@ class Waiting():
 class Executing(Waiting):
 
     def __init__(self, file, inline = False, delete = 0):
-       super().__init__('executing', 'executed', file = file, inline = inline, delete = delete)
+        super().__init__('executing', 'executed', file = file, inline = inline, delete = delete)
 
 class Computing(Waiting):
 
     def __init__(self, file = None, inline = False, delete = 0):
-       super().__init__('computing', 'computed', file = file, inline = inline, delete = delete)
+        super().__init__('computing', 'computed', file = file, inline = inline, delete = delete)
 
 class Writing(Waiting):
 
     def __init__(self, file = None, inline = False, delete = 0):
-       super().__init__('writing', 'written', file = file, inline = inline, delete = delete)
+        super().__init__('writing', 'written', file = file, inline = inline, delete = delete)
 
 class Counter():
 

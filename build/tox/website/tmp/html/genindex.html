@@ -93,7 +93,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/feature-selection/index.html">Feature Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/feature-selection/index.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/feature-selection/example.html">Fisher Score Example</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="usage/models/index.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/feature-importance/index.html">Feature Importance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/metrics.html">Metrics</a></li>
@@ -102,7 +105,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="genolearn/index.html">genolearn</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="genolearn/feature_importance.html">feature_importance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="genolearn/feature_selection.html">feature_selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/feature_selection.html">feature_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="genolearn/feature_selection.html#fisher">fisher</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="genolearn/metrics.html">metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="genolearn/models.html">models</a></li>
 </ul>
@@ -182,11 +188,11 @@
  <a href="#B"><strong>B</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
- | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#S"><strong>S</strong></a>
  
 </div>
@@ -214,14 +220,6 @@
   </ul></td>
 </tr></table>
 
-<h2 id="F">F</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="genolearn/feature_selection.html#genolearn.feature_selection.fisher_score">fisher_score() (in module genolearn.feature_selection)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -232,6 +230,13 @@
 
       <ul>
         <li><a href="genolearn/feature_selection.html#module-genolearn.feature_selection">module</a>
+</li>
+      </ul></li>
+      <li>
+    genolearn.feature_selection.fisher
+
+      <ul>
+        <li><a href="genolearn/feature_selection.html#module-genolearn.feature_selection.fisher">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -256,6 +261,12 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="genolearn/feature_selection.html#genolearn.feature_selection.fisher.init">init() (in module genolearn.feature_selection.fisher)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="genolearn/feature_selection.html#genolearn.feature_selection.fisher.inner_loop">inner_loop() (in module genolearn.feature_selection.fisher)</a>
+</li>
       <li><a href="genolearn/metrics.html#genolearn.metrics.intra_accuracy">intra_accuracy() (in module genolearn.metrics)</a>
 </li>
   </ul></td>
@@ -290,11 +301,21 @@
       <ul>
         <li><a href="genolearn/feature_selection.html#module-genolearn.feature_selection">genolearn.feature_selection</a>
 </li>
+        <li><a href="genolearn/feature_selection.html#module-genolearn.feature_selection.fisher">genolearn.feature_selection.fisher</a>
+</li>
         <li><a href="genolearn/metrics.html#module-genolearn.metrics">genolearn.metrics</a>
 </li>
         <li><a href="genolearn/models.html#module-genolearn.models">genolearn.models</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="genolearn/feature_selection.html#genolearn.feature_selection.fisher.outer_loop">outer_loop() (in module genolearn.feature_selection.fisher)</a>
+</li>
   </ul></td>
 </tr></table>
 

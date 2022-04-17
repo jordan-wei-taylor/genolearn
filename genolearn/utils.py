@@ -1,4 +1,3 @@
-from re import M
 from   genolearn.logger import msg
 
 from   time           import time
@@ -47,8 +46,7 @@ def to_json(obj, path):
     msg(f'writing "{path}"', inline = True)
     with open(path, 'w') as f:
         json.dump(obj, f)
-    msg(f'written "{path}"')
-
+    msg(f'written "{path.split(os.path.sep)[-1] if os.path.sep in path else path}"')
 
 def get_dtype(val):
     dtypes = [np.uint8, np.uint16, np.uint32, np.uint64]

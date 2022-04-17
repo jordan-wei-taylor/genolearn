@@ -95,7 +95,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage/feature-selection/index.html">Feature Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/feature-selection/index.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/feature-selection/example.html">Fisher Score Example</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/models/index.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/feature-importance/index.html">Feature Importance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage/metrics.html">Metrics</a></li>
@@ -104,7 +107,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">genolearn</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="feature_importance.html">feature_importance</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">feature_selection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">feature_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fisher">fisher</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.html">metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">models</a></li>
 </ul>
@@ -184,25 +190,52 @@
 <dl class="py function">
 <dt id="genolearn.feature_selection.base_feature_selection">
 <code class="sig-prename descclassname"><span class="pre">genolearn.feature_selection.</span></code><code class="sig-name descname"><span class="pre">base_feature_selection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inner_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_dense</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_sparse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_selection.html#base_feature_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_selection.base_feature_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>descr</p>
+<dd><p>base feature selection function</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>dataloader</strong><span class="classifier">str</span></dt><dd><p>genolearn.dataloader.DataLoader object.</p>
+</dd>
+<dt><strong>init</strong><span class="classifier">str</span></dt><dd><p>Initialise function to generate and the associated <code class="docutils literal notranslate"><span class="pre">args</span></code> and <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> for <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> and <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> functions.</p>
+</dd>
+<dt><strong>inner_loop</strong><span class="classifier">str</span></dt><dd><p>Inner loop function to be executed on a given (x, y) pair.</p>
+</dd>
+<dt><strong>outer_loop</strong><span class="classifier">str</span></dt><dd><p>Outer loop function to be executed for each value in <code class="docutils literal notranslate"><span class="pre">values</span></code>.</p>
+</dd>
+<dt><strong>values</strong><span class="classifier">list, <em>default=[]</em></span></dt><dd><p>Set of values to use when looping over the generator method of the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> object.</p>
+</dd>
+<dt><strong>force_dense</strong><span class="classifier">bool, <em>default=False</em></span></dt><dd><p>Identify if computations should be forced to dense computations.</p>
+</dd>
+<dt><strong>force_dense</strong><span class="classifier">bool, <em>default=False</em></span></dt><dd><p>Identify if computations should be forced to sparse computations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If it is intended to execute the <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> function on all examplars and the <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> function once at the end, <code class="docutils literal notranslate"><span class="pre">values</span></code> should be set such that it evaluates to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd></dl>
+
+<span class="target" id="module-genolearn.feature_selection.fisher"></span><div class="section" id="fisher">
+<h2>fisher<a class="headerlink" href="#fisher" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="genolearn.feature_selection.fisher.init">
+<code class="sig-prename descclassname"><span class="pre">genolearn.feature_selection.fisher.</span></code><code class="sig-name descname"><span class="pre">init</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_selection/fisher.html#init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_selection.fisher.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialises statistics for the Fisher Score computation for inner and outer loop functions.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="genolearn.feature_selection.fisher_score">
-<code class="sig-prename descclassname"><span class="pre">genolearn.feature_selection.</span></code><code class="sig-name descname"><span class="pre">fisher_score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_selection.html#fisher_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_selection.fisher_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Awesome description</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>dataloader</strong><span class="classifier">genolearn.dataloader.DataLoader</span></dt><dd><p>asdasd</p>
-</dd>
-<dt><strong>values</strong><span class="classifier">list</span></dt><dd><p>adasda sdas</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dt id="genolearn.feature_selection.fisher.inner_loop">
+<code class="sig-prename descclassname"><span class="pre">genolearn.feature_selection.fisher.</span></code><code class="sig-name descname"><span class="pre">inner_loop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_selection/fisher.html#inner_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_selection.fisher.inner_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incrementally updates count, global, and by class label statistics</p>
 </dd></dl>
 
+<dl class="py function">
+<dt id="genolearn.feature_selection.fisher.outer_loop">
+<code class="sig-prename descclassname"><span class="pre">genolearn.feature_selection.fisher.</span></code><code class="sig-name descname"><span class="pre">outer_loop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_selection/fisher.html#outer_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_selection.fisher.outer_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Fisher Score using statistics stored in <code class="docutils literal notranslate"><span class="pre">*args</span></code>.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
