@@ -41,7 +41,7 @@ class DataLoader():
         self.target     = target
         self.group      = group
         self.sparse     = sparse
-
+        
         self._sparse    = os.path.join(path, 'sparse')
         self._dense     = os.path.join(path, 'dense')
 
@@ -60,6 +60,35 @@ class DataLoader():
             self.m = d['m']
             
         self.c = len(set(df[target]))
+
+        self.features = None
+
+    def _load_features(self, feature_path):
+        path = os.path.join(self.path, 'feature-selection')
+        file = os.path.join(path, feature_path)
+
+        assert os.path.exists(file), f'"{feature_path}" not in {path}!'
+
+        npz      = np.load(file)
+
+        features = Dict()
+        
+        for key, value in npz.items():
+            features[key] = value
+
+        return features
+
+    def load_features(self, features):
+        if not isinstance(features, Dict):
+            features = self._load_features(features)
+
+        orders         = features.rank()
+
+        self._features = features
+        self._orders   = orders
+
+    def set_features(self, key, num, top = True):
+        self.features = self._orders[key][::-1][:num] if top else self._orders[key][:num]
 
     def _check_path(self, identifier, sparse):
         """

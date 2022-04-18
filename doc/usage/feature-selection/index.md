@@ -98,10 +98,10 @@ Feature Selection Execution
 .. code-block:: text
 
     >>> # fisher score default
-    >>> python -m genolearn.feature_selection fisher-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year
+    >>> python -m genolearn.feature_selection fisher-scores.npz data raw-data/meta-data.csv Accession Regions 2018 2017 2016 2015 2014 -group Year
 
     >>> # custom (expected custom.py)
-    >>> python -m genolearn.feature_selection custom-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year -method custom
+    >>> python -m genolearn.feature_selection custom-scores.npz data raw-data/meta-data.csv Accession Regions 2018 2017 2016 2015 2014 -group Year -method custom
 
 
 .. toctree::
