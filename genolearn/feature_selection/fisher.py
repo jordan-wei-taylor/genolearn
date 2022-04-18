@@ -83,5 +83,5 @@ def outer_loop(ret, i, value, *args, **kwargs):
 
     ret[value] = S
 
-# computations above require each "x" to be a 1D numpy array and not a scipy sparse array
+# computations above require each "x" to be a numpy array and not a scipy sparse array
 force_dense = True

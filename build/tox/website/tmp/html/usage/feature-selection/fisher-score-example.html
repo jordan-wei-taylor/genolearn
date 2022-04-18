@@ -97,6 +97,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-loader/index.html">DataLoader</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Feature Selection</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Fisher Score Example</a></li>
 </ul>
@@ -108,6 +109,10 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -204,7 +209,7 @@
 <p>Instead of computing each of the RHS terms directly, we can instead incrementally compute the count, the sum, and the sum of squares. To compute the mean, we would have to divide the sum by the associated count, and to compute the variance we can use <span class="math notranslate nohighlight">\(\sigma_{ij}^2 = \frac{1}{n}\sum_k x_k^2 - \big[\frac{1}{n}\sum_k x_k\big]^2 = \mathbb{E}[X^2] - \mathbb{E}[X]^2\)</span> where <span class="math notranslate nohighlight">\(x_k\)</span> denotes the <span class="math notranslate nohighlight">\(k\)</span>-th observation.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> function below performs the incremental updates as previously described. The <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> function uses the statistics the <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code> computes to compute the Fisher Score thus far.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">genolearn.feature_selection.fisher</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="code-block-caption"><span class="caption-number">Listing 1 </span><span class="caption-text">genolearn.feature_selection.fisher.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -376,7 +381,7 @@
 
     <span class="n">ret</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span>
 
-<span class="c1"># computations above require each &quot;x&quot; to be a 1D numpy array and not a scipy sparse array</span>
+<span class="c1"># computations above require each &quot;x&quot; to be a numpy array and not a scipy sparse array</span>
 <span class="n">force_dense</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </td></tr></table></div>
@@ -508,6 +513,8 @@
 
     </p>
   </div>
+
+  <!--
     
     
     
@@ -515,7 +522,7 @@
     
     <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
     
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. --> 
 
 </footer>
 

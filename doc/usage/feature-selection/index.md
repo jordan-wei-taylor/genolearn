@@ -9,7 +9,7 @@ For genome count datasets, it is often the case that the number of sequences is 
 Fisher Score
 ============
 
-``genolearn`` offers the Fisher Score feature selection method which computes a score for each feature and selects the :math:`k` highest scoring features. The Fisher Score, as taken from REFERENCE, is computed by the following equation
+``genolearn`` offers the Fisher Score feature selection method which computes a score for each feature and selects the :math:`k` highest scoring features. The Fisher Score, as taken from Aggarwal 2014 [#fisher]_, is computed by the following equation
 
 .. math::
 
@@ -87,7 +87,7 @@ For this example, the feature rankings are :math:`[2, 3, 4, 1, 5]` i.e. the seco
 Custom Feature Selection
 ------------------------
 
-``genolearn`` offers the user the ability to create their own custom feature selection process. One needs to define ``init``, ``inner_loop``, and ``outer_loop`` functions in their custom module. The ``base_feature_selection`` method is then executed with those modules' functions. Refer to the example to see how the Fisher Score is computed as a guideline when creating your own.
+``genolearn`` offers the user the ability to create their own custom feature selection process. One needs to define ``init``, ``inner_loop``, and ``outer_loop`` functions in their custom module. The ``base_feature_selection`` method is then executed with those modules' functions. Refer to the `example <fisher-score-example.html>`__ to see how the Fisher Score is computed as a guideline when creating your own.
 
 .. literalinclude:: ../../../genolearn/feature_selection/__init__.py
     :linenos:
@@ -97,35 +97,16 @@ Feature Selection Execution
 
 .. code-block:: text
 
-    python -m genolearn.feature_selection --help
-    usage: __main__.py [-h] [-group GROUP] [-method METHOD] [--sparse] output path meta_path identifier target values [values ...]
-
-    Generates an ordered list of features and meta information.
-
-    Example
-    =======
-
     >>> # fisher score default
     >>> python -m genolearn.feature_selection fisher-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year
 
     >>> # custom (expected custom.py)
     >>> python -m genolearn.feature_selection custom-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year -method custom
 
-    positional arguments:
-    output          output file name
-    path            path to preprocessed directory
-    meta_path       path to meta file
-    identifier      column of meta data denoting the identifier
-    target          column of meta data denoting the target
-    values          incremental identifiers (or groups) to perform feature selection on
-
-    optional arguments:
-    -h, --help      show this help message and exit
-    -group GROUP    column of meta data denoting the grouping of labels
-    -method METHOD  either "fisher" for built in Fisher Score or a module name (see example)
-    --sparse        if sparse loading of data is preferred
 
 .. toctree::
     :hidden:
 
-    example
+    fisher-score-example
+    
+.. [#fisher] Charu C. Aggarwal. 2014. Data Classification: Algorithms and Applications (1st. ed.). Chapman & Hall/CRC. page 44

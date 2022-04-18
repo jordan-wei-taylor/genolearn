@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Fisher Score Example" href="example.html" />
-    <link rel="prev" title="Preprocessing" href="../preprocessing.html" /> 
+    <link rel="next" title="Fisher Score Example" href="fisher-score-example.html" />
+    <link rel="prev" title="DataLoader" href="../data-loader/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,8 +97,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-loader/index.html">DataLoader</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Selection</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="example.html">Fisher Score Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fisher-score-example.html">Fisher Score Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../models/index.html">Models</a></li>
@@ -108,6 +109,10 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -190,7 +195,7 @@
 <p>For genome count datasets, it is often the case that the number of sequences is large. This presents memory problems when trying to read the data. Assuming the dataset originally has <span class="math notranslate nohighlight">\(n\)</span> observations each having <span class="math notranslate nohighlight">\(m\)</span> genome sequence counts, the total memory cost would be of the order <span class="math notranslate nohighlight">\(n\times m\)</span>. Feature selection is a process that aim to pre-select <span class="math notranslate nohighlight">\(k\)</span> features from <span class="math notranslate nohighlight">\(m\)</span> before conducting any further analysis and experimentation where <span class="math notranslate nohighlight">\(k\)</span> is much smaller than <span class="math notranslate nohighlight">\(m\)</span>.</p>
 <div class="section" id="fisher-score">
 <h2>Fisher Score<a class="headerlink" href="#fisher-score" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">genolearn</span></code> offers the Fisher Score feature selection method which computes a score for each feature and selects the <span class="math notranslate nohighlight">\(k\)</span> highest scoring features. The Fisher Score, as taken from REFERENCE, is computed by the following equation</p>
+<p><code class="docutils literal notranslate"><span class="pre">genolearn</span></code> offers the Fisher Score feature selection method which computes a score for each feature and selects the <span class="math notranslate nohighlight">\(k\)</span> highest scoring features. The Fisher Score, as taken from Aggarwal 2014 <a class="footnote-reference brackets" href="#fisher" id="id1">1</a>, is computed by the following equation</p>
 <div class="math notranslate nohighlight">
 \[S_i = \frac{\sum_j n_j(\mu_{ij} - \mu_i)^2}{\sum_j n_j\sigma_{ij}^2}\]</div>
 <p>where</p>
@@ -255,7 +260,7 @@
 </div>
 <div class="section" id="custom-feature-selection">
 <h3>Custom Feature Selection<a class="headerlink" href="#custom-feature-selection" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">genolearn</span></code> offers the user the ability to create their own custom feature selection process. One needs to define <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code>, and <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> functions in their custom module. The <code class="docutils literal notranslate"><span class="pre">base_feature_selection</span></code> method is then executed with those modules’ functions. Refer to the example to see how the Fisher Score is computed as a guideline when creating your own.</p>
+<p><code class="docutils literal notranslate"><span class="pre">genolearn</span></code> offers the user the ability to create their own custom feature selection process. One needs to define <code class="docutils literal notranslate"><span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">inner_loop</span></code>, and <code class="docutils literal notranslate"><span class="pre">outer_loop</span></code> functions in their custom module. The <code class="docutils literal notranslate"><span class="pre">base_feature_selection</span></code> method is then executed with those modules’ functions. Refer to the <a class="reference external" href="fisher-score-example.html">example</a> to see how the Fisher Score is computed as a guideline when creating your own.</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -358,37 +363,20 @@
 </div>
 <div class="section" id="feature-selection-execution">
 <h3>Feature Selection Execution<a class="headerlink" href="#feature-selection-execution" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m genolearn.feature_selection --help
-usage: __main__.py [-h] [-group GROUP] [-method METHOD] [--sparse] output path meta_path identifier target values [values ...]
-
-Generates an ordered list of features and meta information.
-
-Example
-=======
-
-&gt;&gt;&gt; # fisher score default
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; # fisher score default
 &gt;&gt;&gt; python -m genolearn.feature_selection fisher-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year
 
 &gt;&gt;&gt; # custom (expected custom.py)
 &gt;&gt;&gt; python -m genolearn.feature_selection custom-scores.npz data raw-data/meta-data.csv Accession Regions 2014 2015 2016 2017 2018 2019 -group Year -method custom
-
-positional arguments:
-output          output file name
-path            path to preprocessed directory
-meta_path       path to meta file
-identifier      column of meta data denoting the identifier
-target          column of meta data denoting the target
-values          incremental identifiers (or groups) to perform feature selection on
-
-optional arguments:
--h, --help      show this help message and exit
--group GROUP    column of meta data denoting the grouping of labels
--method METHOD  either &quot;fisher&quot; for built in Fisher Score or a module name (see example)
---sparse        if sparse loading of data is preferred
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
 </div>
+<dl class="footnote brackets">
+<dt class="label" id="fisher"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Charu C. Aggarwal. 2014. Data Classification: Algorithms and Applications (1st. ed.). Chapman &amp; Hall/CRC. page 44</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -401,10 +389,10 @@ optional arguments:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="example.html" class="btn btn-neutral float-right" title="Fisher Score Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="fisher-score-example.html" class="btn btn-neutral float-right" title="Fisher Score Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../preprocessing.html" class="btn btn-neutral float-left" title="Preprocessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../data-loader/index.html" class="btn btn-neutral float-left" title="DataLoader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -418,6 +406,8 @@ optional arguments:
 
     </p>
   </div>
+
+  <!--
     
     
     
@@ -425,7 +415,7 @@ optional arguments:
     
     <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
     
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. --> 
 
 </footer>
 
