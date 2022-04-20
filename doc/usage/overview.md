@@ -1,7 +1,7 @@
 Overview
 ########
 
-The ``genolearn`` package is a pipeline designed to enable researchers to use off-the-shelf machine learning toolkits on genome sequence data in Python3. Additionally, ``genolearn`` is a loose wrapper around the popular machine learning toolkit ``sklearn`` where the machine learning models are accessible via ``genolearn.models`` (see :ref:`Machine Learning <MachineLearning>` for more details.).
+The ``genolearn`` package is a pipeline designed to enable researchers to use off-the-shelf machine learning toolkits on genome sequence data in Python3. Additionally, ``genolearn`` is a loose wrapper around the popular machine learning toolkit ``sklearn`` where the machine learning models are accessible via ``genolearn.models`` (see :ref:`Models <Models>` for more details.).
 
 
 .. raw:: html
@@ -34,9 +34,11 @@ To use GenoLearn once you have installed it, we require you to first preprocess 
 
 .. code-block:: text
 
-    feature_1 | observation_{1}:count_{1,1} observation_{1}:count_{2,1} ...
-    feature_2 | observation_{1}:count_{1,2} observation_{1}:count_{3,2} ...
+    sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+    sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
     ...
+
+where identifier\_{i,j} is the j-th identifier that contains the i-th sequence count\_{i,j} many times. If an identifier does not contain the i-th sequence, then both the identifier and the associated zero count are omitted from the i-th row as the data is in sparse format (only containing non-zero information).
 
 Preprocessing
 =============
@@ -85,12 +87,12 @@ As the number of genome sequences tends to be large, we need to perform feature 
 See :ref:`Feature Selection <FeatureSelection>` for more details.
 
 
-Machine Learning
+Models
 ================
 
 Within ``genolearn.models``, there are machine learning models from the popular library ``sklearn`` and a few useful functions to save / load models.
 
-See :ref:`Machine Learning <MachineLearning>` for more details.
+See :ref:`Models <Models>` for more details.
 
 Feature Importance
 ==================
@@ -98,3 +100,6 @@ Feature Importance
 After fitting a model, the user may wish to identify which were the most importance features in their dataset. With ``genolearn.feature_importance``, the user can simply call this function on a fitted model and analyse the feature importance based on the particlar model. For example, Logistic Regression will return a set of coefficients for each feature corresponding to the contribution to each class label.
 
 See :ref:`Feature Importance <FeatureImportance>` for more details.
+
+Metrics
+=======

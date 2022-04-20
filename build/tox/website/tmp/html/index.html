@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation via pip" href="installation/pip.html" /> 
+    <link rel="next" title="Overview" href="usage/overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,20 +87,46 @@
               
             
             
-              <p class="caption"><span class="caption-text">Installation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation/pip.html">Installation via pip</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/github.html">Installation via Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation/conda.html">Installation via conda</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Home</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage/overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage/preprocessing.html">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/dataloader.html">Data Loader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/feature-selection.html">Feature Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/machine-learning.html">Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage/feature-importance.html">Feature Importance</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/dataloader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/dataloader.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/dataloader.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/feature-selection/index.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/feature-selection/fisher-score-example.html">Fisher Score Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage/models/index.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/feature-importance/index.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/metrics.html">Metrics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/feature_importance.html">feature_importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/feature_selection.html">feature_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="genolearn/feature_selection.html#fisher">fisher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/metrics.html">metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genolearn/models.html">models</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Demos</span></p>
 <ul>
@@ -172,11 +198,65 @@
   <div class="section" id="genolearn">
 <h1>GenoLearn<a class="headerlink" href="#genolearn" title="Permalink to this headline">¶</a></h1>
 <p>GenoLearn is a machine learning pipeline designed for biologists working with fsm-lite files looking to build a predictive model or identify important patterns.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pip">
+<h3>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># set a virtual environment if not already done so
+# assuming Python3 as the default python (otherwise use python3 inplace of python)
+&gt;&gt;&gt; python -m venv env
+
+# activate virtual environment
+# if linux / mac
+&gt;&gt;&gt; source env/bin/activate
+
+# if windows
+&gt;&gt;&gt; ./env/Scripts/activate
+
+# install GenoLearn
+&gt;&gt;&gt; pip install -U genolearn
+</pre></div>
+</div>
+</div>
+<div class="section" id="github">
+<h3>GitHub<a class="headerlink" href="#github" title="Permalink to this headline">¶</a></h3>
+<p>For the most recent stable version of GenoLearn clone the directory and then pip install</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># clones repository to current directory
+&gt;&gt;&gt; git clone https://github.com/jordan-wei-taylor/genolearn.git
+
+# change directory to the cloned repository
+&gt;&gt;&gt; cd genolearn
+
+# install GenoLearn from local files
+&gt;&gt;&gt; pip install -e .
+</pre></div>
+</div>
+</div>
+<div class="section" id="conda">
+<h3>Conda<a class="headerlink" href="#conda" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># create new conda environment
+&gt;&gt;&gt; conda create --name env
+
+# activate environment
+&gt;&gt;&gt; conda activate env
+
+# install GenoLearn
+&gt;&gt;&gt; conda install genolearn --channel jordan-wei-taylor
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
 </div>
 </div>
 
@@ -188,7 +268,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation/pip.html" class="btn btn-neutral float-right" title="Installation via pip" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="usage/overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -203,6 +283,8 @@
 
     </p>
   </div>
+
+  <!--
     
     
     
@@ -210,7 +292,7 @@
     
     <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
     
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. --> 
 
 </footer>
 

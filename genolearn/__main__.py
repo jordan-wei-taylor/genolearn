@@ -18,11 +18,12 @@ if __name__ == '__main__':
     r"""
     Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
 
-    feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...\n
-    feature_id_2 | ...
+        sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+        sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
+        ...
 
-    into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the 
-    i-th feature and j-th sample i.e. value_i_j at feature_id_i, sample_id_j.
+    into a directory of .npz files, a list of all the features, and some meta information containing number of
+    identifiers, sequences, and non-zero counts.
 
     Required Arguments
     =======================

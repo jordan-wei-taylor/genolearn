@@ -32,6 +32,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -39,7 +41,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Loader" href="dataloader.html" />
+    <link rel="next" title="DataLoader" href="dataloader.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
 </head>
 
@@ -88,20 +90,46 @@
               
             
             
-              <p class="caption"><span class="caption-text">Installation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation/pip.html">Installation via pip</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/github.html">Installation via Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation/conda.html">Installation via conda</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataloader.html">Data Loader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="feature-selection.html">Feature Selection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="machine-learning.html">Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="feature-importance.html">Feature Importance</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dataloader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataloader.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataloader.html#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="feature-selection/index.html">Feature Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature-selection/fisher-score-example.html">Fisher Score Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models/index.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature-importance/index.html">Feature Importance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_importance.html">feature_importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_selection.html">feature_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../genolearn/feature_selection.html#fisher">fisher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../genolearn/metrics.html">metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../genolearn/models.html">models</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Demos</span></p>
 <ul>
@@ -172,6 +200,24 @@
             
   <div class="section" id="preprocessing">
 <span id="id1"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
+<<<<<<< HEAD
+=======
+<p>Preprocessing of the raw genome sequence data is required as the raw format has the form</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
+...
+</pre></div>
+</div>
+<p>This means to read a given identifier, all rows need to be read. For example, suppose we wanted to read all sequence information for the <span class="math notranslate nohighlight">\(i\)</span>-th identifier. This would be a vector of size <span class="math notranslate nohighlight">\(m\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the number of sequences and the <span class="math notranslate nohighlight">\(j\)</span>-th element of the vector is the count of how many times the <span class="math notranslate nohighlight">\(j\)</span>-th sequence appeared for the <span class="math notranslate nohighlight">\(i\)</span>-th strain. To construct this vector, we loop over all rows in the above example, and if on the <span class="math notranslate nohighlight">\(j\)</span>-th row the identifier of interest is present, we assign the associated count value, otherwise, zero.</p>
+<p>The operation described thus far is computationally expensive when the number of sequences, <span class="math notranslate nohighlight">\(m\)</span>, is large. To reduce this cost, we transpose the data such that it has the following form</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>identifier_1 | sequence_{1,1}:count_{1,1} sequence_{1,1}:count_{2,1} ...
+identifier_2 | sequence_{2,1}:count_{2,1} sequence_{2,1}:count_{2,2} ...
+...
+</pre></div>
+</div>
+<p>where each row is a seperate file which has the name format <code class="docutils literal notranslate"><span class="pre">&lt;identifier&gt;.npz</span></code>. We have chosen the file extension <code class="docutils literal notranslate"><span class="pre">.npz</span></code> as it is a compressed data format which is <code class="docutils literal notranslate"><span class="pre">numpy</span></code> friendly.</p>
+<p>Below, we show a diagram of this process, and example code execution.</p>
+>>>>>>> demo
 <style>
   .img-container {
     text-align: center;
@@ -186,6 +232,7 @@
     <br>
 </div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m genolearn --help
 
+<<<<<<< HEAD
 usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG]
                [--not_low_memory]
                output_dir genome_sequence_path
@@ -197,6 +244,18 @@ usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processe
 
     into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the
     i-th feature and j-th sample i.e. value_i_j at feature_id_i, sample_id_j.
+=======
+    usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG] [--not_low_memory] output_dir genome_sequence_path
+
+    Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
+
+        sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
+        sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
+        ...
+
+    into a directory of .npz files, a list of all the features, and some meta information containing number of
+    identifiers, sequences, and non-zero counts.
+>>>>>>> demo
 
     Required Arguments
     =======================
@@ -214,7 +273,11 @@ usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processe
 
     Optional Flags
     =======================
+<<<<<<< HEAD
         --not_low_memory     : if flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
+=======
+        --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
+>>>>>>> demo
 
     Example Usage
     =======================
@@ -246,7 +309,7 @@ optional arguments:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="dataloader.html" class="btn btn-neutral float-right" title="Data Loader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="dataloader.html" class="btn btn-neutral float-right" title="DataLoader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -263,6 +326,8 @@ optional arguments:
 
     </p>
   </div>
+
+  <!--
     
     
     
@@ -270,7 +335,7 @@ optional arguments:
     
     <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
     
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. --> 
 
 </footer>
 
