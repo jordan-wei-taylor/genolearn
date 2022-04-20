@@ -239,10 +239,11 @@ class DataLoader():
         """ The ``identifiers`` from the most recent call of ``load_X`` or ``load_train_test``.  """
         return self._identifiers
 
-    @property
-    def features(self):
-        """ The ``features`` from the most recent call of ``load_X`` or ``load_train_test``.  """
-        return self._features
+    def features(self, indices):
+        """ Returns the features from `features.txt` at indices ``indices``  """
+        with open(os.path.join(self.path, 'features.txt')) as f:
+            features = f.read().split()
+            return [features[i] for i in indices]
 
     @property
     def encoder(self):

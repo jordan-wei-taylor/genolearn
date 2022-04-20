@@ -74,7 +74,7 @@ Conda
 .. toctree::
     :hidden:
 
-    usage/data-loader/index
+    usage/dataloader
 
 .. toctree::
     :hidden:

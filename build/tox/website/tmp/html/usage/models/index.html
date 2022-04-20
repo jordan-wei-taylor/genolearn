@@ -97,9 +97,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../data-loader/index.html">DataLoader</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../data-loader/index.html#basic-example">Basic Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../data-loader/index.html#advanced-example">Advanced Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataloader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader.html#advanced-usage">Advanced Usage</a></li>
 </ul>
 </li>
 </ul>
@@ -115,6 +115,10 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -194,6 +198,24 @@
             
   <div class="section" id="models">
 <span id="id1"></span><h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">genolearn</span></code> currently only supports popular classification models from <code class="docutils literal notranslate"><span class="pre">sklearn</span></code>. The explicit models are</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/naive_bayes.html">Logistic Regression</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html">Multi-Layer Perceptron</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html">k-Nearest Neighbours</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">Support Vectors</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html">Gaussian Process</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">Decision Tree</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html">AdaBoost</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html">Gaussian Naive Bayes</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis">Linear Discriminent Analysis</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html">Quadratic Discriminant Analysis</a></p></li>
+</ul>
+<p>all of which can be located in <code class="docutils literal notranslate"><span class="pre">genolearn.models.classification</span></code>. For example, if you would like to use a Logistic Regression model, then the following will import statement will be required</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">genolearn.models.classification</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+</pre></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import function to get various models</span>
 <span class="kn">from</span> <span class="nn">biolearn.models</span>  <span class="kn">import</span> <span class="n">get_model</span><span class="p">,</span> <span class="n">save_model</span>
 <span class="kn">from</span> <span class="nn">biolearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
