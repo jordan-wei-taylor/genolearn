@@ -47,6 +47,6 @@ for file, model, K, common, params in [rf, lr]:
     with Waiting('generating', 'generated', file):
         np.savez(os.path.join('script-output', f'comparison-{file}'), hats = hats, times = times, K = K, **params)
 
-create_log('script-output', f'log-{script}.txt')
+create_log('script-output', f'{script}-log.txt')
 
 msg(f'executed {script}')
