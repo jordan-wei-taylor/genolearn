@@ -65,13 +65,21 @@ Conda
 
 .. toctree::
     :hidden:
-    :maxdepth: 4
     :titlesonly:
     :caption: Usage
 
     usage/overview
     usage/preprocessing
+
+.. toctree::
+    :hidden:
+
     usage/data-loader/index
+
+.. toctree::
+    :hidden:
+    :titlesonly:
+    
     usage/feature-selection/index
     usage/models/index
     usage/feature-importance/index

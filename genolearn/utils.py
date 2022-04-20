@@ -15,6 +15,10 @@ def get_process_memory():
     """ returns current RAM usage by current Python process """
     return psutil.Process(os.getpid()).memory_info().rss
 
+def monitor_RAM():
+    global RAM
+    RAM = max(RAM, get_process_memory())
+    
 def set_params(params):
     """ sets the global PARAMS value """
     global PARAMS

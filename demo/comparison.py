@@ -43,6 +43,7 @@ for file, model, K, common, params in [rf, lr]:
     msg(f'computing contents for {file}')
     hats, times = grid_predictions(dataloader, train, test, model, K, order, common, **params)
 
+    
     with Waiting('generating', 'generated', file):
         np.savez(os.path.join('script-output', f'comparison-{file}'), hats = hats, times = times, K = K, **params)
 

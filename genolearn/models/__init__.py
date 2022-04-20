@@ -1,5 +1,6 @@
 from   genolearn.models import classification
 from   genolearn.logger import Waiting, msg
+from   genolearn.utils  import monitor_RAM
 
 from   itertools        import product
 from   time             import time
@@ -77,9 +78,13 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         hats.append(hat)
         times.append((fit - start, pred - fit))
 
+        monitor_RAM()
+
     msg('computed predictions and computation times', delete = sum(C))
 
     hats  = np.array(hats).reshape(*C, -1)
     times = np.array(times).reshape(*C, 2)
 
+    monitor_RAM()
+    
     return hats, times
