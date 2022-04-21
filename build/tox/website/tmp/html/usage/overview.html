@@ -127,10 +127,6 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Case Studies</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts.html">Predicting Strain Origin From k-mer Counts</a></li>
-</ul>
 
             
           
@@ -210,7 +206,7 @@
     <br>
 </div><p>Our pipeline starts with the raw genome sequence data which assumes a certain data format (see <a class="reference internal" href="preprocessing.html#preprocessing"><span class="std std-ref">Preprocessing</span></a> for more details). Running the <code class="docutils literal notranslate"><span class="pre">genolearn</span></code> package directly on the raw genome sequence data generates a compressed converted data representation using <code class="docutils literal notranslate"><span class="pre">numpy</span></code> which results in <code class="docutils literal notranslate"><span class="pre">.npz</span></code> files.</p>
 <p>With the compressed converted files, there is an optional script to run which performs genome sequence selection which reduces the number of genome sequences to consider when performing later machine learning tasks. By reducing the space of genome sequences to consider, the model complexity, along with computational and memory demands are reduced.</p>
-<p>Next, we can use the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> class to read in the meta data as well as the <code class="docutils literal notranslate"><span class="pre">.npz</span></code> files efficiently, optionally only filtering on genome sequences from the previous section, to then give to a off-the-shelf Machine Learning framework. For example, we can train a classifier which maps from some genome sequences input to meta data classification such as using <span class="math notranslate nohighlight">\(k\)</span>-mer counts to predict strain location discussed in <a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts.html#papera"><span class="std std-ref">Paper A</span></a>.</p>
+<p>Next, we can use the <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> class to read in the meta data as well as the <code class="docutils literal notranslate"><span class="pre">.npz</span></code> files efficiently, optionally only filtering on genome sequences from the previous section, to then give to a off-the-shelf Machine Learning framework. For example, we can train a classifier which maps from some genome sequences input to meta data classification such as using <span class="math notranslate nohighlight">\(k\)</span>-mer counts to predict strain location discussed in <a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts/index.html#papera"><span class="std std-ref">Paper A</span></a>.</p>
 <div class="section" id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
 <p>To use GenoLearn once you have installed it, we require you to first preprocess your genome sequence files (such as an fsm-lite gun-zipped) into a more readable format. This requires executing the package on a <code class="docutils literal notranslate"><span class="pre">.gz</span></code> file specifying any options. The <code class="docutils literal notranslate"><span class="pre">.gz</span></code> file should be a text file with the following format:</p>
