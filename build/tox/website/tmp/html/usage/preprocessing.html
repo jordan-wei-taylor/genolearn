@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DataLoader" href="dataloader.html" />
+    <link rel="next" title="DataLoader" href="data-loader.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
 </head>
 
@@ -99,9 +99,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Preprocessing</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="dataloader.html">DataLoader</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dataloader.html#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataloader.html#advanced-usage">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-loader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data-loader.html#basic-example">Basic Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-loader.html#advanced-example">Advanced Example</a></li>
 </ul>
 </li>
 </ul>
@@ -117,10 +117,6 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../genolearn/index.html">genolearn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../genolearn/dataloader.html">dataloader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../genolearn/_classes/DataLoader.html">DataLoader</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -131,10 +127,9 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Demos</span></p>
+<p class="caption"><span class="caption-text">Case Studies</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-a.html">Paper A</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-b.html">Paper B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts.html">Predicting Strain Origin From k-mer Counts</a></li>
 </ul>
 
             
@@ -200,8 +195,6 @@
             
   <div class="section" id="preprocessing">
 <span id="id1"></span><h1>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this headline">¶</a></h1>
-<<<<<<< HEAD
-=======
 <p>Preprocessing of the raw genome sequence data is required as the raw format has the form</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sequence_1 | identifier_{1,1}:count_{1,1} identifier_{1,1}:count_{2,1} ...
 sequence_2 | identifier_{2,1}:count_{2,1} identifier_{2,1}:count_{2,2} ...
@@ -217,7 +210,6 @@ identifier_2 | sequence_{2,1}:count_{2,1} sequence_{2,1}:count_{2,2} ...
 </div>
 <p>where each row is a seperate file which has the name format <code class="docutils literal notranslate"><span class="pre">&lt;identifier&gt;.npz</span></code>. We have chosen the file extension <code class="docutils literal notranslate"><span class="pre">.npz</span></code> as it is a compressed data format which is <code class="docutils literal notranslate"><span class="pre">numpy</span></code> friendly.</p>
 <p>Below, we show a diagram of this process, and example code execution.</p>
->>>>>>> demo
 <style>
   .img-container {
     text-align: center;
@@ -232,19 +224,6 @@ identifier_2 | sequence_{2,1}:count_{2,1} sequence_{2,1}:count_{2,2} ...
     <br>
 </div><div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python -m genolearn --help
 
-<<<<<<< HEAD
-usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG]
-               [--not_low_memory]
-               output_dir genome_sequence_path
-
-    Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
-
-    feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...\n
-    feature_id_2 | ...
-
-    into a gunzip compressed text file which contains a matrix. The ij-th element of the matrix refers to the value at the
-    i-th feature and j-th sample i.e. value_i_j at feature_id_i, sample_id_j.
-=======
     usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG] [--not_low_memory] output_dir genome_sequence_path
 
     Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
@@ -255,7 +234,6 @@ usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processe
 
     into a directory of .npz files, a list of all the features, and some meta information containing number of
     identifiers, sequences, and non-zero counts.
->>>>>>> demo
 
     Required Arguments
     =======================
@@ -273,11 +251,7 @@ usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processe
 
     Optional Flags
     =======================
-<<<<<<< HEAD
-        --not_low_memory     : if flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
-=======
         --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
->>>>>>> demo
 
     Example Usage
     =======================
@@ -309,7 +283,7 @@ optional arguments:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="dataloader.html" class="btn btn-neutral float-right" title="DataLoader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="data-loader.html" class="btn btn-neutral float-right" title="DataLoader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

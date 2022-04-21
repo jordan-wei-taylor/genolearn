@@ -74,7 +74,7 @@ Conda
 .. toctree::
     :hidden:
 
-    usage/dataloader
+    usage/data-loader
 
 .. toctree::
     :hidden:
@@ -94,8 +94,7 @@ Conda
 .. toctree::
     :hidden:
     :maxdepth: 4
-    :caption: Demos
+    :caption: Case Studies
     :titlesonly:
 
-    demos/paper-a
-    demos/paper-b
+    case-study/predicting-strain-origin-from-k-mer-counts

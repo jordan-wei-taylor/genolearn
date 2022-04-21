@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>genolearn.metrics &mdash; GenoLearn  documentation</title>
+  <title>genolearn.feature_importance &mdash; GenoLearn  documentation</title>
   
 
   
@@ -174,7 +174,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>genolearn.metrics</li>
+      <li>genolearn.feature_importance</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -189,32 +189,62 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for genolearn.metrics</h1><div class="highlight"><pre>
+  <h1>Source code for genolearn.feature_importance</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">AdaBoostClassifier</span><span class="p">,</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 
-<div class="viewcode-block" id="intra_accuracy"><a class="viewcode-back" href="../../genolearn/metrics.html#genolearn.metrics.intra_accuracy">[docs]</a><span class="k">def</span> <span class="nf">intra_accuracy</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">Y_hat</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureImportance"><a class="viewcode-back" href="../../genolearn/feature_importance.html#genolearn.feature_importance.FeatureImportance">[docs]</a><span class="k">class</span> <span class="nc">FeatureImportance</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the intra-class accuracies</span>
+<span class="sd">    Feature Importance Class</span>
 
-<span class="sd">    :param Y: target labels</span>
-<span class="sd">    :type kind: numpy.ndarray of shape (N, M)</span>
-<span class="sd">    </span>
-<span class="sd">    :param Y_hat: estimate of labels</span>
-<span class="sd">    :type kind: numpy.ndarray of shape (N,...,M)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        model : object</span>
+<span class="sd">            Fitted scikit-learn model.</span>
 
-<span class="sd">    :param labels: a list of unique labels</span>
-<span class="sd">    :type kind: list, set, 1-d array</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
 
-<span class="sd">    :return: intra class accuracies.</span>
-<span class="sd">    :rtype: numpy.ndarray of shape (N,...)</span>
+<span class="sd">        feature_score : numpy.ndarray</span>
+<span class="sd">            Numpy array of feature importance scores.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+
+<span class="sd">        ranked_features: numpy.ndarray</span>
+<span class="sd">            Numpy array of ranked features.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nan</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    
-    <span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">==</span> <span class="n">label</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">Y_hat</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="n">mask</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">else</span> <span class="n">nan</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rank</span> <span class="o">=</span> <span class="n">_assign</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">feature_score</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">labels</span><span class="p">)))</span></div>
+    <span class="k">def</span> <span class="nf">ranked_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rank</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">_assign</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">LogisticRegression</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_logistic_score</span><span class="p">,</span> <span class="n">_logistic_rank</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">RandomForestClassifier</span><span class="p">,</span> <span class="n">AdaBoostClassifier</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">_ensemble_score</span><span class="p">,</span> <span class="n">_ensemble_rank</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">_logistic_score</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+
+<span class="k">def</span> <span class="nf">_logistic_rank</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">fun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">fun</span><span class="p">(</span><span class="n">_logistic_score</span><span class="p">(</span><span class="n">model</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_ensemble_score</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">feature_importances_</span>
+
+<span class="k">def</span> <span class="nf">_ensemble_rank</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_ensemble_score</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
            </div>

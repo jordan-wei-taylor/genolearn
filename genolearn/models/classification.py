@@ -6,4 +6,8 @@ from sklearn.gaussian_process      import GaussianProcessClassifier
 from sklearn.tree                  import DecisionTreeClassifier
 from sklearn.ensemble              import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes           import GaussianNB
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
+
+list = ['LogisticRegression', 'MLPClassifier', 'KNeighborsClassifier', 'SVC', 'GaussianProcessClassifier', 
+        'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier','GaussianNB',
+        'LinearDiscriminantAnalysis', 'QuadraticDiscriminantAnalysis']

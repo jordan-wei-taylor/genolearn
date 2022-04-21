@@ -32,6 +32,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -97,9 +99,9 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Preprocessing</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="dataloader.html">DataLoader</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dataloader.html#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataloader.html#advanced-usage">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-loader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data-loader.html#basic-example">Basic Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data-loader.html#advanced-example">Advanced Example</a></li>
 </ul>
 </li>
 </ul>
@@ -115,10 +117,6 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../genolearn/index.html">genolearn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../genolearn/dataloader.html">dataloader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../genolearn/_classes/DataLoader.html">DataLoader</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -129,10 +127,9 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Demos</span></p>
+<p class="caption"><span class="caption-text">Case Studies</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-a.html">Paper A</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-b.html">Paper B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts.html">Predicting Strain Origin From k-mer Counts</a></li>
 </ul>
 
             
@@ -196,24 +193,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-<<<<<<< HEAD:build/tox/website/tmp/html/usage/feature-importance.html
-  <div class="section" id="feature-importance">
-<span id="featureimportance"></span><h1>Feature Importance<a class="headerlink" href="#feature-importance" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import function to load model from path and function that returns the feature importance</span>
-<span class="kn">from</span> <span class="nn">biolearn.models</span> <span class="kn">import</span> <span class="n">load_model</span>
-<span class="kn">from</span> <span class="nn">biolearn</span> <span class="kn">import</span> <span class="n">feature_importance</span>
-
-<span class="c1"># load model from previous example</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;random-forest&#39;</span><span class="p">)</span>
-
-<span class="c1"># prints the feature importance for the trained random forest</span>
-<span class="n">feature_importance</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
-=======
   <div class="section" id="metrics">
 <h1>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h1>
->>>>>>> demo:build/tox/website/tmp/html/usage/metrics.html
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Further metrics are being developed.</p>
+</div>
+<div class="section" id="intra-class-accuracies">
+<h2>Intra-class Accuracies<a class="headerlink" href="#intra-class-accuracies" title="Permalink to this headline">¶</a></h2>
+<p>For classification tasks, when the target labels are balanced, it is common to report accuracy as a measure of model performance. That is, the number of correct predictions divided by the total number of predictions. When the target labels are unbalanced, this measure is skewed. Consider an example where 90% of the data belongs to label 1 and 10% of the data belongs to label 2, if we had a model that predicts everything as label 1, the model would have an accuracy of 90%.</p>
+<p>We define the intra-class accuracy to be</p>
+<div class="math notranslate nohighlight">
+\[\text{acc}(\mathbf{y}, \mathbf{\hat{y}}, j) = \frac{\sum_{i : y_i = j} 1_{\hat{y}_i = j}}{\sum_{i : y_i = 1} 1},\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}1_{\hat{y}_i = j} = \begin{cases}1, &amp;\text{if } i = j,\\0, &amp; \text{otherwise}.\end{cases}\end{split}\]</div>
+</div>
 </div>
 
 

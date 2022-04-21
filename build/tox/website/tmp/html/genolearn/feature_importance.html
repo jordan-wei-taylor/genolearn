@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="feature_selection" href="feature_selection.html" />
-    <link rel="prev" title="DataLoader" href="_classes/DataLoader.html" /> 
+    <link rel="prev" title="genolearn" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,9 +97,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage/preprocessing.html">Preprocessing</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../usage/dataloader.html">DataLoader</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../usage/dataloader.html#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage/dataloader.html#advanced-usage">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/data-loader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/data-loader.html#basic-example">Basic Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/data-loader.html#advanced-example">Advanced Example</a></li>
 </ul>
 </li>
 </ul>
@@ -115,10 +115,6 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">genolearn</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="dataloader.html">dataloader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="_classes/DataLoader.html">DataLoader</a></li>
-</ul>
-</li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="feature_selection.html#fisher">fisher</a></li>
@@ -129,10 +125,9 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Demos</span></p>
+<p class="caption"><span class="caption-text">Case Studies</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-a.html">Paper A</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../demos/paper-b.html">Paper B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../case-study/predicting-strain-origin-from-k-mer-counts.html">Predicting Strain Origin From k-mer Counts</a></li>
 </ul>
 
             
@@ -198,8 +193,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="feature-importance">
-<h1>feature_importance<a class="headerlink" href="#feature-importance" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-genolearn.feature_importance">
+<span id="feature-importance"></span><h1>feature_importance<a class="headerlink" href="#module-genolearn.feature_importance" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="genolearn.feature_importance.FeatureImportance">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">genolearn.feature_importance.</span></code><code class="sig-name descname"><span class="pre">FeatureImportance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/genolearn/feature_importance.html#FeatureImportance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#genolearn.feature_importance.FeatureImportance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Feature Importance Class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">object</span></dt><dd><p>Fitted scikit-learn model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>feature_score</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>Numpy array of feature importance scores.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 48%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>ranked_features: numpy.ndarray</strong></p></td>
+<td><p>Numpy array of ranked features.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -213,7 +240,7 @@
         <a href="feature_selection.html" class="btn btn-neutral float-right" title="feature_selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="_classes/DataLoader.html" class="btn btn-neutral float-left" title="DataLoader" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="genolearn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

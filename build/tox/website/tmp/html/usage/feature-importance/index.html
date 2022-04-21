@@ -32,6 +32,8 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"TeX": {"equationNumbers": {"autoNumber": "AMS", "useLabelIds": true}}})</script>
         <script src="../../_static/js/custom.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
@@ -97,9 +99,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../preprocessing.html">Preprocessing</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../dataloader.html">DataLoader</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../dataloader.html#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dataloader.html#advanced-usage">Advanced Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-loader.html">DataLoader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../data-loader.html#basic-example">Basic Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data-loader.html#advanced-example">Advanced Example</a></li>
 </ul>
 </li>
 </ul>
@@ -115,10 +117,6 @@
 <p class="caption"><span class="caption-text">Python Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../genolearn/index.html">genolearn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../genolearn/dataloader.html">dataloader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../genolearn/_classes/DataLoader.html">DataLoader</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_importance.html">feature_importance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../genolearn/feature_selection.html">feature_selection</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../genolearn/feature_selection.html#fisher">fisher</a></li>
@@ -129,10 +127,9 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Demos</span></p>
+<p class="caption"><span class="caption-text">Case Studies</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../demos/paper-a.html">Paper A</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../demos/paper-b.html">Paper B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../case-study/predicting-strain-origin-from-k-mer-counts.html">Predicting Strain Origin From k-mer Counts</a></li>
 </ul>
 
             
@@ -198,6 +195,25 @@
             
   <div class="section" id="feature-importance">
 <span id="featureimportance"></span><h1>Feature Importance<a class="headerlink" href="#feature-importance" title="Permalink to this headline">¶</a></h1>
+<p>Once a machine learning model has been fitted (trained) to a dataset, it is common to examine which input features (genome sequences) the machine learning model thinks are important. The way we compute this is different per model.</p>
+<div class="section" id="logistic-regression-example">
+<h2>Logistic Regression Example<a class="headerlink" href="#logistic-regression-example" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> model has a coefficient for each feature - label pair which denotes the change in the log likelihood. For example, if we had <span class="math notranslate nohighlight">\(m\)</span> different genome sequences in our input data and <span class="math notranslate nohighlight">\(c\)</span> different labels in our target output data, then our model would have computed a matrix of size <span class="math notranslate nohighlight">\((m,c)\)</span> where the <span class="math notranslate nohighlight">\(i\)</span>-th row and the <span class="math notranslate nohighlight">\(j\)</span>-th column represents the change that the <span class="math notranslate nohighlight">\(i\)</span>-th genome sequence value has on the <span class="math notranslate nohighlight">\(j\)</span>-th class label.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">genolearn.feature_importance</span> <span class="kn">import</span> <span class="n">FeatureImportance</span>
+
+<span class="c1"># defined model from genolearn.models.classification trained</span>
+<span class="n">model</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="n">importance</span> <span class="o">=</span> <span class="n">FeatureImportance</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># returns a numpy array of the importance scores for each feature (different interpretation for each model)</span>
+<span class="n">importance</span><span class="o">.</span><span class="n">feature_score</span>
+
+<span class="c1"># returns a numpy array of integers denoting highest to lowest feature importance for a given model</span>
+<span class="n">importance</span><span class="o">.</span><span class="n">ranked_features</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

@@ -3,36 +3,6 @@
 Preprocessing
 ##########################
 
-<<<<<<< HEAD
-.. raw:: html
-
-    <style>
-      .img-container {
-        text-align: center;
-      }
-    </style>
-    <div class="img-container">
-        <figure>
-            <img src="../_static/preprocessing-horizontal.png" width=45% />
-            <br><br>
-            <figurecaption>Figure 1. <i>Preprocessing pipeline.</i></figurecaption>
-        </figure>
-        <br>
-    </div>
-
-.. code-block:: text
-
-    >>> python -m genolearn --help
-
-    usage: __main__.py [-h] [-batch_size BATCH_SIZE] [-verbose VERBOSE] [-n_processes N_PROCESSES] [-sparse SPARSE] [-dense DENSE] [-debug DEBUG]
-                   [--not_low_memory]
-                   output_dir genome_sequence_path
-
-        Processes a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
-
-        feature_id_1 | sample_id_1:value_1_1 sample_id_2:value_1_2 ...\n
-        feature_id_2 | ...
-=======
 Preprocessing of the raw genome sequence data is required as the raw format has the form
 
 .. code-block:: text
@@ -73,7 +43,6 @@ Below, we show a diagram of this process, and example code execution.
     </div>
 
 .. code-block:: text
->>>>>>> demo
 
     >>> python -m genolearn --help
 
@@ -104,11 +73,7 @@ Below, we show a diagram of this process, and example code execution.
 
         Optional Flags
         =======================
-<<<<<<< HEAD
-            --not_low_memory     : if flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
-=======
             --not_low_memory     : if not flagged, will write to temporary txt files before converting to npz files, otherwise, will consume RAM to then generate the npz files
->>>>>>> demo
 
         Example Usage
         =======================
@@ -128,7 +93,3 @@ Below, we show a diagram of this process, and example code execution.
     -dense DENSE
     -debug DEBUG
     --not_low_memory
-<<<<<<< HEAD
-=======
-
->>>>>>> demo
