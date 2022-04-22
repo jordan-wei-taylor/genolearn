@@ -9,6 +9,8 @@ import warnings
 import numpy as np
 import os
 
+base = os.path.dirname(__file__)
+
 warnings.simplefilter("ignore")
 os.environ["PYTHONWARNINGS"] = "ignore"
 
@@ -42,7 +44,7 @@ for year in reversed(range(2014, 2019)):
 
 path = 'script-output'
 file = f'{script}.npz'
-full = os.path.join(path, file)
+full = os.path.join(base, path, file)
 
 os.makedirs(path, exist_ok = True)
 

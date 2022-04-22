@@ -10,6 +10,8 @@ import warnings
 import numpy as np
 import os
 
+base = os.path.dirname(__file__)
+
 warnings.simplefilter("ignore")
 os.environ["PYTHONWARNINGS"] = "ignore"
 
@@ -45,7 +47,7 @@ for file, model, K, common, params in [rf, lr]:
 
     
     with Waiting('generating', 'generated', file):
-        np.savez(os.path.join('script-output', f'comparison-{file}'), hats = hats, times = times, K = K, **params)
+        np.savez(os.path.join(base, 'script-output', f'comparison-{file}'), hats = hats, times = times, K = K, **params)
 
 create_log('script-output', f'{script}-log.txt')
 
