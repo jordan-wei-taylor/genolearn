@@ -37,7 +37,7 @@ def load(path):
         return joblib.load(path)
     raise Exception(f'"{full_path}" does not exist!')
 
-def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, **kwargs):
+def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, min_count = 0, **kwargs):
 
     values  = [K] + list(kwargs.values())
     params  = list(product(*values))
@@ -47,7 +47,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
     V       = [None] * len(names)
     
     with Waiting('loading', 'loaded', 'train / test data', inline = True):
-        X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)])
+        X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)], min_count = min_count)
 
     hats    = []
     times   = []

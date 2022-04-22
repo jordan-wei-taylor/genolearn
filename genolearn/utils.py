@@ -84,7 +84,12 @@ def process2dense(npz, c, d):
     arr[c] = d
     np.savez_compressed(npz, arr = arr)
 
-
+def subdir(path, sub, ext = 0):
+    _sub = f'{sub}-{ext}' if ext else sub
+    if _sub in os.listdir(path):
+        return subdir(path, sub, ext + 1)
+    return _sub
+    
 START    = time()
 RAM      = get_process_memory()
 DATETIME = datetime.now().strftime('%d-%m-%Y %X')
