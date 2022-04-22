@@ -97,4 +97,4 @@ Conda
     :caption: Case Studies
     :titlesonly:
 
-    case-study/predicting-strain-origin-from-k-mer-counts
+    case-study/predicting-strain-origin-from-k-mer-counts/index
