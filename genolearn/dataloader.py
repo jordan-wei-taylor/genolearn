@@ -204,8 +204,8 @@ class DataLoader():
         Y_train           = self.encode(self.load_Y(*identifiers[0]))
         Y_test            = self.encode(self.load_Y(*identifiers[1]))
 
-        X_train           = self.load_X(*train_identifiers, features = features, sparse = sparse)
-        X_test            = self.load_X(*test_identifiers , features = features, sparse = sparse)
+        X_train           = self.load_X(*identifiers[0], features = features, sparse = sparse)
+        X_test            = self.load_X(*identifiers[1] , features = features, sparse = sparse)
 
         self._identifiers = train_identifiers, test_identifiers
 

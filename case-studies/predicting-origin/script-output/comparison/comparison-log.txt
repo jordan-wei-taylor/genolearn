@@ -1,0 +1,12 @@
+datetime : 22-04-2022 21:34:23
+duration : 07h 29m 47s
+memory   : -10.448 GB
+
+{
+    "group": "Year",
+    "identifier": "Accession",
+    "meta_path": "raw-data/meta-data.csv",
+    "min_count": 15,
+    "path": "data",
+    "target": "Region"
+}

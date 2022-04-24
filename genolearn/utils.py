@@ -26,9 +26,10 @@ def set_params(params):
 
 def create_log(path = '.', filename = 'log.txt'):
     """ creates a text log file with total time elapsed and RAM usage """
-    global DATETIME, START, RAM, PARAMS
+    global DATETIME, START, RAM, RAMSTART, PARAMS
     dur  = time() - START
-    ram  = (get_process_memory() - RAM) / 1024 ** 3 # B -> GB conversion
+    monitor_RAM()
+    ram  = (RAM - RAMSTART) / 1024 ** 3 # B -> GB conversion
     m, s = divmod(dur, 60)
     h, m = divmod(m  , 60)
     contents = f'datetime : {DATETIME}\nduration : {h:02.0f}h {m:02.0f}m {s:02.0f}s\nmemory   : {ram:.3f} GB'
@@ -91,5 +92,6 @@ def subdir(path, sub, ext = 0):
     return _sub
     
 START    = time()
-RAM      = get_process_memory()
+RAMSTART = get_process_memory()
+RAM      = RAMSTART
 DATETIME = datetime.now().strftime('%d-%m-%Y %X')

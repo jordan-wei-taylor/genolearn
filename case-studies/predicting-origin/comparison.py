@@ -12,16 +12,20 @@ def main(args):
     import numpy as np
     import os
 
-    base   = os.path.dirname(__file__)
+    base   = os.path.join(os.path.dirname(__file__), 'script-output')
     py     = os.path.basename(__file__)
     script = py[:py.index('.')]
+
+    os.makedirs(base, exist_ok = True)
+
     sub    = subdir(base, script)
+
+    path   = os.path.join(base, sub)
+
+    os.makedirs(path)
 
     params = dict(args._get_kwargs())
     print_dict(f'executing {py} with parameters:', params)
-
-    os.makedirs(base, exist_ok = True)
-    os.makedirs(os.path.join(base, sub))
 
     warnings.simplefilter("ignore")
     os.environ["PYTHONWARNINGS"] = "ignore"
@@ -30,7 +34,7 @@ def main(args):
 
     with Waiting('loading', 'loaded', 'fisher scores', inline = True):
         orders = dataloader.load_feature_selection('fisher-score.npz').rank()
-        order  = orders[str(min())]
+        order  = orders['2014']
 
     train  = range(2014, 2019)
     test   = [2019]
@@ -51,12 +55,11 @@ def main(args):
 
         msg(f'computing contents for {file}')
         hats, times = grid_predictions(dataloader, train, test, model, K, order, common, **params, min_count = args.min_count)
-
         
         with Waiting('generating', 'generated', file):
-            np.savez(os.path.join(base, 'script-output', sub, file), hats = hats, times = times, K = K, **params)
+            np.savez(os.path.join(path, file), hats = hats, times = times, K = K, **params)
 
-    create_log('script-output', f'{script}-log.txt')
+    create_log(path, f'{script}-log.txt')
 
     msg(f'executed {py}')
 
@@ -71,7 +74,7 @@ if __name__ == '__main__':
     parser.add_argument('identifier')
     parser.add_argument('target')
     parser.add_argument('-group', default = 'Year')
-    parser.add_argument('-min_count', default = 15)
+    parser.add_argument('-min_count', default = 15, type = int)
 
     args = parser.parse_args()
 

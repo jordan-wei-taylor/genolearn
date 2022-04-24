@@ -1,3 +1,0 @@
-datetime : 18-04-2022 21:28:57
-duration : 11h 27m 02s
-memory   : 0.927 GB
