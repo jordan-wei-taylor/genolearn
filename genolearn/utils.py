@@ -91,6 +91,13 @@ def subdir(path, sub, ext = 0):
         return subdir(path, sub, ext + 1)
     return _sub
     
+def get_basename(path):
+    if '.' in path:
+        n = len(path)
+        i = n - path[::-1].index('.') - 1
+        return path[:i]
+    return path
+
 START    = time()
 RAMSTART = get_process_memory()
 RAM      = RAMSTART

@@ -8,6 +8,9 @@ from sklearn.ensemble              import RandomForestClassifier, AdaBoostClassi
 from sklearn.naive_bayes           import GaussianNB
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 
-list = ['LogisticRegression', 'MLPClassifier', 'KNeighborsClassifier', 'SVC', 'GaussianProcessClassifier', 
-        'DecisionTreeClassifier', 'RandomForestClassifier', 'AdaBoostClassifier','GaussianNB',
-        'LinearDiscriminantAnalysis', 'QuadraticDiscriminantAnalysis']
+valid_models = {name : obj for name, obj in globals().items() if 'sklearn' in repr(obj)}
+
+def get_model(name):
+    if name not in valid_models:
+        raise Exception()
+    return valid_models.get(name)    

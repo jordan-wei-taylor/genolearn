@@ -109,7 +109,7 @@ class Waiting():
     def __init__(self, during, after, file = None, inline = True, delete = 0):
         self.during  = during
         self.after   = after
-        self.file    = f'"{os.path.basename(file)}"' if file else ''
+        self.file    = file if file and ' ' in file else f'"{os.path.basename(file)}"' if file else ''
         self.inline  = inline
         self.delete  = delete
 
