@@ -1,29 +1,10 @@
-def __check(config):
-    import json
-    import re
 
-    if config:
-        if '{' in config:
-            raw    = config
-            while 'range' in raw:
-                nums = re.findall('(?<=range\()[0-9, ]+', raw)[0].replace(',', ' ').split()
-                raw  = re.sub('range\([0-9, ]+\)', str(list(range(*map(int, nums)))), raw, 1)
-            config = json.loads(raw)
-        else:
-            with open(config) as f:
-                config = json.load(f)
-                if isinstance(config, str):
-                    config = json.loads(config)
-    else:
-        config = {}
-
-    return config
 
 def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, overwrite):
     
     params = {k : v for k, v in locals().items() if not k.startswith('_')}
 
-    from genolearn.utils                 import create_log, get_basename
+    from genolearn.utils                 import create_log, check_config
     from genolearn.models.classification import get_model
     from genolearn.models                import grid_predictions
     from genolearn.dataloader            import DataLoader
@@ -43,9 +24,12 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     warnings.simplefilter("ignore")
     os.environ["PYTHONWARNINGS"] = "ignore"
 
-    print_dict('executing "train.py" with parameters', params)
+    data_config, model_config = map(check_config, (data_config, model_config))
 
-    data_config, model_config = map(__check, (data_config, model_config))
+    params['data_config']  = data_config
+    params['model_config'] = model_config
+
+    print_dict('executing "train.py" with parameters', params)
 
     kwargs     = {key : val for key, val in model_config.items() if isinstance(val, list)}
     common     = {key : val for key, val in model_config.items() if key not in kwargs}

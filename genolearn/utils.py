@@ -91,12 +91,35 @@ def subdir(path, sub, ext = 0):
         return subdir(path, sub, ext + 1)
     return _sub
     
-def get_basename(path):
-    if '.' in path:
-        n = len(path)
-        i = n - path[::-1].index('.') - 1
-        return path[:i]
-    return path
+def check_config(config):
+    import json
+    import re
+
+    if config:
+        if '{' in config:
+            raw    = config
+            while 'range' in raw:
+                nums = re.findall('(?<=range\()[0-9, ]+', raw)[0].replace(',', ' ').split()
+                raw  = re.sub('range\([0-9, ]+\)', str(list(range(*map(int, nums)))), raw, 1)
+            config = json.loads(raw)
+        else:
+            with open(config) as f:
+                config = json.load(f)
+                if isinstance(config, str):
+                    config = json.loads(config)
+    else:
+        config = {}
+
+    return config
+
+def generate_config(path, **kwargs):
+    config = {}
+    for key, val in kwargs.items():
+        if isinstance(val, range):
+            val = list(val)
+        config[key] = val
+    with open(path, 'w') as f:
+        json.dump(json.dumps(config, indent = 4), f)
 
 START    = time()
 RAMSTART = get_process_memory()

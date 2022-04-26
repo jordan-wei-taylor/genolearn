@@ -1,0 +1,74 @@
+datetime : 26-04-2022 00:25:58
+duration : 01h 11m 29s
+memory   : 10.341 GB
+
+{
+    "path": "O157-region/2015/rf",
+    "model": "RandomForestClassifier",
+    "data_config": {
+        "path": "data",
+        "meta_path": "raw-data/meta-data.csv",
+        "identifier": "Accession",
+        "target": "Region",
+        "group": "Year"
+    },
+    "model_config": {
+        "n_jobs": -1,
+        "class_weight": "balanced",
+        "max_depth": [
+            5,
+            10,
+            15,
+            20,
+            25,
+            30,
+            35,
+            40,
+            45,
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80,
+            85,
+            90,
+            95,
+            100
+        ],
+        "random_state": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ]
+    },
+    "train": [
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ],
+    "test": [
+        "2019"
+    ],
+    "K": [
+        100,
+        1000,
+        10000,
+        100000,
+        1000000
+    ],
+    "order": "fisher-score.npz",
+    "order_key": "2015",
+    "ascending": false,
+    "min_count": 15,
+    "overwrite": false
+}
