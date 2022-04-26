@@ -42,9 +42,9 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 
     Model = get_model(model)
     
-    hats, times = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, **kwargs)
+    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, **kwargs)
 
-    np.savez_compressed(os.path.join(path, 'results.npz'), hats = hats, times = times, K = K)
+    np.savez_compressed(os.path.join(path, 'results.npz'), labels = dataloader.decoder, K = K, **outputs)
 
     create_log(path)
 

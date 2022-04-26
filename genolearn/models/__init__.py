@@ -49,8 +49,12 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
     with Waiting('loading', 'loaded', 'train / test data', inline = True):
         X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)], min_count = min_count)
 
-    hats    = []
-    times   = []
+    keys    = ['predict_proba', 'predict_log_proba']
+    outputs = {'times' : [], 'predict' : []}
+    for key in keys:
+        if hasattr(Model, key):
+            outputs[key] = []
+
     for param in params:
         for i, theta in enumerate(param):
             flag = V[i] != theta
@@ -75,16 +79,15 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         fit   = time()
         hat   = model.predict(X_test[:,:param[0]])
         pred  = time()
-        hats.append(hat)
-        times.append((fit - start, pred - fit))
+        outputs['predict'].append(hat)
+        outputs['time'].append((fit - start, pred - fit))
+
+        for key in keys:
+            if hasattr(model, key):
+                outputs[key].append(getattr(model, key)(X_test[:,:param[0]]))
 
         monitor_RAM()
 
     msg('computed predictions and computation times', delete = sum(C))
-
-    hats  = np.array(hats).reshape(*C, -1)
-    times = np.array(times).reshape(*C, 2)
-
-    monitor_RAM()
     
-    return hats, times
+    return outputs
