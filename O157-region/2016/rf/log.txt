@@ -1,6 +1,6 @@
-datetime : 26-04-2022 07:39:34
-duration : 01h 02m 31s
-memory   : 9.665 GB
+datetime : 28-04-2022 22:47:03
+duration : 01h 07m 41s
+memory   : 9.703 GB
 
 {
     "path": "O157-region/2016/rf",

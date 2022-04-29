@@ -50,7 +50,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)], min_count = min_count)
 
     keys    = ['predict_proba', 'predict_log_proba']
-    outputs = {'times' : [], 'predict' : []}
+    outputs = {'time' : [], 'predict' : []}
     for key in keys:
         if hasattr(Model, key):
             outputs[key] = []
@@ -87,6 +87,12 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
                 outputs[key].append(getattr(model, key)(X_test[:,:param[0]]))
 
         monitor_RAM()
+
+    outputs['predict'] = np.array(outputs['predict']).reshape(*C, -1)
+    outputs['time']    = np.array(outputs['time']).reshape(*C, 2)
+
+    outputs.update(common_kwargs)
+    outputs.update(kwargs)
 
     msg('computed predictions and computation times', delete = sum(C))
     
