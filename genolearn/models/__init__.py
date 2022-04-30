@@ -50,7 +50,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)], min_count = min_count)
 
     keys    = ['predict_proba', 'predict_log_proba']
-    outputs = {'time' : [], 'predict' : []}
+    outputs = {'labels' : list(dataloader.encoder), 'time' : [], 'predict' : [], 'K' : K}
     for key in keys:
         if hasattr(Model, key):
             outputs[key] = []

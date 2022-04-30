@@ -44,7 +44,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     
     outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, **kwargs)
 
-    np.savez_compressed(os.path.join(path, 'results.npz'), labels = list(dataloader.encoder), K = K, **outputs)
+    np.savez_compressed(os.path.join(path, 'results.npz'), **outputs)
 
     create_log(path)
 
