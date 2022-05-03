@@ -1,6 +1,6 @@
 
 
-def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, overwrite):
+def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, overwrite):
     
     params = {k : v for k, v in locals().items() if not k.startswith('_')}
 
@@ -8,7 +8,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     from genolearn.models.classification import get_model
     from genolearn.models                import grid_predictions
     from genolearn.dataloader            import DataLoader
-    from genolearn.logger                import msg, print_dict
+    from genolearn.logger                import msg, print_dict # , Writing
     
     import warnings
     import shutil
@@ -40,11 +40,16 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
         name  = order
         order = dataloader.load_feature_selection(order).rank(ascending = ascending)[order_key]
 
-    Model = get_model(model)
+    Model   = get_model(model)
     
-    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, **kwargs)
+    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, **kwargs)
 
-    np.savez_compressed(os.path.join(path, 'results.npz'), **outputs)
+    outpath = os.path.join(path, 'results.npz')
+
+    np.savez_compressed(outpath, **outputs)
+
+    # with Writing(outpath, inline = True):
+    #     np.savez_compressed(outpath, **outputs)
 
     create_log(path)
 
@@ -70,6 +75,7 @@ if __name__ == '__main__':
     parser.add_argument('-order_key', default = None)
     parser.add_argument('-ascending', default = False, type = bool)
     parser.add_argument('-min_count', default = 0, type = int)
+    parser.add_argument('-target_subset', nargs = '*', default = None)
     parser.add_argument('--overwrite', action = 'store_true')
 
     args = parser.parse_args()

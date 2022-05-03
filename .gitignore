@@ -8,6 +8,7 @@ env
 
 # preprocessed data
 *data*
+!data_config.json
 
 # testing files / directories
 test*

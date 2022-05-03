@@ -160,7 +160,7 @@ class DataLoader():
         """
         return self.load_X(*identifiers, features = features, sparse = sparse), self.load_Y(*identifiers)
 
-    def load_train_test_identifiers(self, train_identifiers, test_identifiers, min_count = 0):
+    def load_train_test_identifiers(self, train_identifiers, test_identifiers, min_count = 0, target_subset = None):
         """
         Identifiers which of the ``test_identifiers``' targets are also in the ``train_identifiers``' targets
         only counting training targets that have a count of at least ``min_count``.
@@ -178,6 +178,9 @@ class DataLoader():
         label_counts      = dummy.sum()
         labels            = label_counts.index[label_counts >= min_count]
 
+        if target_subset:
+            labels = [label for label in labels if label in target_subset]
+
         self._encoder     = {label : i for i, label in enumerate(labels)}
 
         train_mask        = y_train.isin(self._encoder)
@@ -188,7 +191,7 @@ class DataLoader():
 
         return train_identifiers, test_identifiers
     
-    def load_train_test(self, train_identifiers, test_identifiers, features = None, sparse = None, min_count = 0):
+    def load_train_test(self, train_identifiers, test_identifiers, features = None, sparse = None, min_count = 0, target_subset = None):
         """
         Using the method ``load_train_test_identifiers`` returns train and test data for supervised learning.
 
@@ -199,7 +202,7 @@ class DataLoader():
             X_test  : load_X(test_identifiers, features = features, sparse = sparse)
             Y_test  : load_Y(test_identifiers)
         """
-        identifiers       = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count)
+        identifiers       = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count, target_subset)
 
         Y_train           = self.encode(self.load_Y(*identifiers[0]))
         Y_test            = self.encode(self.load_Y(*identifiers[1]))

@@ -8,7 +8,7 @@ import os
 clear = '\033[2K\033[1G'
 up    = f'{clear}\033[F'
 space = '    '
-logging.basicConfig(stream = sys.stdout, level = logging.INFO, format = f'{clear}%(asctime)s %(message)s', datefmt = "[%Y-%m-%d %H:%M:%S]")
+logging.basicConfig(stream = sys.stdout, level = logging.INFO, format = f'{clear}%(asctime)s %(message)s', datefmt = "[%d-%m-%Y %H:%M:%S]")
 logging.getLogger().handlers[0].terminator = ''
 for name in logging.root.manager.loggerDict:
     logging.getLogger(name).setLevel(logging.CRITICAL)
