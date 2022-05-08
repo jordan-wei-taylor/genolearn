@@ -1,6 +1,10 @@
+from   genolearn.logger     import Writing
+
+from   sklearn.ensemble     import AdaBoostClassifier, RandomForestClassifier
+from   sklearn.linear_model import LogisticRegression
+
 import numpy as np
-from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+import os
 
 class FeatureImportance():
     """
@@ -28,11 +32,17 @@ class FeatureImportance():
         self._score, self._rank = _assign(model)
         
     @property
-    def feature_score(self):
+    def feature_scores(self):
         return self._score(self.model)
 
-    def ranked_features(self, **kwargs):
+    def feature_ranks(self, **kwargs):
         return self._rank(self.model, **kwargs)
+
+    def save(self, name, path, **kwargs):
+        fullpath = os.path.join(path, name)
+        with Writing(fullpath, inline = True):
+            np.savez(fullpath, feature_scores = self.feature_scores, feature_ranks = self.feature_ranks(**kwargs))
+
 
 def _assign(model):
     if isinstance(model, LogisticRegression):
@@ -46,10 +56,10 @@ def _logistic_score(model):
     return model.coef_
 
 def _logistic_rank(model, fun = np.absolute, **kwargs):
-    return fun(_logistic_score(model)).mean(axis = -1)
+    return fun(_logistic_score(model)).mean(axis = -1).argsort()[::-1]
 
 def _ensemble_score(model):
     return model.feature_importances_
 
 def _ensemble_rank(model, **kwargs):
-    return _ensemble_score(model).argsort(axis = -1)
+    return _ensemble_score(model).argsort()[::-1]

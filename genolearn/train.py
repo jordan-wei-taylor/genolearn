@@ -1,5 +1,3 @@
-
-
 def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, overwrite):
     
     params = {k : v for k, v in locals().items() if not k.startswith('_')}
@@ -8,12 +6,13 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     from genolearn.models.classification import get_model
     from genolearn.models                import grid_predictions
     from genolearn.dataloader            import DataLoader
-    from genolearn.logger                import msg, print_dict # , Writing
+    from genolearn.logger                import msg, print_dict, Writing
     
     import warnings
     import shutil
     import numpy as np
     import os
+    import pickle
     
     if overwrite:
         if os.path.exists(path):
@@ -43,13 +42,19 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     Model   = get_model(model)
     
     outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, **kwargs)
+    
+    model   = outputs.pop('model') if 'model' in outputs else None
 
-    outpath = os.path.join(path, 'results.npz')
+    npz     = os.path.join(path, 'results.npz')
+    pkl     = os.path.join(path, 'model.pickle')
 
-    np.savez_compressed(outpath, **outputs)
+    with Writing(npz, inline = True):
+        np.savez_compressed(npz, **outputs)
 
-    # with Writing(outpath, inline = True):
-    #     np.savez_compressed(outpath, **outputs)
+    if model:
+        with Writing(pkl, inline = True):
+            with open(pkl, 'wb') as f:
+                pickle.dump(model, pickle)
 
     create_log(path)
 

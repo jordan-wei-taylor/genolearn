@@ -91,6 +91,9 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
     outputs['predict'] = np.array(outputs['predict']).reshape(*C, -1)
     outputs['time']    = np.array(outputs['time']).reshape(*C, 2)
 
+    if len(params) == 1:
+        outputs['model'] = model
+        
     outputs.update(common_kwargs)
     outputs.update(kwargs)
 

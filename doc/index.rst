@@ -2,7 +2,7 @@
 GenoLearn
 ##############
 
-GenoLearn is a machine learning pipeline designed for biologists working with fsm-lite files looking to build a predictive model or identify important patterns.
+GenoLearn is a machine learning pipeline designed for biologists working with genome sequence data looking to build a predictive model or identify important patterns.
 
 Installation
 ############
