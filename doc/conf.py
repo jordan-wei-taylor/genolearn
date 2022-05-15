@@ -4,8 +4,7 @@ import shlex
 import datetime
 from os.path import abspath
 
-sys.path.insert(0, abspath("sphinxext"))
-sys.path.insert(0, abspath(".."))
+sys.path += [abspath(path) for path in ['..', 'sphinxext', '../src']]
 
 numpydoc_show_class_members = False 
 doctest_global_setup = "import pluginmanager"

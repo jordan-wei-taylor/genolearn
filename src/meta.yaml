@@ -1,0 +1,31 @@
+package:
+  name: "genolearn"
+  version: "0.0.1"
+
+source:
+  git_url: https://github.com/jordan-wei-taylor/genolearn
+
+requirements:
+  host:
+    - python
+    - setuptools
+  build:
+    - python
+  run:
+    - python
+    - scipy>=1.7.3
+    - pandas>=1.4.1
+    - numpy>=1.21.5
+    - psutil>=5.8.0
+    - scikit-learn>=1.0.2
+
+about:
+  home: https://github.com/jordan-wei-taylor/genolearn
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: ../LICENSE
+  summary: "A machine learning toolkit for genome sequence data"
+
+extra:
+  recipe-maintainers:
+    - jordan-wei-taylor
