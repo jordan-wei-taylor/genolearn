@@ -88,8 +88,9 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
 
         monitor_RAM()
 
-    outputs['predict'] = np.array(outputs['predict']).reshape(*C, -1)
-    outputs['time']    = np.array(outputs['time']).reshape(*C, 2)
+    outputs['identifiers'] = dataloader.test_identifiers
+    outputs['predict']     = np.array(outputs['predict']).reshape(*C, -1)
+    outputs['time']        = np.array(outputs['time']).reshape(*C, 2)
 
     if len(params) == 1:
         outputs['model'] = model

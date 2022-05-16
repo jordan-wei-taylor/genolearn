@@ -6,8 +6,11 @@ __pycache__
 env
 
 # preprocessed data
-*data*
+data*
 !data_config.json
+
+# raw-data
+raw-data
 
 # testing files / directories
 test*
