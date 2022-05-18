@@ -155,9 +155,11 @@ if __name__ == '__main__':
                 f.close()
 
                 with Waiting('compressing', 'compressed', 'features.7z'):
-                    with py7zr.SevenZipFile('features.7z', 'w') as archive:
-                        archive.writeall('./features.txt')
+                    with py7zr.SevenZipFile(os.path.join(args.output_dir, 'features.7z'), 'w') as archive:
+                        archive.writeall(os.path.join(args.output_dir, 'features.txt'))
 
+                os.remove(os.path.join(args.output_dir, 'features.txt'))
+                
                 features.clear()
 
                 f = _data.init_write('meta', None, 'json', args.output_dir)
