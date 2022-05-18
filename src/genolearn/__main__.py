@@ -1,6 +1,6 @@
 if __name__ == '__main__':
 
-    from   genolearn.logger  import print_dict, msg
+    from   genolearn.logger  import print_dict, msg, Waiting
     from   genolearn         import utils, _data
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
@@ -9,6 +9,7 @@ if __name__ == '__main__':
 
     import numpy  as np
 
+    import py7zr
     import json
     import gzip
     import re
@@ -149,9 +150,14 @@ if __name__ == '__main__':
 
                 utils.set_m(m)
                 
-                gzf = _data.init_write('features', None, 'txt.gz', args.output_dir)
-                gzf.write(gzip.compress(' '.join(features).encode()))
-                gzf.close()
+                f = _data.init_write('features', None, 'txt', args.output_dir)
+                f.write(' '.join(features))
+                f.close()
+
+                with Waiting('compressing', 'compressed', 'features.7z'):
+                    with py7zr.SevenZipFile('features.7z', 'w') as archive:
+                        archive.writeall('./features.txt')
+
                 features.clear()
 
                 f = _data.init_write('meta', None, 'json', args.output_dir)

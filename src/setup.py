@@ -30,6 +30,7 @@ setuptools.setup(
         'pandas>=1.4.1',
         'numpy>=1.22.3',
         'psutil>=5.9.0',
-        'scikit-learn>=1.0.2'
+        'scikit-learn>=1.0.2',
+        'py7zr'
     ]
 )
