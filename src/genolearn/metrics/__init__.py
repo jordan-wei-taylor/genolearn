@@ -62,7 +62,7 @@ class Metrics():
         self._weight = np.unique(Y, return_counts = True)[1]
 
     def __call__(self, *keys, func = None):
-        func = _func(func, self._w)
+        func = _func(func, self._weight)
         ret  = None
         if keys:
             if func:
