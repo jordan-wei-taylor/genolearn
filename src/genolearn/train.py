@@ -52,13 +52,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     pkl     = 'model.pickle'
     csv     = 'predictions.csv'
 
-    print('identifiers')
-    print(dataloader.test_identifiers)
-
-    print('hats')
-    print(hats.shape)
-
-    pd.DataFrame(index = dataloader.test_identifiers, columns = ['prediction'], data = hats).to_csv(csv)
+    pd.DataFrame(index = outputs['identifiers'], columns = ['prediction'], data = hats).to_csv(csv)
 
     with Writing(npz, inline = True):
         np.savez_compressed(npz, **outputs)
