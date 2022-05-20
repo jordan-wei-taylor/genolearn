@@ -39,10 +39,8 @@ def set_files(f):
     global files
     files = f
 
-def init_write(file, subpath = 'temp', ext = 'txt', out = None):
-    global output_dir
-    out  = output_dir if out is None else out
-    path = os.path.join(out, subpath, f'{file}.{ext}') if subpath else os.path.join(out, f'{file}.{ext}')
+def init_write(file, subpath = 'temp', ext = 'txt'):
+    path = os.path.join(subpath, f'{file}.{ext}') if subpath else f'{file}.{ext}'
     if os.path.exists(path):
         os.remove(path)
     return open(path, 'a')

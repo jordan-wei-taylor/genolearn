@@ -75,13 +75,9 @@ if __name__ == '__main__':
     gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
 
     _data.set_memory(args.not_low_memory)
-    _data.set_output_dir(args.output_dir)
-   
+    
     if os.path.exists(args.output_dir):
         rmtree(args.output_dir)
-
-    os.makedirs(f'{args.output_dir}/temp', exist_ok = True)
-    os.makedirs(os.path.join(args.output_dir, 'feature-selection'), exist_ok = True)
 
     first_run  = True
     features   = []
@@ -92,6 +88,11 @@ if __name__ == '__main__':
 
     with gzip.GzipFile(args.genome_sequence_path) as gz:
        
+        os.chdir(args.output_dir)
+
+        os.mkdir('temp')
+        os.mkdir('feature-selection')
+
         files = {}
         _data.set_files(files)
 
@@ -150,32 +151,32 @@ if __name__ == '__main__':
 
                 utils.set_m(m)
                
-                f = _data.init_write('features', None, 'txt', args.output_dir)
+                f = _data.init_write('features', None, 'txt')
                 f.write(' '.join(features))
                 f.close()
 
                 with Waiting('compressing', 'compressed', 'features.7z'):
-                    with py7zr.SevenZipFile(os.path.join(args.output_dir, 'features.7z'), 'w') as archive:
-                        archive.writeall(os.path.join(args.output_dir, 'features.txt'))
+                    with py7zr.SevenZipFile('features.7z', 'w') as archive:
+                        archive.writeall('features.txt')
 
-                os.remove(os.path.join(args.output_dir, 'features.txt'))
+                os.remove('features.txt')
                 
                 features.clear()
 
-                f = _data.init_write('meta', None, 'json', args.output_dir)
+                f = _data.init_write('meta', None, 'json')
                 json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
                 f.close()
                
                 def to_sparse(npz, c, d):
-                    np.savez_compressed(os.path.join(args.output_dir, 'sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
+                    np.savez_compressed(os.path.join('sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
 
                 def to_dense(npz, c, d):
                     arr = np.zeros(m, dtype = d.dtype)
                     arr[c] = d
-                    np.savez_compressed(os.path.join(args.output_dir, 'dense', npz), arr = arr)
+                    np.savez_compressed(os.path.join('dense', npz), arr = arr)
                
                 def convert_write(file):
-                    txt  = os.path.join(args.output_dir, 'temp', f'{file}.txt')
+                    txt  = os.path.join('temp', f'{file}.txt')
                     npz  = f'{file}.npz'
                     c, d = np.loadtxt(txt, dtype = c_dtype).T
 
@@ -196,11 +197,11 @@ if __name__ == '__main__':
                 functions = []
                 if args.sparse:
                     functions.append(to_sparse)
-                    os.makedirs(f'{args.output_dir}/sparse')
+                    os.mkdir('sparse')
 
                 if args.dense:
                     functions.append(to_dense)
-                    os.makedirs(f'{args.output_dir}/dense')
+                    os.mkdir('dense')
 
                 _data.set_functions(functions)
            
@@ -217,8 +218,8 @@ if __name__ == '__main__':
 
             files.clear()
 
-        os.rmdir(os.path.join(args.output_dir, 'temp'))
+        os.rmdir('temp')
 
-        utils.create_log(args.output_dir)
+        utils.create_log('.')
    
     msg('executed "genolearn"')
