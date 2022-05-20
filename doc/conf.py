@@ -8,13 +8,8 @@ for path in ['..', 'sphinxext', '../src']:
     sys.path.insert(0, abspath(path))
 
 
-
-import genolearn
-
-
 print('python', sys.executable)
 print('path  ', sys.path)
-
 
 numpydoc_show_class_members = False 
 doctest_global_setup = "import pluginmanager"
@@ -42,6 +37,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.mathjax',
     'sphinx.ext.autosectionlabel',
+    'sphinx_copybutton',
     'numpydoc'
 ]
 

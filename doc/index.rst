@@ -12,21 +12,36 @@ Pip
 
 Stable Install
 
+Ubuntu / Mac OS
+---------------
+
 .. code-block:: sh
 
     # set a virtual environment if not already done so
     # assuming Python3 as the default python (otherwise use python3 inplace of python)
-    user@device:~$ python -m venv env
+    python3 -m venv env
 
     # activate virtual environment
-    # if linux / mac
-    user@device:~$ source env/bin/activate
-
-    # if windows
-    user@device:~$ ./env/Scripts/activate
+    source env/bin/activate
 
     # install GenoLearn
-    (env) user@device:~$ pip install genolearn
+    pip install genolearn
+
+
+Windows
+-------
+
+.. code-block:: sh
+
+    # set a virtual environment if not already done so
+    # assuming Python3 as the default python (otherwise use python3 inplace of python)
+    python3 -m venv env
+
+    # activate virtual environment
+    ./env/Scripts/activate
+
+    # install GenoLearn
+    pip install genolearn
 
 
 Conda
@@ -37,13 +52,13 @@ Stable Install
 .. code-block:: sh
 
     # create new conda environment
-    user@device:~$ conda create --name env
+    conda create --name env
 
     # activate environment
-    user@device:~$ conda activate env
+    conda activate env
 
     # install GenoLearn
-    (env) user@device:~$ conda install genolearn --channel jordan-wei-taylor
+    conda install genolearn --channel jordan-wei-taylor
 
 
 GitHub + Pip
@@ -56,7 +71,7 @@ This is to install the most recent work in progress. Note that some functionalit
 
 .. code-block:: sh
 
-    (env) user@device:~$ pip install git+https://github.com/jordan-wei-taylor/genolearn.git
+    pip install git+https://github.com/jordan-wei-taylor/genolearn.git
 
 .. toctree::
     :hidden:

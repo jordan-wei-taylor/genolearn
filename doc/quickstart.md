@@ -5,13 +5,13 @@ In this Quickstart guide, we assume that the user has preprocessed their dataset
 
 .. code-block:: sh
 
-    user@device:~$ git clone https://github.com/jordan-wei-taylor/genolearn-demo-data.git
+    git clone https://github.com/jordan-wei-taylor/genolearn-demo-data.git
 
-The dataset contains data relating to E. Coli O157 with 2,784 different strains, each with a count vector os over 12 million :math:`k`-mers, and an associated region of origin in the meta data file for years 2014 to 2019. We can note this is a large dataset so in order to run any machine learning models on this dataset we will need a means of selecting which genome sequences are of interest. To do so we can use the Fisher Scores for each genome sequence (see :ref:`FeatureSelection`). Lets compute the Fisher Scores for each genome sequence with the below command
+The dataset contains data relating to E. Coli O157 with 2,784 different strains, each with a count vector of over 12 million :math:`k`-mers, and an associated region of origin in the meta data file for years 2014 to 2019. We can note this is a large dataset so in order to run any machine learning models on this dataset we will need a means of selecting which genome sequences are of interest. To do so we can use the Fisher Scores for each genome sequence (see :ref:`FeatureSelection`). Lets compute the Fisher Scores for each genome sequence with the below command
 
 .. code-block:: sh
 
-    user@device:~$ python3 -m genolearn.feature_selection fisher-scores.npz genolearn-demo-data/data genolearn-demo-data/meta-data.csv Accession Regions 2018 2017 2016 2015 2014 -group Year
+    python3 -m genolearn.feature_selection fisher-scores.npz genolearn-demo-data/data genolearn-demo-data/meta-data.csv Accession Regions 2018 2017 2016 2015 2014 -group Year
 
 The above command computes the fisher scores for all genome sequence counts from years 2018 - 2018, then 2017 - 2018, ..., 2014 - 2018. This is to simulate the effect of collecting more data i.e. in scenario one, we only have a single year's worth of data, and in the final scenario, we have 5 years worth of data.
 
@@ -61,7 +61,7 @@ Now lets run a training script where we train on all strains collected in 2018 a
 
 .. code-block:: sh
 
-    user@device:~$ python3 -m genolearn.train output RandomForestClassifier data_config.json rf_config.json -train 2018 -test 2019 -K 10000 -order fisher-score.npz -order_key 2018
+    python3 -m genolearn.train output RandomForestClassifier data_config.json rf_config.json -train 2018 -test 2019 -K 10000 -order fisher-score.npz -order_key 2018
 
 The above generates an ``output/results.npz`` file which works similarly to a dictionary. In Python we can access the information through indexing string values.
 

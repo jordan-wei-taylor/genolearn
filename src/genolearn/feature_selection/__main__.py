@@ -1,5 +1,5 @@
 if __name__ == '__main__':
-    from   genolearn.feature_selection import base_feature_selection
+    from   genolearn.feature_selection import base_feature_selection, fisher
     from   genolearn.logger  import print_dict, msg, Writing
     from   genolearn.dataloader import DataLoader
     from   genolearn         import utils
@@ -46,10 +46,13 @@ if __name__ == '__main__':
 
     dataloader = DataLoader(args.path, args.meta_path, args.identifier, args.target, args.group, args.sparse)
     
+    os.makedirs(os.path.join(args.path, 'feature-selection'), exist_ok = True)
 
-    if f'{args.method}' in [module for _, module, _ in pkgutil.iter_modules(['genolearn/feature_selection']) if not module.startswith('__')]:
+    print(__file__)
 
-        module       = importlib.import_module(f'genolearn.feature_selection.{args.method}')
+    if f'{args.method}' == 'fisher':
+
+        module       = importlib.import_module(f'genolearn.feature_selection.fisher')
 
     elif f'{args.method}.py' in os.listdir():
 
