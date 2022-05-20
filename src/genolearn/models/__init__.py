@@ -1,9 +1,9 @@
-from   genolearn.models import classification
-from   genolearn.logger import Waiting, msg
-from   genolearn.utils  import monitor_RAM
-
-from   itertools        import product
-from   time             import time
+from   genolearn.models  import classification
+from   genolearn.logger  import Waiting, msg
+from   genolearn.utils   import monitor_RAM
+from   genolearn.metrics import Metrics
+from   itertools         import product
+from   time              import time
 
 import numpy as np
 import joblib
@@ -37,7 +37,7 @@ def load(path):
         return joblib.load(path)
     raise Exception(f'"{full_path}" does not exist!')
 
-def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, min_count = 0, target_subset = None, **kwargs):
+def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, min_count = 0, target_subset = None, metric = 'recall', **kwargs):
 
     values  = [K] + list(kwargs.values())
     params  = list(product(*values))
@@ -55,6 +55,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         if hasattr(Model, key):
             outputs[key] = []
 
+    best = (None, None, -1)
     for param in params:
         for i, theta in enumerate(param):
             flag = V[i] != theta
@@ -86,17 +87,20 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
             if hasattr(model, key):
                 outputs[key].append(getattr(model, key)(X_test[:,:param[0]]))
 
+        score = Metrics(Y_test, hat, metric)(func = 'weighted_mean')
+        if score > best[2]:
+            best = (model, hat, score)
+
         monitor_RAM()
 
     outputs['identifiers'] = dataloader.test_identifiers
     outputs['predict']     = np.array(outputs['predict']).reshape(*C, -1)
     outputs['time']        = np.array(outputs['time']).reshape(*C, 2)
-
-    if len(params) == 1:
-        outputs['model'] = model
         
     outputs.update(common_kwargs)
     outputs.update(kwargs)
+
+    outputs['best'] = best
 
     msg('computed predictions and computation times', delete = sum(C))
     

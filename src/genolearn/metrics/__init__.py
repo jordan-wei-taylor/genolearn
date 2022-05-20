@@ -18,6 +18,23 @@ def _apply(stats, func):
     """ applies func with stats dictionary from _base """
     return {key : func(*value) for key, value in stats.items()}
 
+def _func(name):
+
+    if isinstance(name, function):
+        return name
+
+    elif name is None:
+        return name
+
+    def weighted_mean(score, w):
+        return (score * w) / w.sum()
+
+    funcs = dict(mean = np.mean, weighted_mean = weighted_mean)
+
+    if name in funcs:
+        return funcs[name]
+
+    raise Exception()
 
 class Metrics():
     """
@@ -42,15 +59,26 @@ class Metrics():
             self._metric = {metric : _apply(stats, func) for metric, func in _metrics.items()}
         else:
             self._metric = {metric : _apply(stats, _metrics[metric]) for metric in metrics}
+        self._weight = np.unique(Y, return_counts = True)[1]
 
     def __call__(self, *keys, func = None):
+        func = _func(func)
+        ret  = None
         if keys:
             if func:
-                return {key : func(np.array(list(self._metric[key].values()))) for key in keys}
-            return {key : self._metric[key] for key in keys}
+                ret = {key : func(np.array(list(self._metric[key].values()))) for key in keys}
+            else:
+                ret = {key : self._metric[key] for key in keys}
         elif func:
-            return {key : func(np.array(list(value.values()))) for key, value in self._metric.items()}
-        return self._metric
+            ret = {key : func(np.array(list(value.values()))) for key, value in self._metric.items()}
+        else:
+            ret = self._metric
+
+        if ret:
+            if len(ret) == 1:
+                return ret[list(ret)[0]]
+
+        return ret
 
     def __repr__(self):
         if len(self._metric) == 1:

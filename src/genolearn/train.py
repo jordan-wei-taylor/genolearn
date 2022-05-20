@@ -1,4 +1,4 @@
-def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, overwrite):
+def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, overwrite, metric):
     
     params = {k : v for k, v in locals().items() if not k.startswith('_')}
 
@@ -11,6 +11,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     import warnings
     import shutil
     import numpy as np
+    import pandas as pd
     import os
     import pickle
     
@@ -41,12 +42,17 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 
     Model   = get_model(model)
     
-    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, **kwargs)
+    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, **kwargs)
     
-    model   = outputs.pop('model') if 'model' in outputs else None
+    model, hats, score = outputs.pop('best')
 
-    npz     = os.path.join(path, 'results.npz')
-    pkl     = os.path.join(path, 'model.pickle')
+    os.chdir(path)
+
+    npz     = 'results.npz'
+    pkl     = 'model.pickle'
+    csv     = 'predictions.csv'
+
+    pd.DataFrame(index = dataloader._identifiers[1], columns = ['prediction'], data = hats).to_csv(csv)
 
     with Writing(npz, inline = True):
         np.savez_compressed(npz, **outputs)
@@ -54,7 +60,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     if model:
         with Writing(pkl, inline = True):
             with open(pkl, 'wb') as f:
-                pickle.dump(model, pickle)
+                pickle.dump(model, f)
 
     create_log(path)
 
@@ -81,6 +87,7 @@ if __name__ == '__main__':
     parser.add_argument('-ascending', default = False, type = bool)
     parser.add_argument('-min_count', default = 0, type = int)
     parser.add_argument('-target_subset', nargs = '*', default = None)
+    parser.add_argument('-metric', default = 'recall')
     parser.add_argument('--overwrite', action = 'store_true')
 
     args = parser.parse_args()
