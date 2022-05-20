@@ -203,15 +203,13 @@ class DataLoader():
             X_test  : load_X(test_identifiers, features = features, sparse = sparse)
             Y_test  : load_Y(test_identifiers)
         """
-        identifiers       = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count, target_subset)
+        self._identifiers = self.train_identifiers, self.test_identifiers = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count, target_subset)
 
-        Y_train           = self.encode(self.load_Y(*identifiers[0]))
-        Y_test            = self.encode(self.load_Y(*identifiers[1]))
+        Y_train           = self.encode(self.load_Y(*self.train_identifiers))
+        Y_test            = self.encode(self.load_Y(*self.test_identifiers ))
 
-        X_train           = self.load_X(*identifiers[0], features = features, sparse = sparse)
-        X_test            = self.load_X(*identifiers[1] , features = features, sparse = sparse)
-
-        self._identifiers = self.train_identifiers, self.test_identifiers = train_identifiers, test_identifiers
+        X_train           = self.load_X(*self.train_identifiers, features = features, sparse = sparse)
+        X_test            = self.load_X(*self.test_identifiers , features = features, sparse = sparse)
 
         return X_train, Y_train, X_test, Y_test
 
