@@ -1,5 +1,7 @@
-models
+Models
 ################
 
-.. automodule:: genolearn.models
+<!-- .. automodule:: genolearn.models
     :members:
+
+.. autoclass:: DataLoader -->

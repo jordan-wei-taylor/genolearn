@@ -1,6 +1,3 @@
-LICENSE
-README.md
-pyproject.toml
 setup.py
 ./genolearn/__init__.py
 ./genolearn/__main__.py
@@ -8,13 +5,15 @@ setup.py
 ./genolearn/_data.py
 ./genolearn/dataloader.py
 ./genolearn/logger.py
-./genolearn/metrics.py
 ./genolearn/train.py
 ./genolearn/utils.py
 ./genolearn/feature_importance/__init__.py
+./genolearn/feature_importance/__main__.py
 ./genolearn/feature_selection/__init__.py
 ./genolearn/feature_selection/__main__.py
 ./genolearn/feature_selection/fisher.py
+./genolearn/metrics/__init__.py
+./genolearn/metrics/functions.py
 ./genolearn/models/__init__.py
 ./genolearn/models/classification.py
 genolearn.egg-info/PKG-INFO

@@ -4,7 +4,17 @@ import shlex
 import datetime
 from os.path import abspath
 
-sys.path += [abspath(path) for path in ['..', 'sphinxext', '../src']]
+for path in ['..', 'sphinxext', '../src']:
+    sys.path.insert(0, abspath(path))
+
+
+
+import genolearn
+
+
+print('python', sys.executable)
+print('path  ', sys.path)
+
 
 numpydoc_show_class_members = False 
 doctest_global_setup = "import pluginmanager"

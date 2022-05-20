@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: genolearn
-Version: 0.0.1
+Version: 0.0.2
 Summary: A machine learning toolkit for genome sequence data
 Home-page: https://github.com/jordan-wei-taylor/genolearn
 Author: Jordan Taylor
@@ -33,11 +33,13 @@ License: Copyright (c) 2022, Jordan Wei Taylor
         OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Project-URL: Bug Tracker, https://github.com/jordan-wei-taylor/genolearn/issues
+Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.8
+Requires-Python: >=3.6
 Description-Content-Type: text/markdown
-License-File: LICENSE
 
 # Genolearn
+
+
 

@@ -10,7 +10,7 @@ Installation
 Pip
 ====================
 
-
+Stable Install
 
 .. code-block:: sh
 
@@ -32,6 +32,8 @@ Pip
 Conda
 ======================
 
+Stable Install
+
 .. code-block:: sh
 
     # create new conda environment
@@ -41,7 +43,20 @@ Conda
     user@device:~$ conda activate env
 
     # install GenoLearn
-    user@device:~$ conda install genolearn --channel jordan-wei-taylor
+    (env) user@device:~$ conda install genolearn --channel jordan-wei-taylor
+
+GitHub + Pip 
+======================================
+
+Unstable Latest Install
+
+Working progress so 
+
+
+.. code-block:: sh
+
+    (env) user@device:~$ git clone https://github.com/jordan-wei-taylor/genolearn.git
+    (env) user@device:~$ pip install genolearn/src
 
 .. toctree::
     :hidden:
