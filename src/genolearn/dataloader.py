@@ -211,7 +211,7 @@ class DataLoader():
         X_train           = self.load_X(*identifiers[0], features = features, sparse = sparse)
         X_test            = self.load_X(*identifiers[1] , features = features, sparse = sparse)
 
-        self._identifiers = train_identifiers, test_identifiers
+        self._identifiers = self.train_identifiers, self.test_identifiers = train_identifiers, test_identifiers
 
         return X_train, Y_train, X_test, Y_test
 
