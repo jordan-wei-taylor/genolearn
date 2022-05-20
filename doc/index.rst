@@ -50,13 +50,26 @@ GitHub + Pip
 
 Unstable Latest Install
 
-Working progress so 
+This is to install the most recent work in progress. Note that some functionality may be be broken but once fully tested, the above installation methods will install the most recent stable version of ``genolearn``.
 
 
 .. code-block:: sh
 
     (env) user@device:~$ git clone https://github.com/jordan-wei-taylor/genolearn.git
-    (env) user@device:~$ pip install genolearn/src
+    (env) user@device:~$ pip install genolearn/src/.
+
+
+GitHub
+======================================
+
+Unstable Latest Install
+
+This is to install the most recent work in progress. Note that some functionality may be be broken but once fully tested, the above installation methods will install the most recent stable version of ``genolearn``.
+
+
+.. code-block:: sh
+
+    (env) user@device:~$ pip install git+https://github.com/jordan-wei-taylor/genolearn.git
 
 .. toctree::
     :hidden:

@@ -11,7 +11,7 @@ setuptools.setup(
     author="Jordan Taylor",
     author_email="jt2006@bath.ac.uk",
     description="A machine learning toolkit for genome sequence data",
-    long_description=read('../README.md'),
+    long_description=read('README.md'),
     long_description_content_type="text/markdown",
     url="https://github.com/jordan-wei-taylor/genolearn",
     project_urls={
@@ -21,10 +21,10 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "."},
-    packages=setuptools.find_packages(where="."),
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
-    license=read('../LICENSE'), 
+    license=read('LICENSE'), 
     install_requires=[
         'scipy>=1.8.0',
         'pandas>=1.4.1',
