@@ -270,7 +270,7 @@ class DataLoader():
         raise Exception('decoder is only available after running the `load_train_test` method!')
 
     def decode(self, Y):
-        """ Returns an ``decoder`` look-up for every element in ``Y`` """
+        """ Returns a ``decoder`` look-up for every element in ``Y`` """
         if self._encoder:
             decoder = self.decoder
             return np.vectorize(lambda value : decoder[value])(Y)

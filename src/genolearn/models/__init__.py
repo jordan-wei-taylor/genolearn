@@ -89,7 +89,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
 
         score = Metrics(Y_test, hat, metric)(func = 'weighted_mean')
         if score > best[2]:
-            best = (model, hat, score)
+            best = (model, dataloader.decode(hat), score)
 
         monitor_RAM()
 
