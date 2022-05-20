@@ -8,6 +8,7 @@ env
 # preprocessed data
 data
 data-low-memory
+data-batch
 
 !data_config.json
 

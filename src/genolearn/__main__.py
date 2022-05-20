@@ -79,6 +79,8 @@ if __name__ == '__main__':
     if os.path.exists(args.output_dir):
         rmtree(args.output_dir)
 
+    os.mkdir(args.output_dir)
+    
     first_run  = True
     features   = []
     exceptions = set()
