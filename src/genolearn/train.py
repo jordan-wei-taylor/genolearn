@@ -62,7 +62,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
             with open(pkl, 'wb') as f:
                 pickle.dump(model, f)
 
-    create_log(path)
+    create_log()
 
     msg('executed "train.py"')
 
@@ -70,6 +70,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 if __name__ == '__main__':
 
     from   genolearn.models import classification
+    from   genolearn.logger import print_dict
 
     import argparse
     

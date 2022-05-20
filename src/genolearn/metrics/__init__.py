@@ -18,7 +18,7 @@ def _apply(stats, func):
     """ applies func with stats dictionary from _base """
     return {key : func(*value) for key, value in stats.items()}
 
-def _func(name):
+def _func(name, w):
 
     if callable(name):
         return name
@@ -26,7 +26,7 @@ def _func(name):
     elif name is None:
         return name
 
-    def weighted_mean(score, w):
+    def weighted_mean(score):
         return (score * w) / w.sum()
 
     funcs = dict(mean = np.mean, weighted_mean = weighted_mean)
@@ -62,7 +62,7 @@ class Metrics():
         self._weight = np.unique(Y, return_counts = True)[1]
 
     def __call__(self, *keys, func = None):
-        func = _func(func)
+        func = _func(func, self._w)
         ret  = None
         if keys:
             if func:
