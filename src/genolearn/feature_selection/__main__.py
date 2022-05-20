@@ -48,8 +48,6 @@ if __name__ == '__main__':
     
     os.makedirs(os.path.join(args.path, 'feature-selection'), exist_ok = True)
 
-    print(__file__)
-
     if f'{args.method}' == 'fisher':
 
         module       = importlib.import_module(f'genolearn.feature_selection.fisher')

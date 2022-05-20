@@ -20,7 +20,7 @@ def _apply(stats, func):
 
 def _func(name):
 
-    if isinstance(name, function):
+    if callable(name):
         return name
 
     elif name is None:

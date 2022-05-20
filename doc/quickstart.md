@@ -61,7 +61,7 @@ Now lets run a training script where we train on all strains collected in 2018 a
 
 .. code-block:: sh
 
-    python3 -m genolearn.train output RandomForestClassifier data_config.json rf_config.json -train 2018 -test 2019 -K 10000 -order fisher-score.npz -order_key 2018
+    python3 -m genolearn.train output RandomForestClassifier data_config.json rf_config.json -train 2018 -test 2019 -K 10000 -order fisher-scores.npz -order_key 2018
 
 The above generates an ``output/results.npz`` file which works similarly to a dictionary. In Python we can access the information through indexing string values.
 
