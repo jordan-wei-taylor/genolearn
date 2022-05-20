@@ -1,7 +1,4 @@
-from   genolearn import feature_selection, dataloader, metrics
-from   genolearn import models
-from   genolearn import utils
-
+from   genolearn import feature_selection, dataloader
 import numpy     as np
 import os
 

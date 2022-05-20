@@ -1,16 +1,5 @@
 import numpy as np
 
-def _base(Y, Y_hat):
-    stats  = {}
-    unique = set(np.unique(Y)) | set(np.unique(Y_hat))
-    for u in sorted(unique):
-        TP = sum(Y_hat[...,Y == u] == u)
-        TN = sum(Y_hat[...,Y != u] != u)
-        FP = sum(Y_hat[...,Y != u] == u)
-        FN = sum(Y_hat[...,Y == u] != u)
-        stats[u] = TP, TN, FP, FN
-    return stats
-
 def recall(TP, TN, FP, FN):
     return TP / (TP + FN)
 
@@ -83,6 +72,7 @@ _metrics = {metric : func for metric, func in locals().items() if not metric.sta
 
 def apply(stats, func):
     return {key : func(*value) for key, value in stats.items()}
+    
 class Metrics():
 
     def __init__(self, Y, Y_hat, *metrics):
@@ -111,27 +101,3 @@ class Metrics():
 
     def __getitem__(self, name):
         return self._metric[name]
-
-def intra_accuracy(Y, Y_hat, labels):
-    """
-    Returns the intra-class accuracies
-
-    :param Y: target labels
-    :type kind: numpy.ndarray of shape (N, M)
-    
-    :param Y_hat: estimate of labels
-    :type kind: numpy.ndarray of shape (N,...,M)
-
-    :param labels: a list of unique labels
-    :type kind: list, set, 1-d array
-
-    :return: intra class accuracies.
-    :rtype: numpy.ndarray of shape (N,...)
-    """
-    nan    = np.ones(Y_hat.shape[:-1]) * np.nan
-    
-    def accuracy(label):
-        mask = Y == label
-        return (Y_hat[...,mask] == label).mean(axis = -1) if mask.any() else nan
-
-    return np.array(list(map(accuracy, labels)))

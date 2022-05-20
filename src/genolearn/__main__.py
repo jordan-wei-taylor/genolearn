@@ -53,12 +53,12 @@ if __name__ == '__main__':
 
     parser.add_argument('output_dir')
     parser.add_argument('genome_sequence_path')
-    parser.add_argument('-batch_size', type = int, default = 512)
-    parser.add_argument('-verbose', type = int, default = 250000)
-    parser.add_argument('-n_processes', default = 'auto')
-    parser.add_argument('-sparse', default = True, type = bool)
-    parser.add_argument('-dense', default = True, type = bool)
-    parser.add_argument('-debug', default = -1, type = int)
+    parser.add_argument('-bs',  '--batch_size', type = int, default = 512)
+    parser.add_argument('-v' , '--verbose', type = int, default = 250000)
+    parser.add_argument('-n' , '--n_processes', default = 'auto')
+    parser.add_argument('-s' , '--sparse', default = True, type = bool)
+    parser.add_argument('-d' , '--dense', default = True, type = bool)
+    parser.add_argument('--debug', default = -1, type = int)
     parser.add_argument('--not_low_memory', default = False, action = 'store_true')
 
     args   = parser.parse_args()
@@ -76,7 +76,7 @@ if __name__ == '__main__':
 
     _data.set_memory(args.not_low_memory)
     _data.set_output_dir(args.output_dir)
-    
+   
     if os.path.exists(args.output_dir):
         rmtree(args.output_dir)
 
@@ -91,18 +91,18 @@ if __name__ == '__main__':
     unique     = set()
 
     with gzip.GzipFile(args.genome_sequence_path) as gz:
-        
+       
         files = {}
         _data.set_files(files)
 
         while True:
-            
+           
             gz.seek(0)
 
             skip    = False
             skipped = False
             c       = 0
-            
+           
             for m, line in enumerate(gz, 1):
 
                 line   = line.decode()
@@ -118,7 +118,7 @@ if __name__ == '__main__':
                 for SRR, count in zip(srrs, counts):
                     if SRR not in exceptions:
                         if SRR not in files:
-                            if skip: 
+                            if skip:
                                 skipped = True
                                 continue
                             files[SRR] = _data.init(SRR)
@@ -129,10 +129,10 @@ if __name__ == '__main__':
 
                 if m % args.verbose == 0:
                     msg(f'{C:10,d} {m:10,d}')
-                
+               
                 if m == args.debug:
                     break
-            
+           
             if m % args.verbose:
                 msg(f'{C:10,d} {m:10,d}')
 
@@ -149,7 +149,7 @@ if __name__ == '__main__':
                 r_dtype   = utils.get_dtype(n)
 
                 utils.set_m(m)
-                
+               
                 f = _data.init_write('features', None, 'txt', args.output_dir)
                 f.write(' '.join(features))
                 f.close()
@@ -165,7 +165,7 @@ if __name__ == '__main__':
                 f = _data.init_write('meta', None, 'json', args.output_dir)
                 json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
                 f.close()
-                
+               
                 def to_sparse(npz, c, d):
                     np.savez_compressed(os.path.join(args.output_dir, 'sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
 
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                     arr = np.zeros(m, dtype = d.dtype)
                     arr[c] = d
                     np.savez_compressed(os.path.join(args.output_dir, 'dense', npz), arr = arr)
-                
+               
                 def convert_write(file):
                     txt  = os.path.join(args.output_dir, 'temp', f'{file}.txt')
                     npz  = f'{file}.npz'
@@ -203,7 +203,7 @@ if __name__ == '__main__':
                     os.makedirs(f'{args.output_dir}/dense')
 
                 _data.set_functions(functions)
-            
+           
             with Pool(args.n_processes) as pool:
                 pool.map(convert, list(files))
 
@@ -220,5 +220,5 @@ if __name__ == '__main__':
         os.rmdir(os.path.join(args.output_dir, 'temp'))
 
         utils.create_log(args.output_dir)
-    
+   
     msg('executed "genolearn"')

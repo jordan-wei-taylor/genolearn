@@ -8,4 +8,3 @@ genolearn
     feature_importance
     feature_selection
     metrics
-    models
