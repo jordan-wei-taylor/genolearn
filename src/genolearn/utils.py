@@ -37,6 +37,8 @@ def create_log(path = '.', filename = 'log.txt'):
     if PARAMS:
         contents = f'{contents}\n\n{json.dumps(PARAMS, indent = 4)}'
 
+    contents = f'{contents}\n'
+    
     to_txt(contents, os.path.join(path, filename))
 
 def to_txt(obj, path, mode = 'w'):

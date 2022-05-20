@@ -63,17 +63,33 @@ Now lets run a training script where we train on all strains collected in 2018 a
 
     python3 -m genolearn.train output RandomForestClassifier data_config.json rf_config.json -train 2018 -test 2019 -K 10000 -order fisher-scores.npz -order_key 2018
 
-The above generates an ``output/results.npz`` file which works similarly to a dictionary. In Python we can access the information through indexing string values.
+The above generates the following tree
+
+.. code-block:: text
+    
+    output
+    ├── log.txt
+    ├── model.pickle
+    ├── predictions.csv
+    └── results.npz
+
+
+where 
+
++ log.txt contains information about running ``genolearn.train``
++ model.pickle is a saved model which achieved the highest metric and can be loaded with the ``load`` function in ``genolearn.model``
++ predictions.csv is a csv file with an index column containing identifiers and a single column containing model predictions from the previous model.pickle file
++ results.npz contains predictions from all model configurations and can be opened within Python as shown below
 
 .. code-block:: python
 
     import numpy as np
 
-    npz = np.load('output.npz')
+    npz = np.load('output/results.npz')
 
     identifiers = npz['identifiers'] # shape (n,)
-    predictions = npz['predict']     # shape (1, 3, 10, n)
-    times       = npz['times']       # shape (1, 3, 10, 2)
+    predictions = npz['predict']     # shape (1, 3, 10, n) (1, K, 3 max_depth, and 10 random_state parameters for n predictions)
+    times       = npz['times']       # shape (1, 3, 10, 2) (last dimension measures training and predicting times)
 
 where :math:`n` is the number of valid testing strains present in 2019 i.e. only the strains in 2019 where the associated target region was present in 2018. This ignores strains in 2019 where the associated target region does not appear in 2018 as there are no training examples to learn from.
 
