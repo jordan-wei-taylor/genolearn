@@ -27,7 +27,7 @@ def _func(name, w):
         return name
 
     def weighted_mean(score):
-        return (score * w) / w.sum()
+        return (score @ w) / w.sum()
 
     funcs = dict(mean = np.mean, weighted_mean = weighted_mean)
 
