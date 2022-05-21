@@ -11,7 +11,7 @@ The dataset contains data relating to E. Coli O157 with 2,784 different strains,
 
 .. code-block:: sh
 
-    python3 -m genolearn.feature_selection fisher-scores.npz genolearn-demo-data/data genolearn-demo-data/meta-data.csv Accession Regions 2018 2017 2016 2015 2014 -group Year
+    python3 -m genolearn.feature_selection fisher-scores.npz genolearn-demo-data genolearn-demo-data/meta-data.csv Accession Region 2018 2017 2016 2015 2014 -group Year
 
 The above command computes the fisher scores for all genome sequence counts from years 2018 - 2018, then 2017 - 2018, ..., 2014 - 2018. This is to simulate the effect of collecting more data i.e. in scenario one, we only have a single year's worth of data, and in the final scenario, we have 5 years worth of data.
 

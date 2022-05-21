@@ -1,4 +1,4 @@
-def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, overwrite, metric):
+def main(path, model, data_config, model_config, train, test, K, order, order_key, ascending, min_count, target_subset, metric, mean_func, overwrite):
     
     params = {k : v for k, v in locals().items() if not k.startswith('_')}
 
@@ -42,7 +42,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 
     Model   = get_model(model)
     
-    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, **kwargs)
+    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, mean_func, **kwargs)
     
     model, hats, score = outputs.pop('best')
 
@@ -89,6 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('-min_count', default = 0, type = int)
     parser.add_argument('-target_subset', nargs = '*', default = None)
     parser.add_argument('-metric', default = 'recall')
+    parser.add_argument('-mean_func', default = 'weighted_mean')
     parser.add_argument('--overwrite', action = 'store_true')
 
     args = parser.parse_args()

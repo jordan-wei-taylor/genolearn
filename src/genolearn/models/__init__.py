@@ -37,7 +37,7 @@ def load(path):
         return joblib.load(path)
     raise Exception(f'"{full_path}" does not exist!')
 
-def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, min_count = 0, target_subset = None, metric = 'recall', **kwargs):
+def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwargs = {}, min_count = 0, target_subset = None, metric = 'recall', mean_func = 'weighted_mean', **kwargs):
 
     values  = [K] + list(kwargs.values())
     params  = list(product(*values))
@@ -87,14 +87,14 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
             if hasattr(model, key):
                 outputs[key].append(getattr(model, key)(X_test[:,:param[0]]))
 
-        score = Metrics(Y_test, hat, metric)(func = 'weighted_mean')
+        score = Metrics(Y_test, hat, metric)(func = mean_func)
         if score > best[2]:
             best = (model, dataloader.decode(hat), score)
 
         monitor_RAM()
 
     outputs['identifiers'] = dataloader.test_identifiers
-    outputs['predict']     = np.array(outputs['predict']).reshape(*C, -1)
+    outputs['predict']     = dataloader.decode(np.array(outputs['predict']).reshape(*C, -1))
     outputs['time']        = np.array(outputs['time']).reshape(*C, 2)
         
     outputs.update(common_kwargs)
