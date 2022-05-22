@@ -49,14 +49,14 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
     with Waiting('loading', 'loaded', 'train / test data', inline = True):
         X_train, Y_train, X_test, Y_test = dataloader.load_train_test(train, test, features = order[:max(K)], min_count = min_count, target_subset = target_subset)
 
-    keys    = ['predict_proba', 'predict_log_proba']
-    outputs = {'labels' : list(dataloader.encoder), 'time' : [], 'predict' : [], 'K' : K}
+    keys    = ['predict', 'predict_proba', 'predict_log_proba']
+    outputs = {'target' : dataloader.decode(Y_test), 'labels' : list(dataloader.encoder), 'time' : [], 'K' : K}
     for key in keys:
         if hasattr(Model, key):
             outputs[key] = []
 
     best = (None, None, -1)
-    for param in params:
+    for k, param in enumerate(params):
         for i, theta in enumerate(param):
             flag = V[i] != theta
             if (i + 1) < M and V[i] is not None and V[i] != theta:
@@ -80,7 +80,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
         fit   = time()
         hat   = model.predict(X_test[:,:param[0]])
         pred  = time()
-        outputs['predict'].append(hat)
+
         outputs['time'].append((fit - start, pred - fit))
 
         for key in keys:
@@ -89,18 +89,29 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
 
         score = Metrics(Y_test, hat, metric)(func = mean_func)
         if score > best[2]:
-            best = (model, dataloader.decode(hat), score)
+            best = (model, k, score)
 
         monitor_RAM()
+    
+    k                      = best[1]
+    best                   = (best[0], dataloader.decode(outputs['predict'][k]))
+
+    if hasattr(Model, 'predict_proba'):
+        best              += (outputs['predict_proba'][k],)
 
     outputs['identifiers'] = dataloader.test_identifiers
     outputs['predict']     = dataloader.decode(np.array(outputs['predict']).reshape(*C, -1))
+    
+    for key in keys[1:]:
+        if hasattr(Model, key):
+            outputs[key]   = np.array(outputs[key]).reshape(*C, -1, len(dataloader.encoder))
+
     outputs['time']        = np.array(outputs['time']).reshape(*C, 2)
         
     outputs.update(common_kwargs)
     outputs.update(kwargs)
 
-    outputs['best'] = best
+    outputs['best']   = best
 
     msg('computed predictions and computation times', delete = sum(C))
     

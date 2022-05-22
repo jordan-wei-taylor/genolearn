@@ -6,19 +6,20 @@ def _base(Y, Y_hat):
     stats  = {}
     unique = set(np.unique(Y)) | set(np.unique(Y_hat))
     for u in sorted(unique):
-        TP = sum(Y_hat[...,Y == u] == u)
-        TN = sum(Y_hat[...,Y != u] != u)
-        FP = sum(Y_hat[...,Y != u] == u)
-        FN = sum(Y_hat[...,Y == u] != u)
+        TP = (Y_hat[...,Y == u] == u).sum(axis = -1)
+        TN = (Y_hat[...,Y != u] != u).sum(axis = -1)
+        FP = (Y_hat[...,Y != u] == u).sum(axis = -1)
+        FN = (Y_hat[...,Y == u] != u).sum(axis = -1)
         stats[u] = TP, TN, FP, FN
     return stats
 
 
 def _apply(stats, func):
     """ applies func with stats dictionary from _base """
-    return {key : func(*value) for key, value in stats.items()}
+    with np.errstate(divide = 'ignore', invalid = 'ignore'):
+        return {key : func(*value) for key, value in stats.items()}
 
-def _func(name, w):
+def _func(name, count):
 
     if callable(name):
         return name
@@ -27,7 +28,7 @@ def _func(name, w):
         return name
 
     def weighted_mean(score):
-        return (score @ w) / w.sum()
+        return np.einsum('n...,n', score, count) / count.sum()
 
     funcs = dict(mean = np.mean, weighted_mean = weighted_mean)
 
@@ -54,15 +55,20 @@ class Metrics():
             String of metrics to use. If None, all metrics are computed.
     """
     def __init__(self, Y, Y_hat, *metrics):
-        stats = _base(Y, Y_hat)
+        Y, Y_hat = map(np.array, [Y, Y_hat])
+        stats    = _base(Y, Y_hat)
         if len(metrics) == 0:
             self._metric = {metric : _apply(stats, func) for metric, func in _metrics.items()}
         else:
             self._metric = {metric : _apply(stats, _metrics[metric]) for metric in metrics}
-        self._weight = np.unique(Y, return_counts = True)[1]
+        self.count = dict(zip(*np.unique(Y, return_counts = True)))
+        
+    @property
+    def _count(self):
+        return list(self._count.values())
 
     def __call__(self, *keys, func = None):
-        func = _func(func, self._weight)
+        func = _func(func, self._count)
         ret  = None
         if keys:
             if func:

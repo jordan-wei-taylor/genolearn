@@ -44,7 +44,9 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     
     outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, mean_func, **kwargs)
     
-    model, hats, score = outputs.pop('best')
+    model, predict, *probs = outputs.pop('best')
+
+    target  = outputs['target']
 
     os.chdir(path)
 
@@ -52,7 +54,13 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     pkl     = 'model.pickle'
     csv     = 'predictions.csv'
 
-    pd.DataFrame(index = outputs['identifiers'], columns = ['prediction'], data = hats).to_csv(csv)
+    df = pd.DataFrame(index = outputs['identifiers'], columns = ['target', 'predict'], data = np.array([target, predict]).T)
+
+    if probs:
+        for i, label in enumerate(dataloader.encoder):
+            df[label] = probs[0][:,i]
+
+    df.to_csv(csv)
 
     with Writing(npz, inline = True):
         np.savez_compressed(npz, **outputs)
