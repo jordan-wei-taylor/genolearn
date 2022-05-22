@@ -7,10 +7,6 @@ from os.path import abspath
 for path in ['..', 'sphinxext', '../src']:
     sys.path.insert(0, abspath(path))
 
-
-print('python', sys.executable)
-print('path  ', sys.path)
-
 numpydoc_show_class_members = False 
 doctest_global_setup = "import pluginmanager"
 autodoc_default_flags = ['members']

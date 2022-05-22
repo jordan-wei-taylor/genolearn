@@ -1,0 +1,69 @@
+datetime : 21-05-2022 19:20:07
+duration : 06h 01m 50s
+memory   : 1.209 GB
+
+{
+    "path": "O157-region-subset/2015/lr",
+    "model": "LogisticRegression",
+    "data_config": {
+        "path": "data",
+        "meta_path": "raw-data/meta-data.csv",
+        "identifier": "Accession",
+        "target": "Region",
+        "group": "Year"
+    },
+    "model_config": {
+        "n_jobs": -1,
+        "class_weight": "balanced",
+        "solver": "saga",
+        "C": [
+            0.01,
+            1.0,
+            100.0
+        ],
+        "random_state": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ]
+    },
+    "train": [
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ],
+    "test": [
+        "2019"
+    ],
+    "K": [
+        100,
+        1000,
+        10000,
+        100000
+    ],
+    "order": "fisher-scores.npz",
+    "order_key": "2015",
+    "ascending": false,
+    "min_count": 0,
+    "target_subset": [
+        "Asia",
+        "C. America",
+        "C. Europe",
+        "M. East",
+        "N. Africa",
+        "S. Europe",
+        "Subsaharan Africa",
+        "UK"
+    ],
+    "metric": "recall",
+    "mean_func": "weighted_mean",
+    "overwrite": false
+}

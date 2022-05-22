@@ -1,0 +1,86 @@
+datetime : 21-05-2022 18:02:57
+duration : 01h 17m 10s
+memory   : 10.389 GB
+
+{
+    "path": "O157-region-subset/2015/rf",
+    "model": "RandomForestClassifier",
+    "data_config": {
+        "path": "data",
+        "meta_path": "raw-data/meta-data.csv",
+        "identifier": "Accession",
+        "target": "Region",
+        "group": "Year"
+    },
+    "model_config": {
+        "n_jobs": -1,
+        "class_weight": "balanced",
+        "max_depth": [
+            5,
+            10,
+            15,
+            20,
+            25,
+            30,
+            35,
+            40,
+            45,
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80,
+            85,
+            90,
+            95,
+            100
+        ],
+        "random_state": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ]
+    },
+    "train": [
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ],
+    "test": [
+        "2019"
+    ],
+    "K": [
+        100,
+        1000,
+        10000,
+        100000,
+        1000000
+    ],
+    "order": "fisher-scores.npz",
+    "order_key": "2015",
+    "ascending": false,
+    "min_count": 0,
+    "target_subset": [
+        "Asia",
+        "C. America",
+        "C. Europe",
+        "M. East",
+        "N. Africa",
+        "S. Europe",
+        "Subsaharan Africa",
+        "UK"
+    ],
+    "metric": "recall",
+    "mean_func": "weighted_mean",
+    "overwrite": false
+}
