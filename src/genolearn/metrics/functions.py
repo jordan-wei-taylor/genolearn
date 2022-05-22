@@ -25,8 +25,7 @@ def false_omission_rate(TP, TN, FP, FN):
     return FN / (FN + TN)
 
 def positive_likelihood_ratio(TP, TN, FP, FN):
-    with np.errstate(divide = 'ignore', invalid = 'ignore'):
-        return recall(TP, TN, FP, FN) / false_positive_rate(TP, TN, FP, FN)
+    return recall(TP, TN, FP, FN) / false_positive_rate(TP, TN, FP, FN)
 
 def negative_likelihood_ratio(TP, TN, FP, FN):
     return false_negative_rate(TP, TN, FP, FN) / specificity(TP, TN, FP, FN)
@@ -66,5 +65,7 @@ def markedness(TP, TN, FP, FN):
 def diagnostics_odds_ratio(TP, TN, FP, FN):
     return positive_likelihood_ratio(TP, TN, FP, FN) /  negative_likelihood_ratio(TP, TN, FP, FN)
 
+def count(TP, TN, FP, FN):
+    return TP + FN
 
 _metrics = {metric : func for metric, func in locals().items() if not metric.startswith('_') and metric not in ['np']}

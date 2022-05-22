@@ -60,12 +60,13 @@ class Metrics():
         if len(metrics) == 0:
             self._metric = {metric : _apply(stats, func) for metric, func in _metrics.items()}
         else:
+            metrics      = set(metrics) | {'count'}
             self._metric = {metric : _apply(stats, _metrics[metric]) for metric in metrics}
-        self.count = dict(zip(*np.unique(Y, return_counts = True)))
+        self.count = self._metric.pop('count')
         
     @property
     def _count(self):
-        return list(self._count.values())
+        return np.array(list(self.count.values()))
 
     def __call__(self, *keys, func = None):
         func = _func(func, self._count)
