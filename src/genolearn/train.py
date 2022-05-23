@@ -13,6 +13,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     import numpy as np
     import pandas as pd
     import os
+    import json
     import pickle
     
     if overwrite:
@@ -44,6 +45,8 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     
     outputs, params = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, mean_func, **kwargs)
     
+    params['model'] = model
+    
     model, predict, *probs = outputs.pop('best')
 
     target  = outputs['target']
@@ -53,7 +56,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     npz     = 'results.npz'
     pkl     = 'model.pickle'
     csv     = 'predictions.csv'
-    json    = 'params.json'
+    js      = 'params.json'
 
     df = pd.DataFrame(index = outputs['identifiers'], columns = ['target', 'predict'], data = np.array([target, predict]).T)
 
@@ -70,8 +73,8 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
         with open(pkl, 'wb') as f:
             pickle.dump(model, f)
 
-    with Writing(json, inline = True):
-        with open(json, 'w') as f:
+    with Writing(js, inline = True):
+        with open(js, 'w') as f:
             f.write(json.dumps(params, indent = 4))
         
     create_log()
