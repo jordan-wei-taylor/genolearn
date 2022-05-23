@@ -58,7 +58,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 
     if probs:
         for i, label in enumerate(dataloader.encoder):
-            df[label] = probs[0][:,i]
+            df[f'P({label})'] = probs[0][:,i]
 
     df.to_csv(csv)
 

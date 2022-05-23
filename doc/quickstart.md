@@ -5,17 +5,17 @@ In this Quickstart guide, we assume that the user has preprocessed their dataset
 
 .. code-block:: sh
 
-    git clone https://github.com/jordan-wei-taylor/genolearn-demo-data.git
+    git clone https://github.com/jordan-wei-taylor/e-coli-o157-data.git
 
 The dataset contains data relating to E. Coli O157 with 2,784 different strains, each with a count vector of over 12 million :math:`k`-mers, and an associated region of origin in the meta data file for years 2014 to 2019. We can note this is a large dataset so in order to run any machine learning models on this dataset we will need a means of selecting which genome sequences are of interest. To do so we can use the Fisher Scores for each genome sequence (see :ref:`FeatureSelection`). Lets compute the Fisher Scores for each genome sequence with the below command
 
 .. code-block:: sh
 
-    python3 -m genolearn.feature_selection fisher-scores.npz genolearn-demo-data genolearn-demo-data/meta-data.csv Accession Region 2018 2017 2016 2015 2014 -group Year
+    python3 -m genolearn.feature_selection fisher-scores.npz e-coli-o157-data e-coli-o157-data/meta-data.csv Accession Region 2018 2017 2016 2015 2014 -group Year
 
 The above command computes the fisher scores for all genome sequence counts from years 2018 - 2018, then 2017 - 2018, ..., 2014 - 2018. This is to simulate the effect of collecting more data i.e. in scenario one, we only have a single year's worth of data, and in the final scenario, we have 5 years worth of data.
 
-Upon execution of the above command we should the path ``genolearn-demo-data/feature-selection/fisher-scores.npz`` should exist. Before training a machine learning model, we may wish to specify both a ``data_config`` and ``model_config`` files. Here is an example of the contents for both:
+Upon execution of the above command we should the path ``e-coli-o157-data/feature-selection/fisher-scores.npz`` should exist. Before training a machine learning model, we may wish to specify both a ``data_config`` and ``model_config`` files. Here is an example of the contents for both:
 
 .. code-block:: text
     :caption: data_config.json
@@ -28,7 +28,7 @@ Upon execution of the above command we should the path ``genolearn-demo-data/fea
         "group": "Year"
     }
 
-This specifies that the path to all of the outputs from the :ref:`Preprocessing` stage is ``genolearn-demo-data``, similarly the meta data is present in the same directory. We further state that the identifier for each strain is the ``Accession`` column within the meta data file, and the target values of interest are located within the ``Region`` column. Further we state that strains can be grouped by the ``Year`` column.
+This specifies that the path to all of the outputs from the :ref:`Preprocessing` stage is ``e-coli-o157-data``, similarly the meta data is present in the same directory. We further state that the identifier for each strain is the ``Accession`` column within the meta data file, and the target values of interest are located within the ``Region`` column. Further we state that strains can be grouped by the ``Year`` column.
 
 .. code-block:: text
     :caption: model_config.json
