@@ -21,8 +21,8 @@ Upon execution of the above command we should the path ``e-coli-o157-data/featur
     :caption: data_config.json
 
     {
-        "path": "genolearn-demo-data",
-        "meta_path": "genolearn-demo-data/meta-data.csv",
+        "path": "e-coli-o157-data",
+        "meta_path": "e-coli-o157-data/meta-data.csv",
         "identifier": "Accession",
         "target": "Region",
         "group": "Year"
