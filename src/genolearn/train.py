@@ -42,7 +42,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
 
     Model   = get_model(model)
     
-    outputs = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, mean_func, **kwargs)
+    outputs, params = grid_predictions(dataloader, train, test, Model, K, order, common, min_count, target_subset, metric, mean_func, **kwargs)
     
     model, predict, *probs = outputs.pop('best')
 
@@ -53,6 +53,7 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     npz     = 'results.npz'
     pkl     = 'model.pickle'
     csv     = 'predictions.csv'
+    json    = 'params.json'
 
     df = pd.DataFrame(index = outputs['identifiers'], columns = ['target', 'predict'], data = np.array([target, predict]).T)
 
@@ -65,11 +66,14 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     with Writing(npz, inline = True):
         np.savez_compressed(npz, **outputs)
 
-    if model:
-        with Writing(pkl, inline = True):
-            with open(pkl, 'wb') as f:
-                pickle.dump(model, f)
+    with Writing(pkl, inline = True):
+        with open(pkl, 'wb') as f:
+            pickle.dump(model, f)
 
+    with Writing(json, inline = True):
+        with open(json, 'w') as f:
+            f.write(json.dumps(params, indent = 4))
+        
     create_log()
 
     msg('executed "train.py"')
