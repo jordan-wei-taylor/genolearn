@@ -5,19 +5,6 @@ __pycache__
 # virtual python env
 env
 
-# preprocessed data
-data
-data-low-memory
-data-batch
-
-!data_config.json
-
-# raw-data
-raw-data
-
-# testing files / directories
-test*
-
 # additional file from running tox
 .tox
 
