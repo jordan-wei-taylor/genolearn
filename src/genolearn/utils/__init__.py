@@ -122,7 +122,7 @@ def generate_config(path, **kwargs):
         config[key] = val
     with open(path, 'w') as f:
         json.dump(json.dumps(config, indent = 4), f)
-
+    
 START    = time()
 RAMSTART = get_process_memory()
 RAM      = RAMSTART

@@ -16,9 +16,11 @@ def main(path, model, data_config, model_config, train, test, K, order, order_ke
     import json
     import pickle
     
-    if overwrite:
-        if os.path.exists(path):
+    if os.path.exists(path):
+        if overwrite:
             shutil.rmtree(path)
+        else:
+            raise Exception(f'"{path}" already exists! Add the "--overwrite" flag to overwrite.')
 
     os.makedirs(path)
 
