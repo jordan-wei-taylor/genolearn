@@ -1,8 +1,7 @@
 metrics
 #################
 
-.. automodule:: genolearn.metrics
-    :members:
     
-
+.. automodule:: genolearn.metrics.functions
+    :members:
     
