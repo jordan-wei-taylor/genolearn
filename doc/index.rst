@@ -75,32 +75,43 @@ This is to install the most recent work in progress. Note that some functionalit
 
 .. toctree::
     :hidden:
+    :titlesonly:
     
     Installation <self>
     QuickStart <quickstart>
+    glossary
+
+.. toctree::
+    :hidden:
+    :caption: Usage
+
+    usage/preprocess
+    usage/feature-selection
+    usage/train
+    usage/inference
 
 .. toctree::
     :hidden:
     :titlesonly:
-    :caption: Usage
+    :caption: TBC
 
-    usage/overview
-    usage/preprocessing
+    tbc/overview
+    tbc/preprocessing
 
 .. toctree::
     :hidden:
 
-    usage/data-loader
+    tbc/data-loader
 
 .. toctree::
     :hidden:
     :titlesonly:
     
-    usage/feature-selection/index
-    usage/models/index
-    usage/feature-importance/index
-    usage/metrics
-
+    tbc/feature-selection/index
+    tbc/models/index
+    tbc/feature-importance/index
+    tbc/metrics
+    
 .. toctree::
     :hidden:
     :caption: Python Documentation

@@ -23,11 +23,11 @@ Instead of computing each of the RHS terms directly, we can instead incrementall
 
 The ``inner_loop`` function below performs the incremental updates as previously described. The ``outer_loop`` function uses the statistics the ``inner_loop`` computes to compute the Fisher Score thus far.
 
-.. literalinclude:: ../../../genolearn/feature_selection/fisher.py
+.. literalinclude:: ../../../src/genolearn/feature_selection/fisher.py
     :caption: genolearn.feature_selection.fisher.py
     :linenos:
 
 The above code is run by 
 
-.. literalinclude:: ../../../genolearn/feature_selection/__init__.py
+.. literalinclude:: ../../../src/genolearn/feature_selection/__init__.py
     :linenos:
