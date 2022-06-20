@@ -114,7 +114,7 @@ class DataLoader():
     def _get_identifiers(self, *values, column):
         values = [str(value) for value in values]
         self._check_meta(*values, column = column)            
-        identifiers = self.meta.index[self.meta[column].isin(values)].values
+        identifiers = self._identifiers = self.meta.index[self.meta[column].isin(values)].values
         return identifiers
 
     def load_X(self, *identifiers, features = None, sparse = None):
@@ -203,13 +203,15 @@ class DataLoader():
             X_test  : load_X(test_identifiers, features = features, sparse = sparse)
             Y_test  : load_Y(test_identifiers)
         """
-        self._identifiers = self.train_identifiers, self.test_identifiers = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count, target_subset)
+        self.train_identifiers, self.test_identifiers = self.load_train_test_identifiers(train_identifiers, test_identifiers, min_count, target_subset)
 
         Y_train           = self.encode(self.load_Y(*self.train_identifiers))
         Y_test            = self.encode(self.load_Y(*self.test_identifiers ))
 
         X_train           = self.load_X(*self.train_identifiers, features = features, sparse = sparse)
         X_test            = self.load_X(*self.test_identifiers , features = features, sparse = sparse)
+
+        self._identifiers = self.train_identifiers, self.test_identifiers
 
         return X_train, Y_train, X_test, Y_test
 
@@ -222,7 +224,16 @@ class DataLoader():
             x : load_X(identifier, features = features, sparse = sparse)
             y : load_Y(identifier)
         """
+        _identifiers = []
         for identifier in identifiers:
+            if str(identifier) in self.meta[self.group].values:
+                _identifiers += list(self._get_identifiers(str(identifier), column = self.group))
+            else:
+                _identifiers.append(identifier)
+        
+        self._identifiers = np.array(_identifiers)
+
+        for identifier in _identifiers:
             if f'{identifier}.npz' in os.listdir(self._sparse if sparse else self._dense):
                 npz  = self._check_path(identifier, sparse)
                 X, Y = self._load_X(npz, features, sparse), self.load_Y(identifier)
@@ -233,8 +244,6 @@ class DataLoader():
                     if not isinstance(X, np.ndarray):
                         X = X.A.flatten()
                 yield X, Y
-            elif identifier in self.meta[self.group].values:
-                yield from self.generator(*self._get_identifiers(identifier, column = self.group))
 
     @property
     def identifiers(self):

@@ -3,11 +3,13 @@ README.md
 pyproject.toml
 setup.py
 src/genolearn/__init__.py
-src/genolearn/__main__.py
 src/genolearn/_base.py
 src/genolearn/_data.py
+src/genolearn/combine.py
 src/genolearn/dataloader.py
+src/genolearn/evaluate.py
 src/genolearn/logger.py
+src/genolearn/preprocess.py
 src/genolearn/train.py
 src/genolearn.egg-info/PKG-INFO
 src/genolearn.egg-info/SOURCES.txt

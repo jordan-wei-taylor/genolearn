@@ -1,6 +1,7 @@
 Feature Selection
 #################
 
+<<<<<<< HEAD
 Creates a numpy ``npz`` object within a preprocessed directory. The npz object is similar to that of a dictionary where the ``key`` contains the groups of the observations and the ``value`` is a 1-dimensional array with the number of elements to be the number of genome sequences present in the genomoe sequence data used to preprocess.
 
 The input parameters for ``genolearn.feature_selection`` are
@@ -98,3 +99,28 @@ Why we were interested in analysing this growing period is to investigate the ef
 + ...
 
 We then made predictions on the 2019 data to see how measures such as recall changed.
+=======
+For genome sequence data, it is often the case that the feature space is large and therefore, loading it all into memory for further analysus is not feasible. Instead, we can compute a measure of a priori relatedness to our target variables of interest and only use the top :math:`k` features based on this measure of relatedness. ``GenoLearn`` provides, by default, a feature selection framework which uses the Fisher Score as the measure of relatedness by default. See :ref:`FisherScoreExample` for how it is defined and further details.
+
+
+.. code-block:: bash
+
+    output="fisher-scores.npz"
+    dataset="data"
+    meta="raw-data/meta-data.csv"
+    identifier="Acccession"
+    target="Region"
+    group="Year"
+    group_vals="2018 2017 2016 2015 2014"
+
+    python3 -m genolearn.feature_selection $output $dataset $meta $identifier $target $group_vals -group $group
+
+The above would generate a file with the path ``data/feature-selection/fisher-scores.npz``.
+
+Custom Feature Selection
+========================
+
+If the user would like to define their own way of computing relatedness, then it is recommended to see how the Fisher Score is defined within ``GenoLearn`` and create their own following the template used.
+
+.. literalinclude:: ../../src/genolearn/feature_selection/fisher.py
+>>>>>>> 5f3a4fd (rebased)

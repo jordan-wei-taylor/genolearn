@@ -1,14 +1,12 @@
 if __name__ == '__main__':
-
-    from   genolearn.logger  import print_dict, msg, Waiting
+    
+    from   genolearn.logger  import print_dict, msg
     from   genolearn         import utils, _data
 
     from   argparse          import ArgumentParser, RawTextHelpFormatter
     from   multiprocessing   import cpu_count, Pool
-    from   shutil            import rmtree
 
     import numpy  as np
-
     import py7zr
     import json
     import gzip
@@ -36,9 +34,7 @@ if __name__ == '__main__':
         batch_size  = 512    : number of temporary txt files to generate over a single parse of the genome data
         verbose     = 250000 : number of iterations before giving verbose update
         n_processes = 'auto' : number of processes to run in parallel when compressing txt to npy files
-        sparse      = True   : output sparse npz files
-        dense       = True   : output dense npz files
-        debug       = -1     : integer denoting first number of features to consider (-1 results in all features)
+        debug       = -1     : integer denoting first number of features to consider (-1 results in all features, 100 results in only processing the first 100 features etc)
 
     Optional Flags
     =======================
@@ -46,7 +42,7 @@ if __name__ == '__main__':
 
     Example Usage
     =======================
-        python -m genolearn data raw-data/STEC_14-19_fsm_kmers.txt.gz --batch_size 256
+        python -m genolearn.combine data STEC_19_fsm_kmers.txt.gz
     """
 
     parser = ArgumentParser(description = description, formatter_class = RawTextHelpFormatter)
@@ -56,18 +52,21 @@ if __name__ == '__main__':
     parser.add_argument('-bs',  '--batch_size', type = int, default = 512)
     parser.add_argument('-v' , '--verbose', type = int, default = 250000)
     parser.add_argument('-n' , '--n_processes', default = 'auto')
-    parser.add_argument('-s' , '--sparse', default = True, type = bool)
-    parser.add_argument('-d' , '--dense', default = True, type = bool)
     parser.add_argument('--debug', default = -1, type = int)
     parser.add_argument('--not_low_memory', default = False, action = 'store_true')
 
     args   = parser.parse_args()
     params = dict(args._get_kwargs())
-    print_dict('executing "genolearn" with parameters:', params)
+    print_dict('executing "genolearn.combine" with parameters:', params)
 
     if args.batch_size == -1:
         args.batch_size = np.inf
 
+    assert os.path.exists(args.output_dir)
+
+    with py7zr.SevenZipFile(f'{args.output_dir}/features.7z') as fz:
+        feature_set = fz.read()['features.txt'].read().decode().split()
+        
     args.n_processes = cpu_count() if args.n_processes == 'auto' else int(args.n_processes)
 
     gather_feature = lambda line : line[:line.index(' ')]
@@ -75,12 +74,7 @@ if __name__ == '__main__':
     gather_counts  = lambda line : re.findall(r'(?<=:)[\w]+', line)
 
     _data.set_memory(args.not_low_memory)
-    
-    if os.path.exists(args.output_dir):
-        rmtree(args.output_dir)
 
-    os.mkdir(args.output_dir)
-    
     first_run  = True
     features   = []
     exceptions = set()
@@ -88,13 +82,20 @@ if __name__ == '__main__':
     hi         = 0
     unique     = set()
 
-    with gzip.GzipFile(args.genome_sequence_path) as gz:
+    if args.genome_sequence_path.endswith('.gz'):
+        _open  = gzip.GzipFile
+        decode = lambda line : line.decode()
+    else:
+        _open  = open
+        decode = lambda line : line
+
+    with _open(args.genome_sequence_path) as gz:
        
         os.chdir(args.output_dir)
 
         os.mkdir('temp')
-        os.mkdir('feature-selection')
-
+        
+        
         files = {}
         _data.set_files(files)
 
@@ -108,10 +109,10 @@ if __name__ == '__main__':
            
             for m, line in enumerate(gz, 1):
 
-                line   = line.decode()
+                line    = decode(line)
 
-                srrs   = gather_samples(line)
-                counts = gather_counts(line)
+                srrs    = gather_samples(line)
+                counts  = gather_counts(line)
 
                 if first_run:
                     features.append(gather_feature(line))
@@ -152,23 +153,19 @@ if __name__ == '__main__':
                 r_dtype   = utils.get_dtype(n)
 
                 utils.set_m(m)
-               
-                f = _data.init_write('features', None, 'txt')
-                f.write(' '.join(features))
-                f.close()
-
-                with Waiting('compressing', 'compressed', 'features.7z'):
-                    with py7zr.SevenZipFile('features.7z', 'w') as archive:
-                        archive.writeall('features.txt')
-
-                os.remove('features.txt')
                 
-                features.clear()
+                with open('meta.json') as f:
+                    meta = json.load(f)
+                    n    = meta['n'] + len(unique)
+                    m    = meta['m']
+                    hi   = max(meta['max'], hi)
 
                 f = _data.init_write('meta', None, 'json')
-                json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
+                json.dump({'n' : n, 'm' : m, 'max' : hi}, f)
                 f.close()
-               
+                
+                feature_overlap = np.nonzero(np.isin(features, feature_set, assume_unique = True))[0]
+
                 def to_sparse(npz, c, d):
                     np.savez_compressed(os.path.join('sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
 
@@ -190,20 +187,18 @@ if __name__ == '__main__':
                 def convert_dict(file):
                     npz  = f'{file}.npz'
                     c, d = map(np.array, map(list, zip(*files[file].items())))
-
+                    mask = np.nonzero(np.isin(c, feature_overlap, assume_unique = True))[0]
                     for function in functions:
-                        function(npz, c, d)
+                        function(npz, c[mask], d[mask])
 
                 convert = convert_dict if args.not_low_memory else convert_write
 
                 functions = []
-                if args.sparse:
+                if 'sparse' in os.listdir():
                     functions.append(to_sparse)
-                    os.mkdir('sparse')
 
-                if args.dense:
+                if 'dense' in os.listdir():
                     functions.append(to_dense)
-                    os.mkdir('dense')
 
                 _data.set_functions(functions)
            
@@ -222,6 +217,8 @@ if __name__ == '__main__':
 
         os.rmdir('temp')
 
-        utils.create_log('.')
+        utils.create_log('.', 'combine-log.txt')
    
-    msg('executed "genolearn"')
+    msg('executed "genolearn.combine"')
+    
+    

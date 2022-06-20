@@ -92,9 +92,24 @@ This is to install the most recent work in progress. Note that some functionalit
 
 .. toctree::
     :hidden:
+<<<<<<< HEAD
     :titlesonly:
     :caption: TBC
 
+=======
+    :caption: Usage
+
+    usage/preprocessing
+    usage/feature-selection
+    usage/train
+    usage/evaluate
+
+.. toctree::
+    :hidden:
+    :titlesonly:
+    :caption: TBC
+
+>>>>>>> 5f3a4fd (rebased)
     tbc/overview
     tbc/preprocessing
 
@@ -111,7 +126,11 @@ This is to install the most recent work in progress. Note that some functionalit
     tbc/models/index
     tbc/feature-importance/index
     tbc/metrics
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 5f3a4fd (rebased)
 .. toctree::
     :hidden:
     :caption: Python Documentation
