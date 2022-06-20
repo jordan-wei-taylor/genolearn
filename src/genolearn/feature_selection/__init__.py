@@ -2,7 +2,7 @@ from   genolearn.logger import msg
 
 import numpy as np
 
-def base_feature_selection(dataloader, init, inner_loop, outer_loop, values, force_dense = False, force_sparse = False):
+def base_feature_selection(dataloader, init, inner_loop, outer_loop, values, force_dense = False, force_sparse = False, aggregate = False):
     """
     base feature selection function
 
@@ -28,6 +28,9 @@ def base_feature_selection(dataloader, init, inner_loop, outer_loop, values, for
 
         force_dense : bool, *default=False*
             Identify if computations should be forced to sparse computations.
+
+        aggregate : bool, *default=False*
+            Performs a single outer loop instead of incremental loop using the values list.
         
     Notes
     -----
@@ -37,10 +40,16 @@ def base_feature_selection(dataloader, init, inner_loop, outer_loop, values, for
     ret          = {}
     args, kwargs = init(dataloader)
     if values:
-        for value in values:
-            for i, (x, label) in enumerate(dataloader.generator(value, force_dense = force_dense, force_sparse = force_sparse), 1):
-                inner_loop(ret, i, x, label, value, *args, **kwargs)
-            outer_loop(ret, i, value, *args, **kwargs)
+        if aggregate:
+            values = dataloader.meta.index[dataloader.meta[dataloader.group].isin(values)]
+            for i, (x, label) in enumerate(dataloader.generator(*values, force_dense = force_dense, force_sparse = force_sparse), 1):
+                inner_loop(ret, i, x, label, 'all', *args, **kwargs)
+            outer_loop(ret, i, 'all', *args, **kwargs)
+        else:
+            for value in values:
+                for i, (x, label) in enumerate(dataloader.generator(value, force_dense = force_dense, force_sparse = force_sparse), 1):
+                    inner_loop(ret, i, x, label, value, *args, **kwargs)
+                outer_loop(ret, i, value, *args, **kwargs)
     else:
         values = dataloader.meta.index
         for i, (x, label) in enumerate(dataloader.generator(*values, force_dense = force_dense, force_sparse = force_sparse), 1):

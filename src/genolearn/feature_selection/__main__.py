@@ -36,6 +36,7 @@ if __name__ == '__main__':
     parser.add_argument('values', nargs = '*', help = 'incremental identifiers (or groups) to perform feature selection on')
     parser.add_argument('-group', default = None, help = 'column of meta data denoting the grouping of labels')
     parser.add_argument('-method', default = 'fisher', help = 'either "fisher" for built in Fisher Score or a module name (see example)')
+    parser.add_argument('-aggregate', default = False, action = 'store_true', help = 'removes incremental loop and performs a single outer loop')
     parser.add_argument('-log', default = None, help = 'log file name')
     parser.add_argument('--sparse', default = False, action = 'store_true', help = 'if sparse loading of data is preferred')
 
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     force_sparse = module.force_sparse if 'force_sparse' in variables else False
     force_dense  = module.force_dense  if 'force_dense'  in variables else False
 
-    scores       = base_feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse)
+    scores       = base_feature_selection(dataloader, module.init, module.inner_loop, module.outer_loop, args.values, force_dense, force_sparse, args.aggregate)
 
     save_path    = f'{args.path}/feature-selection/{args.output}'
     with Writing(save_path, inline = True):
