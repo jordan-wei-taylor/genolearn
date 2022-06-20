@@ -77,11 +77,13 @@ Upon execution of the above command, we should the path ``data/feature-selection
 
 Now lets add to our preprocessed data, newly collected data from 2019.
 
+# have a flag instead of if
+
 .. code-block:: bash
 
     output="data"
     input="raw-data/STEC_19_fsm_kmers.txt.gz"
-
+    
     # set to 0 to process slower but require less diskspace
     # set to 1 to process faster but require more diskspace
     fast=0

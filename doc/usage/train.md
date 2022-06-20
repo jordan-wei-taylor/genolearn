@@ -1,6 +1,8 @@
 Train
 #####
 
+# allow train / test split (without grouping by year)
+
 Creates a numpy ``npz`` object within a preprocessed directory. The npz object is similar to that of a dictionary where the ``key`` contains the groups of the observations and the ``value`` is a 1-dimensional array with the number of elements to be the number of genome sequences present in the genomoe sequence data used to preprocess.
 
 The input parameters for ``genolearn.feature_selection`` are
