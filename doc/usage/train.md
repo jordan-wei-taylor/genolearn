@@ -1,7 +1,6 @@
 Train
 #####
 
-<<<<<<< HEAD
 Creates a numpy ``npz`` object within a preprocessed directory. The npz object is similar to that of a dictionary where the ``key`` contains the groups of the observations and the ``value`` is a 1-dimensional array with the number of elements to be the number of genome sequences present in the genomoe sequence data used to preprocess.
 
 The input parameters for ``genolearn.feature_selection`` are
@@ -55,7 +54,6 @@ The input parameters for ``genolearn.feature_selection`` are
      - \-\-sparse
      - False
      - indicate if sparse loading of the data is preferred
-=======
 Suppose we are interested in training a Machine Learning model on our preprocessed dataset. Given a Machine Learning model, we may wish to:
 
 + vary it's hyperparameters
@@ -147,4 +145,3 @@ The above should generate the following directory
     ├── params.json
     ├── lopredictions.csv
     └── results.npz
->>>>>>> 5f3a4fd (rebased)

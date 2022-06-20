@@ -92,11 +92,9 @@ This is to install the most recent work in progress. Note that some functionalit
 
 .. toctree::
     :hidden:
-<<<<<<< HEAD
     :titlesonly:
     :caption: TBC
 
-=======
     :caption: Usage
 
     usage/preprocessing
@@ -109,7 +107,6 @@ This is to install the most recent work in progress. Note that some functionalit
     :titlesonly:
     :caption: TBC
 
->>>>>>> 5f3a4fd (rebased)
     tbc/overview
     tbc/preprocessing
 
