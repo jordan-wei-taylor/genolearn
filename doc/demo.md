@@ -40,23 +40,13 @@ Now that we have the most recent installation of ``GenoLearn``, lets preprocess 
 .. code-block:: bash
 
     output="data"
-    input="raw-data/STEC_18_fsm_kmers.txt.gz"
+    input="raw-data/STEC_14-18_fsm_kmers.txt.gz"
 
-    # set to 0 to process slower but require less diskspace
-    # set to 1 to process faster but require more diskspace
-    fast=0
+    python3 -m genolearn.preprocess $output $input
 
-    if [[ $fast -eq 0 ]]; then
-        python3 -m genolearn.preprocess $output $input
-    elif [[ $fast -eq 1 ]]; then
-        # remove maximum number of files open (for this session)
-        ulimit -n 8000
-
-        # batch-size (bs) -1 means perform preprocess in a single batch
-        python3 -m genolearn.preprocess $output $input -bs -1
-    else
-        echo "fast value $fast not recognised!"
-    fi
+    # execute this instead for quicker preprocessing but a higher diskspace requirement
+    # ulimit -n 8000 # remove maximum number of files open at a time
+    # python3 -m genolearn.preprocess $output $input -bs -1
 
 The dataset contains data relating to E. Coli O157 with 2,460 different strains, each with a count vector of over 12 million :math:`k`-mers, and an associated region of origin in the meta data file for years 2014 to 2018. We can note this is a large dataset so in order to run any machine learning models on this dataset we will need a means of selecting which genome sequences are of interest. To do so we can use the Fisher Scores for each genome sequence (see :ref:`FeatureSelection`). Lets compute the Fisher Scores for each genome sequence with the below command
 
@@ -77,28 +67,15 @@ Upon execution of the above command, we should the path ``data/feature-selection
 
 Now lets add to our preprocessed data, newly collected data from 2019.
 
-# have a flag instead of if
-
 .. code-block:: bash
 
     output="data"
     input="raw-data/STEC_19_fsm_kmers.txt.gz"
     
-    # set to 0 to process slower but require less diskspace
-    # set to 1 to process faster but require more diskspace
-    fast=0
+    python3 -m genolearn.combine $output $input
 
-    if [[ $fast -eq 0 ]]; then
-        python3 -m genolearn.combine $output $input
-    elif [[ $fast -eq 1 ]]; then
-        # remove maximum number of files open (for this session)
-        ulimit -n 8000
-        
-        # batch-size (bs) -1 means perform preprocess in a single batch
-        python3 -m genolearn.combine $output $input -bs -1
-    else
-        echo "fast value $fast not recognised!"
-    fi
+    # execute this instead for quicker preprocessing but a higher diskspace requirement
+    # python3 -m genolearn.combine $output $input -bs -1
 
 Now that we have preprocessed all of our data we, can look to see how our machine learning models perform on this newly collected data by training only on the old 2014-2018 dataset. Before training a machine learning model, we may wish to specify both a ``data_config`` and ``model_config`` files. Here is an example of the contents for both:
 
