@@ -16,7 +16,7 @@ Upon cloning the repository, ``cd`` into the repository and execute the ``merge.
     cd e-coli-o157-data
     ./merge.sh
 
-Once the above has been executed there should be two files within the directory ``raw-data``.
+Once the above has been executed there should be three files within the directory ``raw-data``.
 
 .. code-block:: text
 
@@ -77,7 +77,14 @@ Now lets add to our preprocessed data, newly collected data from 2019.
     # execute this instead for quicker preprocessing but a higher diskspace requirement
     # python3 -m genolearn.combine $output $input -bs -1
 
-Now that we have preprocessed all of our data we, can look to see how our machine learning models perform on this newly collected data by training only on the old 2014-2018 dataset. Before training a machine learning model, we may wish to specify both a ``data_config`` and ``model_config`` files. Here is an example of the contents for both:
+Now that we have preprocessed all of our data we, can look to see how our machine learning models perform on this newly collected data by training only on the old 2014-2018 dataset. Before training a machine learning model, we will need to compute a way of ranking the features a prior. To do so we can execute ``genolearn.feature-selection`` which requires ``data_config`` and ``model_config`` files. Here is an example of generating the contents for both:
+
+.. code-block:: bash
+
+    python3 -m genolearn.utils.make_config model_config.json '{"n_jobs" : -1, "class_weight" : "balanced", "max_depth" : range(5, 105, 5), "random_state" : range(10)}'
+    python3 -m genolearn.utils.make_config data_config.json '{"path" : "data", "meta_path" : "raw-data/meta-data.csv", "identifier" : "Accession", "target" : "Region", "group" : "Year"}'
+
+The above should generate two files in your current directory
 
 .. code-block:: text
     :caption: data_config.json
@@ -89,8 +96,6 @@ Now that we have preprocessed all of our data we, can look to see how our machin
         "target": "Region",
         "group": "Year"
     }
-
-This specifies that the path to all of the outputs from the :ref:`Preprocessing` stage is ``e-coli-o157-data``, similarly the meta data is present in the same directory. We further state that the identifier for each strain is the ``Accession`` column within the meta data file, and the target values of interest are located within the ``Region`` column. Further we state that strains can be grouped by the ``Year`` column.
 
 .. code-block:: text
     :caption: model_config.json

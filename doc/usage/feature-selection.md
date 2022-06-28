@@ -3,6 +3,62 @@ Feature Selection
 
 Creates a numpy ``npz`` object within a preprocessed directory. The npz object is similar to that of a dictionary where the ``key`` contains the groups of the observations and the ``value`` is a 1-dimensional array with the number of elements to be the number of genome sequences present in the genomoe sequence data used to preprocess.
 
+Suppose your meta-data file had the form
+
+.. list-table:: Example meta-data.csv
+   :header-rows: 1
+   :align: center
+
+   * - Accession
+     - Year
+     - Region
+   * - SRR001
+     - 2014
+     - UK
+   * - SRR002
+     - 2014
+     - Middle East
+   * - ...
+     - ...
+     - ...
+   * - SRR999
+     - 2019
+     - C\. Europe
+
+
+Example feature selection usage for the above dataset if we wanted to create a score for all data points belonging to the year 2018 only
+
+.. code-block:: python
+
+    output='fisher-scores.npz'
+    data='data'
+    meta='meta-data.csv'
+    identifier='Accession'
+    target='Regions'
+    values='2018'
+    group='Year'
+
+    python3 genolearn.feature_selection $output $data $meta $identifier $target $values -group $group
+
+
+This would create the file ``data/feature-selection/scores.npz`` using the preprocessed data found in ``data/dense`` and the meta data ``meta-data.csv`` where the identifying column is ``Accession``, the target column ``Region``, the grouping column of the identifiers ``Year``, and the identifier (or group) ``2018``. The resulting ``scores.npz`` would contain a single key ``2018`` with the associated 1D-array containing a score for each genome sequence. By default, the score values are the Fisher Scores but the user can implement their own scoring regime following the example.
+
+To extend the example, if we would like to create a Fisher Score for each genome sequence for the periods 2018-2018, 2017-2018, ...,2014-2018 we would execute
+
+
+.. code-block:: bash
+
+    output='fisher-scores.npz'
+    data='data'
+    meta='meta-data.csv'
+    identifier='Accession'
+    target='Regions'
+    values='2018 2017 2016 2015 2014'
+    group='Year'
+    python3 -m genolearn.feature_selection $output $data $meta $identifier $target $values -group $group
+
+Executing the above would create the file ``data/feature-selection/fisher-scores.npz`` based on a meta data file ``meta-data.csv`` which has columns "Accession", "Regions" and "Year". It computes the Fisher Score for data that belongs to the years 2018-2018, 2017-2018, ...,2014-2018.
+
 The input parameters for ``genolearn.feature_selection`` are
 
 .. list-table:: Parameters for genolearn.feature_selection
@@ -56,42 +112,6 @@ The input parameters for ``genolearn.feature_selection`` are
      - indicate if sparse loading of the data is preferred
 
 
-Suppose your meta-data file had the form
-
-.. list-table:: Example meta-data.csv
-   :header-rows: 1
-   :align: center
-
-   * - Accession
-     - Year
-     - Region
-   * - SRR001
-     - 2014
-     - UK
-   * - SRR002
-     - 2014
-     - Middle East
-   * - ...
-     - ...
-     - ...
-   * - SRR999
-     - 2019
-     - C\. Europe
-
-and we wanted to create a score for all data points belonging to the year 2018 only, we would execute
-
-.. code-block:: python
-
-    python3 genolearn.feature_selection scores.npz data meta-data.csv Accession Region 2018 -group Year
-
-This would create the file ``data/feature-selection/scores.npz`` using the preprocessed data found in ``data/dense`` and the meta data ``meta-data.csv`` where the identifying column is ``Accession``, the target column ``Region``, the grouping column of the identifiers ``Year``, and the identifier (or group) ``2018``. The resulting ``scores.npz`` would contain a single key ``2018`` with the associated 1D-array containing a score for each genome sequence. By default, the score values are the Fisher Scores but the user can implement their own scoring regime following the example.
-
-To extend the example, if we would like to create a Fisher Score for each genome sequence for the periods 2018-2018, 2017-2018, ...,2014-2018 we would execute
-
-.. code-block:: python
-
-    python3 genolearn.feature_selection scores.npz data meta-data.csv Accession Region 2018 2017 2016 2015 2014 -group Year
-
 Why we were interested in analysing this growing period is to investigate the effect of having more data when performing our supervised learning task. So the scenarios we were modelling were:
 + the current year is 2018 and we only have the current year's worth of data
 + the current year is 2018 and we have the past two year's worth of data
@@ -100,20 +120,6 @@ Why we were interested in analysing this growing period is to investigate the ef
 We then made predictions on the 2019 data to see how measures such as recall changed.
 For genome sequence data, it is often the case that the feature space is large and therefore, loading it all into memory for further analysus is not feasible. Instead, we can compute a measure of a priori relatedness to our target variables of interest and only use the top :math:`k` features based on this measure of relatedness. ``GenoLearn`` provides, by default, a feature selection framework which uses the Fisher Score as the measure of relatedness by default. See :ref:`FisherScoreExample` for how it is defined and further details.
 
-
-.. code-block:: bash
-
-    output="fisher-scores.npz"
-    dataset="data"
-    meta="raw-data/meta-data.csv"
-    identifier="Acccession"
-    target="Region"
-    group="Year"
-    group_vals="2018 2017 2016 2015 2014"
-
-    python3 -m genolearn.feature_selection $output $dataset $meta $identifier $target $group_vals -group $group
-
-The above would generate a file with the path ``data/feature-selection/fisher-scores.npz``.
 
 Custom Feature Selection
 ========================

@@ -10,13 +10,13 @@ Default preprocessing usage
     output_dir="data"
     genome_sequence_path="genome_data.txt.gz"
 
-    python3 genolearn $output_dir $genome_sequence_path
+    python3 -m genolearn $output_dir $genome_sequence_path
 
 Executing the above would create both dense and sparse representations of your data which can be gigabytes of space. It is more often the case that you do not require sparse representation so we can ommit this output by appending ``--sparse false`` i.e.
 
 .. code-block:: bash
 
-    python3 genolearn $output_dir $genome_sequence_path --sparse false
+    python3 -m genolearn $output_dir $genome_sequence_path --sparse false
 
 The preprocessing of the data relies on either generating temporary txt files or storing this temporary data in memory. Writing these temporary files increases the preprocessing time whilst storing them in memory inreases the required memory allowance. If you have extra memory to spare (RAM), we can choose to not output any temporary files by appending the ``--not-low-memory``. If you have harddisk to spare, you can try increasing the ``batch_size``. Either option should decrease preprocessing time significantly as long as your computer can handle either the increase RAM usage or the additional harddisk space.
 

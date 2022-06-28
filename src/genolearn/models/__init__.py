@@ -89,7 +89,7 @@ def grid_predictions(dataloader, train, test, Model, K, order = None, common_kwa
 
         score = Metrics(Y_test, hat, metric)(func = mean_func)
         if score > best[2]:
-            best_kwargs = {**common_kwargs, **dict(zip(names[1:], V[1:]))}
+            best_kwargs = {**common_kwargs, **dict(zip(names[1:], V[1:])), 'k' : param[0]}
             best        = (model, k, score)
 
         monitor_RAM()

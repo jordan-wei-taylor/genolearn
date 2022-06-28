@@ -1,61 +1,6 @@
 Train
 #####
 
-# allow train / test split (without grouping by year)
-
-Creates a numpy ``npz`` object within a preprocessed directory. The npz object is similar to that of a dictionary where the ``key`` contains the groups of the observations and the ``value`` is a 1-dimensional array with the number of elements to be the number of genome sequences present in the genomoe sequence data used to preprocess.
-
-The input parameters for ``genolearn.feature_selection`` are
-
-.. list-table:: Parameters for genolearn.feature_selection
-   :widths: 25 25 50 100
-   :header-rows: 1
-   :align: center
-
-   * - Parameter
-     - Flag
-     - Default
-     - Description
-   * - output
-     - 
-     - 
-     - output file name
-   * - path
-     - 
-     - 
-     - path to preprocessed directory
-   * - meta_path
-     -
-     - 
-     - path to meta data csv
-   * - identifier
-     - 
-     - 
-     - meta data column denoting the identifier
-   * - target
-     - 
-     - 
-     - meta data column denoting the target
-   * - values
-     - 
-     - 
-     - incremental identifiers (or groups) to perform feature selection on
-   * - group
-     - \-group
-     - None
-     - meta data column denoting the groupings of the observations
-   * - method
-     - \-method
-     - fisher
-     - either "fisher" for built-in Fisher Score or a module name (see example in documentation)
-   * - log
-     - \-log
-     - None
-     - name of the log file generated upon completion
-   * - sparse
-     - \-\-sparse
-     - False
-     - indicate if sparse loading of the data is preferred
 Suppose we are interested in training a Machine Learning model on our preprocessed dataset. Given a Machine Learning model, we may wish to:
 
 + vary it's hyperparameters
@@ -124,6 +69,8 @@ The above should generate two files in your current directory
     }
 
 
+Training the ``RandomForestClassifier`` varying the earlier specified hyperparameters is done so by executing
+
 .. code-block:: bash
 
     output="output"
@@ -139,11 +86,14 @@ The above should generate two files in your current directory
 
 The above should generate the following directory
 
-.. code-block: text
+.. code-block:: text
 
     output
     ├── log.txt
     ├── model.pickle
     ├── params.json
-    ├── lopredictions.csv
+    ├── predictions.csv
     └── results.npz
+    
+
+where ``log.txt``, is a text file containing information like what parameters were used when calling ``genolearn.train``, time taken to complete command, and RAM usage. ``model.pickle`` is the saved best model, ``param.json`` is a json file containing the best parameter setting found when a grid search was executed as per the specifications of the ``model_config.json`` file, and ``predictions.csv`` are results on the 2019 dataset. This is chosen to be the best model according the recall metric when training on data gathered between 2014-2018 and evaluated on 2019 where we choose genome sequences according to the Fisher Scores based on the 2014-2018 dataset.
