@@ -42,6 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('data_config')
     parser.add_argument('values', nargs = '+')
     parser.add_argument('-fs', '--feature-selection', default = None)
+    parser.add_argument('-K' , '--nfeatures', default = None)
     parser.add_argument('-k' , '--key', default = None)
     parser.add_argument('-a', '--ascending', default = False, action = 'store_true')
 
