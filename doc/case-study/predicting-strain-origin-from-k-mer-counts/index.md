@@ -5,12 +5,6 @@ Predicting Strain Origin From k-mer Counts
 
 In this case study we talk through how we decided on which strain origin locations were used, how we pre-selected certain :math:`k`-mers to train our machine learning models on, and finally a discussion on our preliminary results with an analysis of which strain origin locations we see our model performing better.
 
-+ size of dataset
-+ ;class imbalance
-+ training / eval time
-+ explain train on 2014 - 2018 and eval 2019
-+ analysis of results by class
-
 Data
 ====
 
@@ -97,6 +91,6 @@ Below we show the recall metric for the Random Forest model varying both the num
         <br>
     </div>
 
-The color scheme for Figure 3 is the same as Figure 2 where each color represents a number of :math:`k`-mers used as ranked by the Fisher Scores. Each row refers to a region and each column varies the training data period - this is to observe the effects of having more data. The x-label shows the number of training data points belonging to the region row and the column period as well as the associated proportion for that period. Each experiment was conducted ten times where each trial is visualised as a faded dashed line. The solid line is the average of the ten trials.
+The color scheme for Figure 3 is the same as Figure 2 where each color represents a number of :math:`k`-mers used as ranked by the Fisher Scores. Each row refers to a region with the number of test examples present in the year 2019, and each column varies the training data period - this is to observe the effects of having more data. The x-label shows the number of training data points belonging to the region row and the column period as well as the associated proportion for that period. Each experiment was conducted ten times where each trial is visualised as a faded dashed line. The solid line is the average of the ten trials.
 
-We can see that there is a significant class imbalance issue whereby the number of training examples for each region vary significantly and or not uniform. 
+We can see that there is a significant class imbalance issue whereby the number of training examples for each region vary significantly and or not uniform. Despite this, we can see that some regions outperform others even when the number of training examples is lower. Consider the regions M. East, and S. Europe for the training period 2014 - 2018. We observe that has less training examples but achieves a much better set of recall evaluations. This may be because there may be more variance genetically amongst the population of people in the Southern Europe region.
