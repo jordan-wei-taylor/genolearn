@@ -1,0 +1,22 @@
+# virtual python env
+env
+
+# compile
+__pycache__
+
+# additional file from running tox
+.tox
+
+# local build
+build
+dist
+*.egg-info
+
+# conda build command
+conda-build.sh
+
+# working directory
+wd
+
+# copy script
+_copy.py

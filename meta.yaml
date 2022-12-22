@@ -1,0 +1,46 @@
+package:
+  name: genolearn
+  version: 0.0.9
+
+source:
+  path: .
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . -vv --no-deps"
+  noarch: python
+  entry_points:
+    - genolearn = genolearn.cli:menu
+    - genolearn-clean = genolearn.cli:clean
+    - genolearn-setup = genolearn.cli:setup
+  include_recipe: False
+  
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+
+  run:
+    - click>=8.1
+    - numpy>=1.23
+    - pandas>=1.5
+    - pathos>=0.3
+    - psutil>=5.9
+    - scikit-learn>=1.1
+    - scipy>=1.9
+    - python
+
+about:
+  home: https://github.com/jordan-wei-taylor/genolearn
+  license: BSD-3-Clause
+  license_family: BSD
+  summary: "A machine learning toolkit for genome sequence data"
+
+test:
+  imports:
+    - genolearn
+
+extra:
+  recipe-maintainers:
+    - jordan-wei-taylor

@@ -1,0 +1,13 @@
+sphinx
+sphinx-copybutton
+sphinx-rtd-theme
+sphinx-click
+jinja2
+numpydoc
+scipy
+pandas
+numpy
+psutil
+scikit-learn
+click
+pathos
