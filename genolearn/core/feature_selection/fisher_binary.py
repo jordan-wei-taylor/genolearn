@@ -33,6 +33,9 @@ def loop(i, x, label, value, *args, **kwargs):
         
     y        = encode[label]
 
+    # convert to binary 0 -> 0, {1, 2, 3, ...} -> 1
+    x        = x > 0
+
     # increase count of label
     n[y]    += 1
 

@@ -24,11 +24,11 @@ and selecting the ``preprocess`` option number, the user will be prompted to sel
 
     Select a preprocess subcommand
 
-    1.  back                            goes to the previous command
+    0.  back                            goes to the previous command
 
-    2.  sequence                        preprocesses sequence data
-    3.  combine                         preprocesses sequence data and combines to previous preprocessing
-    4.  meta                            preprocesses meta data
+    1.  sequence                        preprocesses sequence data
+    2.  combine                         preprocesses sequence data and combines to previous preprocessing
+    3.  meta                            preprocesses meta data
 
 with ``combine`` and ``meta`` commands available upon having executed ``sequence``.
 
@@ -43,17 +43,13 @@ The user is prompted for parameters
 
     batch_size [None]  : 
     n_processes [None] : 
-    sparse [True]      : 
-    dense [True]       : 
     verbose [250000]   : 
     max_features [None]:
 
 where
 
-+ ``batch_size`` determines how many concurrent identifiers to preprocess per run of the ``.gz`` file. By default, GenoLearn arbitrarily sets this to the minimum of your OS limit (RLIMIT_NOFILE) and :math:`2^14`.
++ ``batch_size`` determines how many concurrent identifiers to preprocess per run of the ``.gz`` file. By default, GenoLearn arbitrarily sets this to the minimum of your OS limit (RLIMIT_NOFILE) and :math:`2^14` or :math:`512` in the case of running on iOS.
 + ``n_processes`` determines how many processes to run when converting temp ``txt`` files to ``numpy`` arrays. By default, GenoLearn sets this to the number of physical CPU cores.
-+ ``sparse`` flag indicates if the preprocessing should output sparse arrays.
-+ ``dense`` flag indicates if the preprocessing should output dense arrays.
 + ``verbose`` determines the number of sequences to cycle through before printing a new line.
 + ``max_features`` determines the number of first number of sequences to preprocess. Mainly used for debugging purposes. Users should always leave this as the default ``None``.
 
@@ -62,12 +58,11 @@ Upon a successful execution, within the ``working directory`` is a ``preprocess`
 .. code-block:: text
 
     preprocess
-    ├── dense   [{identifier}.npz files]
+    ├── array  [{identifier}.npz files]
     ├── features.txt.gz
     ├── info.json
     ├── meta.json
-    ├── preprocess.log
-    └── sparse  [{identifier}.npz files]
+    └── preprocess.log
 
 .. note::
 
@@ -89,21 +84,20 @@ The user is prompted for parameters
 where the other parameters mentioned in ``preprocess sequence`` are automatically set according to the previous run of ``preprocess sequence``. Upon a successful execution, within the ``working directory`` the ``preprocess`` subdirectory now has the following tree
 
 .. code-block:: text
-    :emphasize-lines: 2, 3, 8
+    :emphasize-lines: 2, 3
 
     preprocess
+    ├── array   [more {identifier}.npz files]
     ├── combine.log
-    ├── dense   [more {identifier}.npz files]
     ├── features.txt.gz
     ├── info.json
     ├── meta.json
-    ├── preprocess.log
-    └── sparse  [more {identifier}.npz files]
+    └── preprocess.log
 
 Meta
 ====
 
-This command is only available once the user has executed the ``preprocess sequence`` command. This command defines the *train* and *test* datasets for later modelling purposes.
+This command is only available once the user has executed the ``preprocess sequence`` command. This command defines the *train* and *validation* datasets for later modelling purposes.
 
 The user is prompted for parameters
 
@@ -122,17 +116,17 @@ if the user selects ``None`` as the ``group`` value or
     target                 :
     group            [None]:
     train group values*    :
-    test  group values*    :
+    val group values*      :
 
 if the user enters a column present in their metadata csv where
 
 + ``output`` is the output filename storing the collected information from the user.
 + ``identifier`` is a column within the metadata csv containing the unique identifiers.
 + ``target`` is a column within the metadata csv containing the target metadata labels.
-+ ``group`` is either a column within the metadata csv that helps the user split the data into *train* and *test* datasets or left as ``None``
-+ ``proportion train`` is only available if ``group`` is ``None`` and is a sensible proportion value to randomly assign as *train* with the rest as *test*.
++ ``group`` is either a column within the metadata csv that helps the user split the data into *train* and *validation* datasets or left as ``None``
++ ``proportion train`` is only available if ``group`` is ``None`` and is a sensible proportion value to randomly assign as *train* with the rest as *validation*.
 + ``train group values*`` is only available if ``group`` is not ``None`` and contains a comma seperated string indicating which group values belong to *train*.
-+ ``test  group values*`` is only available if ``group`` is not ``None`` and contains a comma seperated string indicating which group values belong to *test*. Note that these values cannot overlap with ``train group values*``.
++ ``val group values*`` is only available if ``group`` is not ``None`` and contains a comma seperated string indicating which group values belong to *validation*. Note that these values cannot overlap with ``train group values*``.
 
 Upon a successful execution of this command, within the ``working directory`` is a ``meta`` subdirectory with an additional entry of ``output``.
   

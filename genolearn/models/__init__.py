@@ -37,7 +37,7 @@ def load(path):
         return joblib.load(path)
     raise Exception(f'"{full_path}" does not exist!')
 
-def grid_predictions(dataloader, Model, selection, num_features, common_kwargs = {}, min_count = 0, target_subset = None, metric = 'recall', mean_func = 'weighted_mean', **kwargs):
+def grid_predictions(dataloader, Model, selection, num_features, dtype, common_kwargs = {}, min_count = 0, target_subset = None, metric = 'recall', mean_func = 'weighted_mean', **kwargs):
 
     values  = [num_features] + list(kwargs.values())
     params  = list(product(*values))
@@ -46,11 +46,11 @@ def grid_predictions(dataloader, Model, selection, num_features, common_kwargs =
     M       = len(C)
     V       = [None] * len(names)
     
-    with Waiting('loading', 'loaded', 'train / test data', inline = True):
-        X_train, Y_train, X_test, Y_test = dataloader.load_train_test(features = selection[:max(num_features)], min_count = min_count, target_subset = target_subset)
+    with Waiting('loading', 'loaded', 'train / val data', inline = True):
+        X_train, Y_train, X_val, Y_val = dataloader.load_train_val(features = selection[:max(num_features)], dtype = dtype, min_count = min_count, target_subset = target_subset)
 
     keys    = ['predict', 'predict_proba', 'predict_log_proba']
-    outputs = {'target' : dataloader.decode(Y_test), 'labels' : list(dataloader._encoder), 'time' : [], 'num_features' : num_features}
+    outputs = {'target' : dataloader.decode(Y_val), 'labels' : list(dataloader._encoder), 'time' : [], 'num_features' : num_features}
     for key in keys:
         if hasattr(Model, key):
             outputs[key] = []
@@ -78,16 +78,16 @@ def grid_predictions(dataloader, Model, selection, num_features, common_kwargs =
         start = time()
         model.fit(X_train[:,:param[0]], Y_train)
         fit   = time()
-        hat   = model.predict(X_test[:,:param[0]])
+        hat   = model.predict(X_val[:,:param[0]])
         pred  = time()
 
         outputs['time'].append((fit - start, pred - fit))
 
         for key in keys:
             if hasattr(model, key):
-                outputs[key].append(getattr(model, key)(X_test[:,:param[0]]))
+                outputs[key].append(getattr(model, key)(X_val[:,:param[0]]))
 
-        score = Metrics(Y_test, hat, metric)(func = mean_func)
+        score = Metrics(Y_val, hat, metric)(func = mean_func)
         if score > best[2]:
             best_kwargs = {**common_kwargs, **dict(zip(names[1:], V[1:])), 'num_features' : param[0]}
             best        = (model, k, score)
@@ -100,7 +100,7 @@ def grid_predictions(dataloader, Model, selection, num_features, common_kwargs =
     if hasattr(Model, 'predict_proba'):
         best              += (outputs['predict_proba'][k],)
 
-    outputs['identifiers'] = dataloader.identifiers_test
+    outputs['identifiers'] = dataloader.identifiers_val
     outputs['predict']     = dataloader.decode(np.array(outputs['predict']).reshape(*C, -1))
     
     for key in keys[1:]:
@@ -116,4 +116,4 @@ def grid_predictions(dataloader, Model, selection, num_features, common_kwargs =
 
     msg('computed predictions and computation times', delete = sum(C))
     
-    return outputs, best_kwargs
+    return outputs, best_kwargs, np.vstack([X_train, X_val]), np.concatenate([Y_train, Y_val])

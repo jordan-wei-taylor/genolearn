@@ -25,7 +25,7 @@ def init(file, subpath = 'temp', ext = 'txt'):
 def add(object, i, count):
     object.write(f'{i} {count}\n')
     
-def preprocess(preprocess_dir, data, batch_size, n_processes, sparse, dense, max_features, verbose):
+def preprocess(preprocess_dir, data, batch_size, n_processes, max_features, verbose):
     """
     Preprocess a gunzip (gz) compressed text file containing genome sequence data of the following sparse format
 
@@ -48,14 +48,12 @@ def preprocess(preprocess_dir, data, batch_size, n_processes, sparse, dense, max
     >>> genolearn preprocess file.gz --batch-size 128
     """
 
-    from   genolearn.logger       import msg, Waiting, print_dict
+    from   genolearn.logger       import msg, Waiting
     from   genolearn              import utils
 
     from   pathos.multiprocessing import cpu_count, Pool
-    from   shutil                 import rmtree
 
     import resource
-
     import json
     import gzip
 
@@ -89,7 +87,7 @@ def preprocess(preprocess_dir, data, batch_size, n_processes, sparse, dense, max
     with _open(os.path.expanduser(data)) as gz:
         
         if os.path.exists(preprocess_dir):                    
-            rmtree(preprocess_dir)
+            shutil.rmtree(preprocess_dir)
 
         os.mkdir(preprocess_dir)
         os.chdir(preprocess_dir)
@@ -98,6 +96,7 @@ def preprocess(preprocess_dir, data, batch_size, n_processes, sparse, dense, max
             shutil.rmtree('temp')
 
         os.mkdir('temp')
+        os.mkdir('array')
 
         files = {}
 
@@ -155,34 +154,16 @@ def preprocess(preprocess_dir, data, batch_size, n_processes, sparse, dense, max
 
                 f = init('info', None, 'json')
                 json.dump({'n' : len(unique), 'm' : m, 'max' : hi}, f)
-                f.close()
-               
-                def to_sparse(npz, c, d):
-                    np.savez_compressed(os.path.join('sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
-
-                def to_dense(npz, c, d):
-                    arr = np.zeros(m, dtype = d.dtype)
-                    arr[c] = d
-                    np.savez_compressed(os.path.join('dense', npz), arr = arr)
+                f.close()                    
                
                 def convert(file):
-                    txt  = os.path.join('temp', f'{file}.txt')
-                    npz  = f'{file}.npz'
-                    c, d = np.loadtxt(txt, dtype = c_dtype).T
-
-                    for function in functions:
-                        function(npz, c, d)
-
+                    txt    = os.path.join('temp', f'{file}.txt')
+                    npz    = f'{file}.npz'
+                    c, d   = np.loadtxt(txt, dtype = c_dtype).T
+                    arr    = np.zeros(m, dtype = d.dtype)
+                    arr[c] = d
+                    np.savez_compressed(os.path.join('array', npz), arr = arr)
                     os.remove(txt)
-
-                functions = []
-                if sparse:
-                    functions.append(to_sparse)
-                    os.mkdir('sparse')
-
-                if dense:
-                    functions.append(to_dense)
-                    os.mkdir('dense')
            
             with Waiting('converting', 'converted', 'to arrays'):
                 with Pool(n_processes) as pool:
@@ -225,14 +206,10 @@ def combine(preprocess_dir, data, batch_size, n_processes, max_features, verbose
     from   genolearn              import utils
     from   pathos.multiprocessing import cpu_count, Pool
 
-    import numpy  as np
-
     import resource
 
     import json
     import gzip
-    import re
-    import os
 
     assert os.path.exists(preprocess_dir)
 
@@ -272,10 +249,11 @@ def combine(preprocess_dir, data, batch_size, n_processes, max_features, verbose
         
         if 'temp' in os.listdir():
             shutil.rmtree('temp')
+
         os.mkdir('temp')
         
         files      = {}
-        exceptions = set([file.replace('.npz', '') for file in os.listdir('dense' if 'dense' in os.listdir() else 'sparse')])
+        exceptions = set([file.replace('.npz', '') for file in os.listdir('array')])
         while True:
            
             gz.seek(0)
@@ -333,32 +311,18 @@ def combine(preprocess_dir, data, batch_size, n_processes, max_features, verbose
                 json.dump({'n' : n, 'm' : m, 'max' : hi}, f)
                 f.close()
                 
-                feature_overlap = np.nonzero(np.isin(features, feature_set, assume_unique = True))[0]
-
-                def to_sparse(npz, c, d):
-                    np.savez_compressed(os.path.join('sparse', npz), col = c.astype(c_dtype), data = d.astype(d_dtype))
-
-                def to_dense(npz, c, d):
-                    arr = np.zeros(m, dtype = d.dtype)
-                    arr[c] = d
-                    np.savez_compressed(os.path.join('dense', npz), arr = arr)
+                feature_overlap = np.nonzero(np.isin(features, feature_set, assume_unique = True))[0]                    
                
                 def convert(file):
-                    txt  = os.path.join('temp', f'{file}.txt')
-                    npz  = f'{file}.npz'
-                    c, d = np.loadtxt(txt, dtype = c_dtype).T
-                    mask = np.nonzero(np.isin(c, feature_overlap, assume_unique = True))[0]
-                    for function in functions:
-                        function(npz, c[mask], d[mask])
-
+                    txt    = os.path.join('temp', f'{file}.txt')
+                    npz    = f'{file}.npz'
+                    c, d   = np.loadtxt(txt, dtype = c_dtype).T
+                    mask   = np.nonzero(np.isin(c, feature_overlap, assume_unique = True))[0]
+                    c, d   = c[mask], d[mask]
+                    arr    = np.zeros(m, dtype = d.dtype)
+                    arr[c] = d
+                    np.savez_compressed(os.path.join('array', npz), arr = arr)
                     os.remove(txt)
-
-                functions = []
-                if 'sparse' in os.listdir():
-                    functions.append(to_sparse)
-
-                if 'dense' in os.listdir():
-                    functions.append(to_dense)
 
             with Waiting('converting', 'converted', 'to arrays'):
                 with Pool(n_processes) as pool:
@@ -383,17 +347,13 @@ def combine(preprocess_dir, data, batch_size, n_processes, max_features, verbose
     msg(f'executed "preprocess combine"')
 
 
-def preprocess_meta(output, meta_path, identifier_column, target_column, group_column, train_values, test_values, ptrain):
-
-    from   genolearn import get_active
+def preprocess_meta(output, meta_path, identifier_column, target_column, group_column, train_values, val_values, ptrain):
 
     import pandas as pd
     import json
 
-    active   = get_active()
-
     pdir     = 'preprocess'
-    file_dir = os.path.join(pdir, 'sparse' if 'sparse' in os.listdir(pdir) else 'dense')
+    file_dir = os.path.join(pdir, 'array')
     files    = [file.replace('.npz', '') for file in os.listdir(file_dir)]
     meta_df  = pd.read_csv(meta_path).applymap(str)
     meta_df[identifier_column] = meta_df[identifier_column].apply(clean_sample)
@@ -403,12 +363,12 @@ def preprocess_meta(output, meta_path, identifier_column, target_column, group_c
     meta_df  = meta_df.loc[meta_df[identifier_column].isin(valid)]
 
     if group_column == 'None':
-        group_column                      = 'train_test'
+        group_column                      = 'train_val'
         n                                 = len(meta_df)
         i                                 = int(n * ptrain + 0.5)
         r                                 = np.random.permutation(n)
-        values                            = np.array(['Train'] * n)
-        values[r[i:]]                     = 'Test'
+        values                            = np.array(['train'] * n)
+        values[r[i:]]                     = 'val'
         meta_df[group_column]             = values
         
     groups    = sorted(set(meta_df[group_column]))
@@ -424,13 +384,13 @@ def preprocess_meta(output, meta_path, identifier_column, target_column, group_c
         meta_json['group'][group] = list(meta_df.loc[meta_df[group_column] == group, identifier_column])
 
     meta_json['Train'] = []
-    meta_json['Test' ] = []
+    meta_json['Val' ]  = []
 
     for group in groups:
         if group in train_values:
             meta_json['Train'].append(group)
-        elif group in test_values:
-            meta_json['Test'].append(group)
+        elif group in val_values:
+            meta_json['Val'  ].append(group)
     
     os.makedirs('meta', exist_ok = True)
 

@@ -13,7 +13,6 @@ def _base(Y, Y_hat):
         stats[u] = TP, TN, FP, FN
     return stats
 
-
 def _apply(stats, func):
     """ applies func with stats dictionary from _base """
     with np.errstate(divide = 'ignore', invalid = 'ignore'):
@@ -21,16 +20,13 @@ def _apply(stats, func):
 
 def _func(name, count):
 
-    if callable(name):
-        return name
-
-    elif name is None:
-        return name
-
     def weighted_mean(score):
         return np.einsum('n...,n', score, count) / count.sum()
 
-    funcs = dict(mean = np.mean, weighted_mean = weighted_mean)
+    funcs = {'mean' : np.mean, 'weighted_mean' : weighted_mean}
+
+    if callable(name) or name is None:
+        return name
 
     if name in funcs:
         return funcs[name]

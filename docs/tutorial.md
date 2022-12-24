@@ -88,7 +88,7 @@ As the user executes the commands available, new commands are made available. Le
 Following the execution of the above, which should take up to a few minutes, your directory tree should look like
 
 .. code-block:: text
-    :emphasize-lines: 6-11
+    :emphasize-lines: 6-10
 
     genolearn-tutorial
         ├── data
@@ -96,11 +96,10 @@ Following the execution of the above, which should take up to a few minutes, you
         │   ├── 19.txt.gz
         │   └── metadata.csv
         ├── preprocess
-        │   ├── dense   [2460 .npz files]
+        │   ├── array   [2460 .npz files]
         │   ├── features.txt.gz
         │   ├── info.json
-        │   ├── preprocess.log
-        │   └── sparse  [2460 .npz files]
+        │   └── preprocess.log
         └── README.md
 
 Imagine, at a later point in time, we had access to the 2019 dataset. We can combine the preprocessing if this data with our previous data with the ``preprocess combine`` command.
@@ -117,7 +116,7 @@ Imagine, at a later point in time, we had access to the 2019 dataset. We can com
 The directory tree following the above execution should be
 
 .. code-block:: text
-    :emphasize-lines: 7, 8, 13
+    :emphasize-lines: 7, 8
 
     genolearn-tutorial
     ├── data
@@ -126,16 +125,15 @@ The directory tree following the above execution should be
     │   └── metadata.csv
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     └── README.md
 
 
-Now we need a means of splitting our data into a *train* and *test* set. The *train* set is used to fit our models whilst the *test* is used to check model performance which then helps us decide which of the potentially many models to choose from. For this tutorial, since we want to train on the 2014 - 2018 dataset and then evaluate against the 2019 dataset we execute ``preprocess meta`` with the following parameters
+Now we need a means of splitting our data into a *train* and *validation* datasets. The *train* set is used to fit our models whilst the *validation* set is used to check model performance which then helps us decide which of the potentially many models to choose from. For this tutorial, since we want to train on the 2014 - 2018 dataset and then evaluate against the 2019 dataset we execute ``preprocess meta`` with the following parameters
 
 .. rubric:: Prompted Information
 .. code-block:: text
@@ -145,7 +143,7 @@ Now we need a means of splitting our data into a *train* and *test* set. The *tr
     target                 : Region
     group            [None]: Year
     train group values*    : 2014, 2015, 2016, 2017, 2018
-    test  group values*    : 2019
+    val group values*      : 2019
 
 
 If you do not have something similar to the ``Year`` column in your metadata, it is recommended to use the default values provided.
@@ -176,12 +174,11 @@ This randomly assigns 75\% of the data as the *train* dataset and the rest as yo
     │   └── yearly
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     └── README.md
 
 
@@ -189,7 +186,7 @@ At this point we can analyse the metadata by executing ``print meta analyse``. I
 
 .. code-block:: text
 
-                      |   2014 |   2015 |   2016 |   2017 |   2018 |   2019 |  Train |   Test | Global
+                      |   2014 |   2015 |   2016 |   2017 |   2018 |   2019 |  Train |    Val | Global
     ------------------+--------+--------+--------+--------+--------+--------+--------+--------+--------
     Asia              |      0 |      4 |     16 |      9 |     18 |     10 |     47 |     10 |     57
     Australasia       |      0 |      0 |      1 |      0 |      3 |      2 |      4 |      2 |      6
@@ -208,13 +205,13 @@ At this point we can analyse the metadata by executing ``print meta analyse``. I
     suggested target subset: Asia, C. America, C. Europe, M. East, N. Africa, N. America, N. Europe, S. Europe, Subsaharan Africa, UK
 
 
-From the above, we can see the target region distribution over each year as well as the *train* and *test* datasets. Additionally, it prints the target regions that have a count of at least 10 (by default) to ensure our later models have enough examples to learn from (the number you choose is somewhat subjective).
+From the above, we can see the target region distribution over each year as well as the *train* and *validation* datasets. Additionally, it prints the target regions that have a count of at least 10 (by default) to ensure our later models have enough examples to learn from (the number you choose is somewhat subjective).
 
 If we instead, choose to print out the ``default`` metadata, it prints
 
 .. code-block:: text
 
-                      |  Train |   Test | Global
+                      |  Train |    Val | Global
     ------------------+--------+--------+--------
     Asia              |     43 |     14 |     57
     Australasia       |      5 |      1 |      6
@@ -238,7 +235,7 @@ If we instead, choose to print out the ``default`` metadata, it prints
     Numbers suggested target subset may vary due to the randomness.
 
 
-At this point, we can now use Fisher Scores to compute which genome sequences to take forward for modelling purposes (see `Feature Selection <https://genolearn.readthedocs.io/en/latest/usage/feature-selection.html>`_ for more details). Lets compute the Fisher Scores for each genome sequence with the ``feature-selection`` command using the ``yearly`` metadata.
+At this point, we can now use Fisher Scores to compute which genome sequences to take forward for modelling purposes (see `Feature Selection <https://genolearn.readthedocs.io/en/stable/usage/feature-selection.html>`_ for more details). Lets compute the Fisher Scores for each genome sequence with the ``feature-selection`` command using the ``yearly`` metadata.
 
 .. rubric:: Prompted Information
 .. code-block:: text
@@ -265,12 +262,11 @@ Upon execution of the above command, the directory tree should be now
     │   └── yearly
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     └── README.md
 
 
@@ -323,12 +319,11 @@ The above results in the following directory tree.
     │   └── random-forest
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     └── README.md
 
 
@@ -371,8 +366,9 @@ With these files now created, we can proceed to the ``train`` command. Lets assu
 .. rubric:: Prompted Information
 .. code-block:: text
 
-    output_dir [yearly-fisher-random-forest]                          : 
-    num_features* [1000]                                : 1000, 10000, 100000      
+    output_dir [yearly-fisher-random-forest]            : 
+    num_features* [1000]                                : 1000, 10000, 100000
+    binary [False]                                      : 
     min_count [0]                                       : 10
     target_subset [None]                                : 
     metric [f1_score]                                   : 
@@ -382,7 +378,7 @@ With these files now created, we can proceed to the ``train`` command. Lets assu
 The above results in the following directory tree
 
 .. code-block:: text
-    :emphasize-lines: 23-
+    :emphasize-lines: 22-
 
     genolearn-tutorial
     ├── data
@@ -399,15 +395,15 @@ The above results in the following directory tree
     │   └── random-forest
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     ├── README.md
     └── train
         └── yearly-fisher
+            ├── full-model.pickle
             ├── encoding.json
             ├── model.pickle
             ├── params.json
@@ -428,9 +424,60 @@ For a deeper insight on the results, you will need to run in Python
     predictions = npz['predict']     # shape (3, 5, 3, n) (3 num_features, 5 max_depth, and 3 random_state parameters for n predictions)
     times       = npz['times']       # shape (3, 5, 3, 2) (last dimension measures training and predicting times in seconds)
 
-where :math:`n` is the number of valid testing strains present in 2019 i.e. only the strains in 2019 where the associated target region was present in 2018. This ignores strains in 2019 where the associated target region does not appear in 2018 as there are no training examples to learn from.
+where :math:`n` is the number of validation strains present in 2019 i.e. only the strains in 2019 where the associated target region was present in 2018. This ignores strains in 2019 where the associated target region does not appear in 2018 as there are no training examples to learn from.
 
 Feature importances can be obtained by the ``feature-importance`` command which results in the following directory tree
+
+.. code-block:: text
+    :emphasize-lines: 26-30
+
+    genolearn-tutorial
+    ├── data
+    │   ├── 14-18.txt.gz
+    │   ├── 19.txt.gz
+    │   └── metadata.csv
+    ├── feature-selection
+    │   ├── yearly-fisher
+    │   └── yearly-fisher.log
+    ├── meta
+    │   ├── default
+    │   └── yearly
+    ├── model
+    │   └── random-forest
+    ├── preprocess
+    │   ├── combine.log
+    │   ├── array   [2875 .npz files]
+    │   ├── features.txt.gz
+    │   ├── info.json
+    │   ├── meta.json
+    │   └── preprocess.log
+    ├── README.md
+    └── train
+        └── yearly-fisher
+            ├── full-model.pickle
+            ├── encoding.json
+            ├── importance
+            │   ├── full-importance.npz
+            │   ├── full-importance-rank.csv
+            │   ├── importance.npz
+            │   └── importance-rank.csv
+            ├── model.pickle
+            ├── params.json
+            ├── predictions.csv
+            ├── results.npz
+            └── train.log
+
+The ``importance-rank.csv`` contains a single column of genome sequences which have been ranked from most important to least by the trained model's logic based on the 2014 - 2018 dataset. See `Feature Importance <https://genolearn.readthedocs.io/en/stable/usage/feature-importance.html>`_ for further details on interpretation of the ``importance.npz`` file.
+
+Finally, if new data is obtained but with no corresponding target labels (i.e. only the genome sequence counts are obtained), then after first executing ``preprocess combine`` on the new data, we can evaluate on the new ``unlabelled`` data points.
+
+.. rubric:: Prompted Information
+.. code-block:: text
+
+    output filename                                               : unlabelled
+    group values* {2014, 2015, 2016, 2017, 2018, 2019, unlabelled}: unlabelled
+
+which results in the following directory tree
 
 .. code-block:: text
     :emphasize-lines: 26-28
@@ -450,68 +497,22 @@ Feature importances can be obtained by the ``feature-importance`` command which 
     │   └── random-forest
     ├── preprocess
     │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
+    │   ├── array   [2875 .npz files]
     │   ├── features.txt.gz
     │   ├── info.json
     │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
+    │   └── preprocess.log
     ├── README.md
     └── train
         └── yearly-fisher
-            ├── encoding.json
-            ├── importance
-            │   ├── importance.npz
-            │   └── importance-rank.csv
-            ├── model.pickle
-            ├── params.json
-            ├── predictions.csv
-            ├── results.npz
-            └── train.log
-
-The ``importance-rank.csv`` contains a single column of genome sequences which have been ranked from most important to least by the trained model's logic. See `Feature Importance <https://genolearn.readthedocs.io/en/latest/usage/feature-importance.html>`_ for further details on interpretation of the ``importance.npz`` file.
-
-Finally, if new data is obtained but with no corresponding target labels (i.e. only the genome sequence counts are obtained), then after first executing ``preprocess combine`` on the new data, we can evaluate on the new ``unlabelled`` data points.
-
-.. rubric:: Prompted Information
-.. code-block:: text
-
-    output filename                                               : unlabelled
-    group values* {2014, 2015, 2016, 2017, 2018, 2019, unlabelled}: unlabelled
-
-which results in the following directory tree
-
-.. code-block:: text
-    :emphasize-lines: 26, 27
-
-    genolearn-tutorial
-    ├── data
-    │   ├── 14-18.txt.gz
-    │   ├── 19.txt.gz
-    │   └── metadata.csv
-    ├── feature-selection
-    │   ├── yearly-fisher
-    │   └── yearly-fisher.log
-    ├── meta
-    │   ├── default
-    │   └── yearly
-    ├── model
-    │   └── random-forest
-    ├── preprocess
-    │   ├── combine.log
-    │   ├── dense   [2875 .npz files]
-    │   ├── features.txt.gz
-    │   ├── info.json
-    │   ├── meta.json
-    │   ├── preprocess.log
-    │   └── sparse  [2875 .npz files]
-    ├── README.md
-    └── train
-        └── yearly-fisher
+            ├── full-model.pickle
             ├── encoding.json
             ├── evaluate
+            │   ├── full-unlabelled.npz
             │   └── unlabelled.csv
             ├── importance
+            │   ├── full-importance.npz
+            │   ├── full-importance-rank.csv
             │   ├── importance.npz
             │   └── importance-rank.csv
             ├── model.pickle

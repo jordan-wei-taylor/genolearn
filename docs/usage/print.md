@@ -24,9 +24,9 @@ and selecting the ``print`` option number, the users will be given a choice of w
 
     Select option to print 
 
-    1.  back                            goes to the previous command
+    0.  back                            goes to the previous command
 
-    2.  history                         history of significant GenoLearn commands
-    3.  config                          current config
+    1.  history                         history of significant GenoLearn commands
+    2.  config                          current config
 
 with further options as the user executes different GenoLearn commands.

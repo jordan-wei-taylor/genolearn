@@ -78,7 +78,7 @@ Similar to ``preprocess sequence``, preprocesses another ``*.gz`` file and combi
 .. rubric:: preprocess meta
 
 
-Preprocesses the ``metadata`` defining the ``identifier`` column, ``target`` column, and splitting which datapoints can be used to train and test our later Machine Learning models on. The user is prompted on
+Preprocesses the ``metadata`` defining the ``identifier`` column, ``target`` column, and splitting which datapoints can be used to train and validate our later Machine Learning models on. The user is prompted on
 
 .. code-block:: text
 
@@ -86,11 +86,11 @@ Preprocesses the ``metadata`` defining the ``identifier`` column, ``target`` col
     identifier          : identifier column in input metadata
     target              : target column in input metadata
     group               : group column in input metadata
-    train group values* : group values to assign as training data [if group  = None]
-    test group values * : group values to assign as testing data  [if group  = None]
-    proportion train    : proportion of data to assign as train   [if group != None]
+    train group values* : group values to assign as train data       [if group  = None]
+    val group values *  : group values to assign as validation data  [if group  = None]
+    proportion train    : proportion of data to assign as train      [if group != None]
 
-The user should leave the ``group`` value as ``None`` if they want to randomly assign their data as train and test (this is standard practice in the Data Science community). If the user has defined their own groupings of the data points, they should specify the group column and state which (non-overlapping) group values belong to the train and test datasets. 
+The user should leave the ``group`` value as ``None`` if they want to randomly assign their data as train / validation (this is standard practice in the Data Science community). If the user has defined their own groupings of the data points, they should specify the group column and state which (non-overlapping) group values belong to the train and validation datasets. 
 
 .. note::
 
@@ -132,10 +132,11 @@ Trains a Machine Learning model based on previous generated configuration files.
 
    <output directory>
     ├── encoding.json      # translation between the prediction integers and the class labels
+    ├── full-model.pickle  # trained scikit-learn model on the full train / val datasets with best parameters found in the gridsearch
     ├── model.pickle       # trained scikit-learn model which performed the best during the gridsearch
     ├── params.json        # parameters of the saved model
-    ├── predictions.csv    # predictions on the test dataset with probabilities if applicable
-    ├── results.npz        # numpy file with more information on the training such as predictions for all models in the gridsearch, train / test time etc
+    ├── predictions.csv    # predictions on the validation dataset with probabilities if applicable
+    ├── results.npz        # numpy file with more information on the training such as predictions for all models in the gridsearch, train / validation time etc
     └── train.log          # text file logging information such as time of execution, RAM usage, parameters for command execution
 
 The user is prompted for

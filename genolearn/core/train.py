@@ -1,15 +1,10 @@
-def train(output_dir, meta, model_config, feature_selection, num_features, min_count, target_subset, metric, aggregate_func):
-
-    import os
-    import json
-
-    command = 'genolearn train'
+def train(output_dir, meta, model_config, feature_selection, num_features, binary, min_count, target_subset, metric, aggregate_func):
 
     from genolearn.utils                 import create_log
     from genolearn.models.classification import get_model
     from genolearn.models                import grid_predictions
     from genolearn.dataloader            import DataLoader
-    from genolearn.logger                import msg, Writing
+    from genolearn.logger                import msg, Writing, Waiting
 
     import warnings
     import numpy as np
@@ -23,15 +18,6 @@ def train(output_dir, meta, model_config, feature_selection, num_features, min_c
     warnings.simplefilter("ignore")
     os.environ["PYTHONWARNINGS"] = "ignore"
 
-
-    # data_config, model_config = map(check_config, (data_config, model_config))
-
-    # with open(model_config) as f:
-    #     model_config = json.load(model_config)
-
-
-    # print_dict('executing "train.py" with parameters', params)
-
     with open(os.path.join('model', model_config)) as file:
         model_config = json.load(file)
         model        = model_config.pop('model')
@@ -41,11 +27,11 @@ def train(output_dir, meta, model_config, feature_selection, num_features, min_c
 
     dataloader = DataLoader(meta)
     selection  = dataloader.load_feature_selection(feature_selection).argsort()
+    Model      = get_model(model)
+    dtype      = bool if binary else None
 
-    Model   = get_model(model)
+    outputs, params, X, Y = grid_predictions(dataloader, Model, selection, num_features, dtype, common, min_count, target_subset, metric, aggregate_func, **kwargs)
     
-    outputs, params = grid_predictions(dataloader, Model, selection, num_features, common, min_count, target_subset, metric, aggregate_func, **kwargs)
-        
     model, predict, *probs = outputs.pop('best')
 
     target  = outputs['target']
@@ -83,6 +69,16 @@ def train(output_dir, meta, model_config, feature_selection, num_features, min_c
     with open(enc, 'w') as f:
         f.write(json.dumps(dataloader._encoder, indent = 4))
 
+    num_features = params.pop('num_features')
+
+    with Waiting('fitting', 'fitted', 'full model'):
+        full_model = Model(**params).fit(X[:,:num_features], Y)
+
+    path = os.path.join(output_dir, 'full-model.pickle')
+    with Writing(path, inline = True):
+        with open(path, 'wb') as f:
+            pickle.dump(full_model, f)
+
     create_log('train', output_dir)
 
-    msg(f'executed "{command}"')
+    msg(f'executed "genolearn train"')

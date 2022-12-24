@@ -1,4 +1,4 @@
-def base_feature_selection(method, dataloader, init, loop, post, force_dense = False, force_sparse = False):
+def base_feature_selection(method, dataloader, init, loop, post):
     """
     base feature selection function
 
@@ -18,17 +18,11 @@ def base_feature_selection(method, dataloader, init, loop, post, force_dense = F
         
         outer_loop : str
             Outer loop function to be executed for each value in ``values``.
-
-        force_dense : bool, *default=False*
-            Identify if computations should be forced to dense computations.
-
-        force_dense : bool, *default=False*
-            Identify if computations should be forced to sparse computations.
     """
     from   genolearn.logger import msg, Waiting
     args, kwargs = init(dataloader)
     n            = sum(map(len, (dataloader.meta['group'][group] for group in dataloader.meta['Train'])))
-    for i, (x, label) in enumerate(dataloader.generator('Train', force_dense = force_dense, force_sparse = force_sparse), 1):
+    for i, (x, label) in enumerate(dataloader.generator('Train'), 1):
         msg(f'{method} : {i:,d} of {n:,d}', inline = True)
         loop(i, x, label, 'Train', *args, **kwargs)
     
@@ -41,12 +35,12 @@ def feature_selection(name, meta, method, module, log):
 
     from   genolearn.logger     import msg, Writing
     from   genolearn.dataloader import DataLoader
-    from   genolearn            import utils, working_directory
+    from   genolearn            import utils
 
     import numpy  as np
     import os
 
-    dataloader = DataLoader(meta, working_directory)
+    dataloader = DataLoader(meta, utils.working_directory)
     
     os.makedirs('feature-selection', exist_ok = True)
 
@@ -56,12 +50,11 @@ def feature_selection(name, meta, method, module, log):
 
     save_path    = os.path.join('feature-selection', name)
     funcs        = ['init', 'loop', 'post']
-    extra        = ['force_dense', 'force_sparse']
 
     for name in funcs:
         assert name in variables
         
-    params       = {func : variables.get(func) for func in funcs + extra}
+    params       = {func : variables.get(func) for func in funcs}
     scores       = base_feature_selection(method, dataloader, **params)
 
     with Writing(save_path, inline = True):

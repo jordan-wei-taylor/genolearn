@@ -14,6 +14,7 @@ setup(
     long_description_content_type = 'text/markdown',
     license          = 'BSD-3-Clause',
     package          = ['genolearn'],
+    py_modules       = [],
     url              = url,
     project_urls     = {"Bug Tracker": f"{url}/issues"},
     classifiers      = [

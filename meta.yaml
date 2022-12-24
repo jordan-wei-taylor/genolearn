@@ -1,6 +1,6 @@
 package:
   name: genolearn
-  version: 0.0.9
+  version: 1.0.1
 
 source:
   path: .
@@ -36,10 +36,6 @@ about:
   license: BSD-3-Clause
   license_family: BSD
   summary: "A machine learning toolkit for genome sequence data"
-
-test:
-  imports:
-    - genolearn
 
 extra:
   recipe-maintainers:

@@ -28,10 +28,10 @@ which then prints
 
     Working directory: {WORKING_DIRECTORY} 
 
-    1.  exit                               exits GenoLearn
+    0.  exit                               exits GenoLearn
 
-    2.  print                              prints various GenoLearn generated files
-    3.  preprocess                         preprocess data into an easier format for file reading
+    1.  print                              prints various GenoLearn generated files
+    2.  preprocess                         preprocess data into an easier format for file reading
 
 at which point, the user enters the **option number** to continue.
 

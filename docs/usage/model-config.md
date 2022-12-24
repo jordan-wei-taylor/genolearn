@@ -30,7 +30,7 @@ Upon executing the ``model-config`` command option, the user is prompted to conf
 
     Select a model to configure 
 
-    1.  back                                goes to the previous command
+    0.  back                                goes to the previous command
 
     1.  logistic_regression                 
     2.  random_forest                       

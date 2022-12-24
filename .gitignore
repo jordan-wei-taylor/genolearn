@@ -18,5 +18,5 @@ conda-build.sh
 # working directory
 wd
 
-# copy script
-_copy.py
+# local dev tools
+dev
