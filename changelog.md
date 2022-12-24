@@ -1,3 +1,17 @@
+Version 1.0.2
+=============
+
+Bug Fixes
+---------
+
+- fixed bad input warning
+
+Misc
+----
+
+- switched from tag versioning to branch / tag versioning 
+
+
 Version 1.0.1
 =============
 
