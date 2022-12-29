@@ -1,12 +1,11 @@
 from setuptools import setup
-from genolearn  import __version__
 from pathlib    import Path
 
 url = "https://github.com/jordan-wei-taylor/genolearn"
 
 setup(
     name             = "genolearn",
-    version          = __version__,
+    version          = "1.0.2",
     author           = "Jordan Taylor",
     author_email     = "jt2006@bath.ac.uk",
     description      = "A machine learning toolkit for genome sequence data",
