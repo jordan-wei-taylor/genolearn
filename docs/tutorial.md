@@ -3,7 +3,7 @@ Tutorial
 
 In this Tutorial, we are interested in using :math:`k`-mer counts to predict where an E. Coli O157 strain geographically originated from. We imagine ourselves having collected data from years 2014-2018 and find ourselves in 2019. We want to preprocess the 2014-2018 dataset, perform feature selection, and train machine learning models on this data. We then collect data in 2019 and wish to see how accurate our machine learning models are for the new data. For demo purposes, the data has been truncated to contain only the first 100,000 :math:`k`-mers which means reduces execution times at the cost of model performance.
 
-We start by cloning an E. Coli O157 dataset which consists kmer count files (split into parts) and location region as the meta data. For the complete dataset clone my https://github.com/jordan-wei-taylor/genolearn-e-coli.git and execute ``./combine.sh`` after executing ``cd genolearn-e-coli``.
+We start by cloning an E. Coli O157 dataset which consists kmer count files (split into parts) and location region as the meta data. For the complete dataset clone my https://github.com/jordan-wei-taylor/e-coli-o157-data.git and execute ``./merge.sh`` after executing ``cd genolearn-e-coli``.
 
 .. code-block:: bash
 

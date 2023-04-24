@@ -9,6 +9,12 @@ Installation
 
 Ensure you have a minimum Python3 version of 3.10.
 
+.. warning::
+
+    The standard pip and conda installation methods currently may not work. To install GenoLearn, ensure you have pip and git installed on your terminal then execute:
+
+    ``pip install -e git+https://github.com/jordan-wei-taylor/genolearn.git#egg=genolearn``
+
 Pip
 ====================
 
