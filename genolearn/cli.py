@@ -599,7 +599,7 @@ def feature_selection(meta, module):
     """ Computes Feature Selection (Fisher by default) """
     print(f'{PRE}\n\nCommand: feature-selection\n\nParameters for feature selection using "{meta}" meta with "{os.path.basename(module)[:-3]}" method\n')
     py     = os.path.basename(module).replace('.py', '')
-    params = dict(meta = meta, method = py, module = path.expanduser(module).replace('_', '-'))
+    params = dict(meta = meta, method = py, module = path.expanduser(module))
     info   = dict(name = dict(default = f'{params["meta"]}-{py}'))
     
     params.update(prompt(info))
